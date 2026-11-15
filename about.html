@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>About · iLearnDeen</title>
+<meta name="theme-color" content="#0B6E5F">
+<link rel="icon" href="icons/icon-192.png">
+<script src="config.js"></script>
+<script src="dict.js"></script>
+<script src="i18n.js"></script>
+<style>
+:root{--bg:#F6F3EA;--panel:#FFFFFF;--ink:#1B2A28;--muted:#5D6B68;--line:#DDD6C6;--accent:#0B6E5F;--soft:#EEE8DA;color-scheme:light}
+@media (prefers-color-scheme: dark){:root{--bg:#0F1817;--panel:#172321;--ink:#E8EFEC;--muted:#9AAAA6;--line:#2A3936;--accent:#4FC3A9;--soft:#1D2B28;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+main{max-width:680px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+h1{font:800 1.8rem/1.1 "Bricolage Grotesque","Segoe UI",system-ui,sans-serif;margin:0 0 6px}
+h2{font:600 1.1rem/1.3 "Bricolage Grotesque","Segoe UI",system-ui,sans-serif;margin:22px 0 6px}
+ul{padding-left:20px}
+.muted{color:var(--muted);font-size:.9rem}
+.terms{background:var(--soft);border-radius:10px;padding:10px 14px;font-size:.92rem}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;border-radius:10px;padding:10px 16px;margin-top:6px}
+a{color:var(--accent)}
+[dir="rtl"] ul{padding-left:0;padding-right:20px}
+[dir="rtl"] body{font-family:"Vazirmatn","IBM Plex Sans",system-ui,sans-serif}
+</style>
+<link rel="stylesheet" href="fonts.css">
+</head>
+<body>
+<main>
+<p class="muted"><a href="index.html">← Back to the games</a></p>
+<h1>About iLearnDeen</h1>
+<p class="muted" id="ver">Free beta</p>
+
+<p>iLearnDeen is a set of short games that help children from Kindergarten to Year 9 learn about Islam according to the teachings of the Ahl al-Bayt (ʿa). Children can play at home, in class, or at community programs, where a teacher can show the questions on a big screen and play in teams.</p>
+<p>The games cover six units: knowing Allah and our beliefs, worship in practice, the 14 Maʿṣūmīn, stories of the Prophets, the Qur'an and the Islamic year, and good character. Special packs are ready for occasions such as 15 Shaʿbān, 13 Rajab and Eid al-Ghadīr.</p>
+
+<h2>Our content rules</h2>
+<ul>
+<li>Only Shia (Imāmī) teachings.</li>
+<li>Rulings (fiqh) only where all our marājiʿ agree. For anything else, please check your marjaʿ.</li>
+<li>No pictures of the Prophets, the Imams, Sayyidah Fāṭimah (ʿa) or other holy figures.</li>
+<li>Muḥarram and Karbalāʾ are introduced gently, focusing on values.</li>
+<li>All wording is written fresh for this app.</li>
+</ul>
+
+<h2>Sources</h2>
+<p>Every answer shows its source. The main sources are:</p>
+<ul>
+<li>The Holy Qur'an, with ʿAllāmah Ṭabāṭabāʾī's <em>Tafsīr al-Mīzān</em></li>
+<li>al-Kulaynī, <em>al-Kāfī</em>; Shaykh al-Ṣadūq, <em>Kamāl al-Dīn</em>, <em>al-Iʿtiqādāt</em> and <em>ʿUyūn Akhbār al-Riḍā</em></li>
+<li>Shaykh al-Mufīd, <em>al-Irshād</em></li>
+<li><em>Nahj al-Balāghah</em> and <em>al-Ṣaḥīfah al-Sajjādiyyah</em></li>
+<li>Shaykh ʿAbbās al-Qummī, <em>Mafātīḥ al-Jinān</em></li>
+<li>The books of rulings (<em>Tawḍīḥ al-Masāʾil</em>) of the marājiʿ</li>
+</ul>
+<p class="muted">The content is being reviewed by scholars. If you notice anything that needs correcting, please let us know.</p>
+
+<h2>Install on your phone</h2>
+<ul>
+<li><strong>Android (Chrome):</strong> tap the <strong>⋮</strong> menu → <strong>Add to home screen</strong> (or <strong>Install app</strong>) → choose <strong>Install</strong>, not “Create shortcut”.</li>
+<li><strong>iPhone or iPad (Safari):</strong> tap <strong>Share</strong> (square with an up arrow) → <strong>Add to Home Screen</strong> → <strong>Add</strong>.</li>
+</ul>
+<p class="muted">Once installed, iLearnDeen opens full-screen and works offline.</p>
+
+<h2>Created by</h2>
+<p id="owner"></p>
+
+<h2>Feedback from parents and teachers</h2>
+<p>Parents, teachers and community organisers are welcome to suggest games, report mistakes or share how they used iLearnDeen. We ask that children don't send feedback themselves.</p>
+<p class="terms">By sending an idea or feedback, you agree that it can be used, adapted and included in iLearnDeen without payment. If you'd like to be thanked, include your name and we'll list your name only, with your permission.</p>
+<div id="people"></div>
+<div id="fb"></div>
+
+<h2>Copyright</h2>
+<p id="copy"></p>
+<p class="muted">You may use iLearnDeen free of charge for learning and teaching, including at schools, mosques and community centres. Copying, modifying, hosting or selling the app or its content requires written permission.</p>
+</main>
+<script>
+(function(){
+ var c=window.SS_CONFIG||{},$=function(id){return document.getElementById(id)};
+ var owner=c.owner||"the iLearnDeen team";
+ $("ver").textContent="Free beta "+(c.version||"");
+ $("owner").textContent=owner+".";
+ $("copy").textContent="© 2026 "+owner+". All rights reserved.";
+ if(c.contributors&&c.contributors.length){var h=document.createElement("h2");h.textContent="Thank you";var ul=document.createElement("ul");c.contributors.forEach(function(n){var li=document.createElement("li");li.textContent=n;ul.appendChild(li)});$("people").appendChild(h);$("people").appendChild(ul)}
+ var fb=$("fb");
+ if(c.feedbackUrl){var a=document.createElement("a");a.className="btn";a.href=c.feedbackUrl;a.target="_blank";a.rel="noopener";a.textContent="Open the feedback form";fb.appendChild(a)}
+ if(c.contactEmail){var p=document.createElement("p");p.textContent="Or email ";var s=document.createElement("span");s.style.userSelect="all";s.setAttribute("translate","no");s.style.fontWeight="600";s.textContent=c.contactEmail;p.appendChild(s);fb.appendChild(p)}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Privacy · iLearnDeen</title>
+<meta name="theme-color" content="#0B6E5F">
+<link rel="icon" href="icons/icon-192.png">
+<script src="config.js"></script>
+<script src="dict.js"></script>
+<script src="i18n.js"></script>
+<style>
+:root{--bg:#F6F3EA;--panel:#FFFFFF;--ink:#1B2A28;--muted:#5D6B68;--line:#DDD6C6;--accent:#0B6E5F;color-scheme:light}
+@media (prefers-color-scheme: dark){:root{--bg:#0F1817;--panel:#172321;--ink:#E8EFEC;--muted:#9AAAA6;--line:#2A3936;--accent:#4FC3A9;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+main{max-width:680px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+h1{font:800 1.8rem/1.1 "Bricolage Grotesque","Segoe UI",system-ui,sans-serif;margin:0 0 6px}
+h2{font:600 1.1rem/1.3 "Bricolage Grotesque","Segoe UI",system-ui,sans-serif;margin:22px 0 6px}
+ul{padding-left:20px}
+.muted{color:var(--muted);font-size:.9rem}
+a{color:var(--accent)}
+[dir="rtl"] ul{padding-left:0;padding-right:20px}
+[dir="rtl"] body{font-family:"Vazirmatn","IBM Plex Sans",system-ui,sans-serif}
+</style>
+<link rel="stylesheet" href="fonts.css">
+</head>
+<body>
+<main>
+<p class="muted"><a href="index.html">← Back to the games</a></p>
+<h1>Privacy</h1>
+<p class="muted">iLearnDeen free beta · last updated 15 November 2026</p>
+
+<p>iLearnDeen is a free set of games for children. Children can play every game without an account, and the app does not ask for or collect anyone's name, email, age, photo or any other personal details.</p>
+
+<h2>What stays on your device</h2>
+<p>To remember progress, the app saves a few things in the browser's local storage on your own phone, tablet or computer:</p>
+<ul>
+<li>the age group you chose (Little, Middle, Older or All ages)</li>
+<li>the best score in each game</li>
+<li>which games have been opened, so “How to play” only opens automatically the first time</li>
+<li>simple settings, such as the unit filter and the class host mode settings</li>
+</ul>
+<p>This information is not sent to us. You can delete it at any time by clearing this site's data in your browser settings.</p>
+
+<h2>Class host mode</h2>
+<p>Class host mode runs on one device. Team names are fixed (Team Noor, Ṣabr, Ṣidq and Shukr), team scores are kept only while the game is open, and no names of children are entered or stored.</p>
+
+<h2>What other services see</h2>
+<ul>
+<li><strong>Website hosting.</strong> Like any website, the hosting service receives standard technical information when the app loads, such as the IP address and browser type, and may keep short-term logs for security and reliability.</li>
+<li id="fbitem"><strong>Feedback form (parents and teachers only).</strong> If you choose to send feedback, the form service processes what you type. Please don't include children's names or other sensitive personal information.</li>
+<li id="gc"><strong>Usage counts.</strong> To learn which games are used, the app counts page visits, the app language, the age group chosen, and when a game is opened, played or finished, using GoatCounter. GoatCounter doesn't use cookies and doesn't store personal data that identifies anyone; it keeps totals such as browser type, screen size and approximate country.</li>
+</ul>
+<p>The app has no advertising, no in-app purchases, no chat and no tracking cookies.</p>
+
+<h2>Changes</h2>
+<p>Future versions may add optional teacher accounts or class codes. If that changes what information is collected, this page will be updated before those features go live, and you'll be told what is collected and why.</p>
+
+<h2>Contact</h2>
+<p id="contact">Questions about privacy? Use the feedback link in the app.</p>
+</main>
+<script>
+(function(){var c=window.SS_CONFIG||{},el=document.getElementById("contact");
+ if(!c.analyticsCode){var g=document.getElementById("gc");if(g)g.parentNode.removeChild(g)}
+ if(!c.feedbackUrl){var f=document.getElementById("fbitem");if(f)f.parentNode.removeChild(f)}
+ if(c.contactEmail){el.textContent="Questions about privacy? Email ";var s=document.createElement("span");s.style.userSelect="all";s.setAttribute("translate","no");s.style.fontWeight="600";s.textContent=c.contactEmail;el.appendChild(s);el.appendChild(document.createTextNode("."))}})();
+</script>
+</body>
+</html>

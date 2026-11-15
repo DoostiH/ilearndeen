@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Short games about Shia Islamic teachings for children from Kindy to Year 9.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<meta name="theme-color" content="#0B6E5F">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="iLearnDeen">
+<title>iLearnDeen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="fonts.css">
+<style>
+/* Layout: phone-first hub, one column of game cards; each game opens full-width with a back bar. */
+:root{
+  --bg:#F6F3EA; --panel:#FFFFFF; --ink:#1B2A28; --muted:#5D6B68; --line:#DDD6C6; --soft:#EEE8DA;
+  --mean:#0B6E5F; --mean-soft:#DDEFE9; --gold:#A86A12; --gold-soft:#F6EAD2; --ok:#1B8A5A; --bad:#C23A2B;
+  --t1:#0B6E5F; --t2:#A86A12; --t3:#7A4FB5; --t4:#C2410C; --on-accent:#FFFFFF;
+  --display:"Bricolage Grotesque","Vazirmatn","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Vazirmatn",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1817; --panel:#172321; --ink:#E8EFEC; --muted:#9AAAA6; --line:#2A3936; --soft:#1D2B28;
+  --mean:#4FC3A9; --mean-soft:#173A33; --gold:#E8B04A; --gold-soft:#3A2E17; --ok:#4CC98D; --bad:#FF7A6B;
+  --t1:#4FC3A9; --t2:#E8B04A; --t3:#B394F0; --t4:#F08A55; --on-accent:#0F1817; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1817; --panel:#172321; --ink:#E8EFEC; --muted:#9AAAA6; --line:#2A3936; --soft:#1D2B28;
+  --mean:#4FC3A9; --mean-soft:#173A33; --gold:#E8B04A; --gold-soft:#3A2E17; --ok:#4CC98D; --bad:#FF7A6B;
+  --t1:#4FC3A9; --t2:#E8B04A; --t3:#B394F0; --t4:#F08A55; --on-accent:#0F1817; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 48px}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+h1{font-size:2.3rem;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+h2{font-size:1.2rem;font-weight:600}
+h3{font-size:1.02rem;font-weight:600}
+p{margin:0}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{width:38px;height:38px;flex:none}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lead{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card.accent{background:var(--mean-soft);border-color:transparent}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.between{justify-content:space-between}
+.chip{font:inherit;font-size:.88rem;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:7px 13px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip .dot{width:10px;height:10px;border-radius:50%}
+.chip[aria-pressed="true"]{border-color:var(--mean);background:var(--mean);color:var(--on-accent)}
+.tag{font-family:var(--mono);font-size:.7rem;padding:2px 8px;border-radius:999px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.tag.star{background:var(--gold-soft);color:var(--gold)}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--mean);outline-offset:2px}
+.btn{font:inherit;font-weight:600;border:0;border-radius:12px;padding:12px 20px;cursor:pointer;background:var(--mean);color:var(--on-accent);font-size:1rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:var(--panel);color:var(--ink);border:1.5px solid var(--line);font-weight:500;font-size:.92rem;padding:10px 14px}
+.btn.gold{background:var(--gold);color:var(--on-accent)}
+input[type=search],select{font:inherit;width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font-family:var(--mono);font-weight:500;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.75rem;color:var(--muted)}
+.games{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gcard{text-align:start;font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-width:0}
+.gcard:hover{border-color:var(--mean)}
+.gcard .gpic{font-size:2rem;line-height:1}
+.gcard p{font-size:.88rem;color:var(--muted)}
+.gcard .best{font-family:var(--mono);font-size:.75rem;color:var(--ok)}
+.gcard.occ{background:var(--gold-soft);border-color:transparent}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;display:flex;gap:10px;align-items:center}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.back{font:inherit;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;padding:8px 12px;cursor:pointer}
+.stem{font-size:1.05rem}
+.bigpic{font-size:4.2rem;line-height:1.1;text-align:center}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice{font:inherit;text-align:start;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);border-radius:12px;padding:12px 14px;cursor:pointer;font-size:1rem}
+.choice:hover:not([disabled]){border-color:var(--mean)}
+.choice.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--panel))}
+.choice.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 11%,var(--panel))}
+.choice.done{opacity:.4}
+.choice[disabled]{cursor:default}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tiles .choice{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;padding:16px 10px;min-height:110px;font-size:1.05rem;font-weight:600}
+.tiles .choice .pic{font-size:2.6rem;line-height:1}
+.tiles.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.seq{display:flex;flex-direction:column;gap:6px;padding:0;margin:0;list-style:none}
+.seq li{display:flex;gap:10px;align-items:center;background:var(--mean-soft);border-radius:10px;padding:8px 12px}
+.seq li b{font-family:var(--mono);color:var(--mean)}
+.feedback{border-inline-start:4px solid var(--ok);padding:10px 12px;background:var(--bg);border-radius:10px;display:flex;flex-direction:column;gap:6px}
+.feedback.no{border-inline-start-color:var(--bad)}
+.ref{font-size:.82rem;color:var(--muted)}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:24px;height:7px;border-radius:4px;background:var(--line)}
+.dots i.ok{background:var(--ok)}.dots i.no{background:var(--bad)}.dots i.cur{background:var(--mean)}
+.stars{font-size:2rem;letter-spacing:4px}
+.seg{display:inline-flex;flex-wrap:wrap;gap:6px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--panel);padding:10px 16px;border-radius:12px;font-size:.9rem;z-index:20;max-width:calc(100% - 32px)}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@media (prefers-reduced-motion: reduce){.shake{animation:none}}
+/* class host mode: readable from the back of a room */
+.host .hostq{font-family:var(--display);font-size:1.6rem;font-weight:600;line-height:1.25}
+.host .choice{font-size:1.2rem;padding:14px 16px}
+.host .choice .let{font-family:var(--mono);font-weight:600;color:var(--mean);margin-inline-end:10px}
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.score{border-radius:12px;padding:8px 12px;background:var(--soft);display:flex;justify-content:space-between;align-items:center;gap:8px;border-inline-start:6px solid var(--line)}
+.score b{font-family:var(--mono);font-size:1.3rem}
+@media (min-width:900px){.wrap.wide{max-width:1000px}.host .hostq{font-size:2.2rem}.host .choice{font-size:1.5rem}.host .bigpic{font-size:6rem}}
+@media (max-width:440px){h1{font-size:1.95rem}.games{grid-template-columns:minmax(0,1fr)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.host .hostq{font-size:1.35rem}}
+/* right-to-left (Farsi) */
+[dir="rtl"] body{font-family:"Vazirmatn",var(--body)}
+[dir="rtl"] h1,[dir="rtl"] h2,[dir="rtl"] h3{font-family:"Vazirmatn",var(--display)}
+[dir="rtl"] .eyebrow,[dir="rtl"] .tag{letter-spacing:0;text-transform:none;font-family:"Vazirmatn",var(--body)}
+[dir="rtl"] ul,[dir="rtl"] ol{padding-left:0!important;padding-right:20px!important}
+.num,.stat b{direction:ltr}
+[dir="rtl"] .choice{unicode-bidi:plaintext}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="config.js"></script>
+<script>(function(){var c=(window.SS_CONFIG||{}).analyticsCode;if(c&&/^[a-z0-9-]+$/.test(c)){var s=document.createElement("script");s.async=true;s.src="https://gc.zgo.at/count.js";s.setAttribute("data-goatcounter","https://"+c+".goatcounter.com/count");document.head.appendChild(s)}})();</script>
+<script src="dict.js"></script>
+<script>
+/* ================= Translation layer =================
+   Visible text is looked up by its English wording, numbers replaced by {0}, {1}…
+   A sentence that mixes plain text with bold/italic words is translated as one unit:
+   inline elements become <0>…</0>, <1>…</1> and untranslatable names become [[0]], [[1]].
+   Dictionaries: window.SS_DICT = {fa:{...}}. Missing entries stay in English. */
+(function(){
+const A = window.APP || (window.APP = {});
+const LANGS = [{id:"en",name:"English"},{id:"fa",name:"فارسی",rtl:true}];
+A.LANGS = LANGS.filter(l=>l.id==="en"||(window.SS_DICT&&window.SS_DICT[l.id]&&Object.keys(window.SS_DICT[l.id]).length));
+let lang = "";
+try{ lang = JSON.parse(localStorage.getItem("ild.lang")) || ""; }catch(e){ lang = ""; }
+if(!A.LANGS.some(l=>l.id===lang)){
+  const nav = ((navigator.languages&&navigator.languages[0])||navigator.language||"en").toLowerCase();
+  lang = nav.startsWith("fa")?"fa":"en";
+  if(!A.LANGS.some(l=>l.id===lang)) lang="en";
+}
+A.lang = lang;
+A.setLang = id => { try{localStorage.setItem("ild.lang",JSON.stringify(id))}catch(e){} location.reload(); };
+const L = LANGS.find(l=>l.id===lang);
+document.documentElement.lang = lang;
+document.documentElement.dir = L.rtl?"rtl":"ltr";
+
+const NUM = /[-−]?\d+(?:[.,]\d+)*%?/g;
+const dict = (window.SS_DICT && window.SS_DICT[lang]) || {};
+const capture = window.SS_CAPTURE || null;
+const INLINE = new Set(["STRONG","EM","B","I","SPAN","SUB","SUP","CODE","BR"]);
+const SKIP = new Set(["SCRIPT","STYLE","TEXTAREA"]);
+const hasLetters = s => /[A-Za-z]/.test(s);
+
+function lookup(key){ if(capture) capture.add(key); if(lang==="en") return null; const d=dict[key]; return d==null?null:d; }
+function fill(tpl,nums){ return tpl.replace(/\{(\d+)\}/g,(_,i)=>nums[+i]!=null?nums[+i]:""); }
+
+/* plain text */
+function translate(s){
+  const t = s.replace(/\s+/g," ").trim();
+  if(!t) return null;
+  const nums = [];
+  const key = t.replace(NUM, m => { nums.push(m); return "{"+(nums.length-1)+"}"; });
+  if(!hasLetters(key)) return null;
+  const d = lookup(key);
+  if(d==null) return null;
+  return s.match(/^\s*/)[0] + fill(d,nums) + s.match(/\s*$/)[0];
+}
+A.tr = s => translate(String(s)) ?? String(s);
+
+/* mixed sentence */
+const isNo = el => el.getAttribute && el.getAttribute("translate")==="no";
+function unitOK(el){
+  if(INLINE.has(el.nodeName) || SKIP.has(el.nodeName) || isNo(el)) return false;
+  let text=false, elem=false;
+  for(const c of el.childNodes){
+    if(c.nodeType===3){ if(c.data.trim()) text=true; }
+    else if(c.nodeType===1){
+      if(!INLINE.has(c.nodeName)) return false;
+      if(!isNo(c) && c.nodeName!=="BR") for(const g of c.childNodes) if(g.nodeType!==3) return false;
+      elem=true;
+    } else if(c.nodeType!==8) return false;
+  }
+  return text && elem;
+}
+const units = new WeakMap();
+function doUnit(el){
+  if(units.get(el)===el.innerHTML) return true;
+  const nums=[], parts=[], inl=[], keep=[];
+  const norm = s => s.replace(NUM, m => { nums.push(m); return "{"+(nums.length-1)+"}"; });
+  for(const c of el.childNodes){
+    if(c.nodeType===3) parts.push(norm(c.data));
+    else if(c.nodeType===1){
+      if(c.nodeName==="BR"){ parts.push("<br>"); }
+      else if(isNo(c)){ keep.push(c); parts.push("[["+(keep.length-1)+"]]"); }
+      else { inl.push(c); parts.push("<"+(inl.length-1)+">"+norm(c.textContent)+"</"+(inl.length-1)+">"); }
+    }
+  }
+  const key = parts.join("").replace(/\s+/g," ").trim();
+  if(!hasLetters(key.replace(/<\/?\d+>|\[\[\d+\]\]|<br>/g,""))){ units.set(el,el.innerHTML); return true; }
+  const d = lookup(key);
+  if(d==null){ units.set(el,el.innerHTML); return !!capture; }
+  const frag = document.createDocumentFragment();
+  const re = /<(\d+)>([\s\S]*?)<\/\1>|\[\[(\d+)\]\]|<br>/g; let last=0, m;
+  const txt = s => { if(s) frag.appendChild(document.createTextNode(fill(s,nums))); };
+  while((m=re.exec(d))){
+    txt(d.slice(last,m.index));
+    if(m[1]!=null){ const o=inl[+m[1]]; if(o){ const n=o.cloneNode(false); n.textContent=fill(m[2],nums); frag.appendChild(n); } }
+    else if(m[3]!=null){ const o=keep[+m[3]]; if(o) frag.appendChild(o.cloneNode(true)); }
+    else frag.appendChild(document.createElement("br"));
+    last = re.lastIndex;
+  }
+  txt(d.slice(last));
+  el.textContent=""; el.appendChild(frag);
+  units.set(el,el.innerHTML);
+  return true;
+}
+
+const seen = new WeakMap();
+function doText(n){
+  if(seen.get(n)===n.data) return;
+  const p = n.parentNode;
+  if(p && (SKIP.has(p.nodeName) || (p.closest && p.closest("[translate=no]")))) return;
+  if(p && p.nodeType===1 && unitOK(p)){ if(doUnit(p)) return; }
+  if(p && p.parentNode && p.parentNode.nodeType===1 && INLINE.has(p.nodeName) && unitOK(p.parentNode)){ if(doUnit(p.parentNode)) return; }
+  const r = translate(n.data);
+  if(r!=null){ seen.set(n,r); n.data = r; } else seen.set(n,n.data);
+}
+function doAttrs(el){
+  for(const a of ["placeholder","aria-label","title"]){
+    if(el.hasAttribute && el.hasAttribute(a)){ const v=el.getAttribute(a), r=translate(v); if(r!=null && r!==v) el.setAttribute(a,r); }
+  }
+}
+function walk(node){
+  if(!node) return;
+  if(node.nodeType===3){ doText(node); return; }
+  if(node.nodeType===11){ for(const c of [...node.childNodes]) walk(c); return; }
+  if(node.nodeType!==1 || SKIP.has(node.nodeName) || isNo(node)) return;
+  doAttrs(node);
+  if(unitOK(node) && doUnit(node)) return;
+  for(const c of [...node.childNodes]) walk(c);
+}
+A.translateTree = walk;
+function start(){
+  walk(document.body);
+  new MutationObserver(ms=>{ for(const m of ms){ if(m.type==="characterData") doText(m.target); else m.addedNodes.forEach(walk); } })
+    .observe(document.body,{subtree:true,childList:true,characterData:true});
+}
+if(document.body) start(); else document.addEventListener("DOMContentLoaded",start);
+})();
+
+/* ================= iLearnDeen core ================= */
+(function(){
+const A = window.APP = Object.assign(window.APP||{}, {games:[], sets:[], occasions:[]});
+A.reg = g => A.games.push(g);
+
+/* ---------- units, age bands, teams ---------- */
+A.UNITS = {
+  u1:{name:"Knowing Allah and our beliefs"},
+  u2:{name:"Worship in practice"},
+  u3:{name:"The 14 Maʿṣūmīn"},
+  u4:{name:"Stories of the Prophets"},
+  u5:{name:"The Qur'an, duʿā and the Islamic year"},
+  u6:{name:"Good character"}
+};
+A.BANDS = [{id:"k2",name:"Little",yrs:"K–2"},{id:"35",name:"Middle",yrs:"Years 3–5"},{id:"69",name:"Older",yrs:"Years 6–9"}];
+A.bandName = id => {const b=A.BANDS.find(x=>x.id===id);return b?`${b.name} (${b.yrs})`:"All ages"};
+A.TEAMS = [{id:"noor",name:"Team Noor",c:"var(--t1)"},{id:"sabr",name:"Team Ṣabr",c:"var(--t2)"},{id:"sidq",name:"Team Ṣidq",c:"var(--t3)"},{id:"shukr",name:"Team Shukr",c:"var(--t4)"}];
+
+/* ---------- random helpers ---------- */
+const S = A.S = {};
+S.r = Math.random;
+S.int = (a,b) => a + Math.floor(S.r()*(b-a+1));
+S.pick = arr => arr[Math.floor(S.r()*arr.length)];
+S.shuffle = arr => {const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(S.r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+/* ---------- utils ---------- */
+A.esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+A.h = (tag,attrs={},html="") => {const e=document.createElement(tag);for(const k in attrs){if(k==="class")e.className=attrs[k];else e.setAttribute(k,attrs[k])}e.innerHTML=html;return e};
+const store = A.store = {get(k,d){try{const v=localStorage.getItem("ild."+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("ild."+k,JSON.stringify(v))}catch(e){}}};
+let toastT; A.toast = msg => {const t=document.getElementById("toast");t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2600)};
+A.best = store.get("best",{});
+A.band = store.get("band","all");
+A.inBand = bands => A.band==="all"||!bands||bands.includes(A.band);
+
+/* ---------- usage counts (GoatCounter, optional) ---------- */
+const trackQ=[];let trackT=null,trackTries=0;
+const trackOn=()=>!!(window.SS_CONFIG&&window.SS_CONFIG.analyticsCode);
+const trackFlush=()=>{if(window.goatcounter&&window.goatcounter.count){while(trackQ.length){try{window.goatcounter.count(trackQ.shift())}catch(e){}}clearInterval(trackT);trackT=null}else if(++trackTries>40){trackQ.length=0;clearInterval(trackT);trackT=null}};
+A.track = (path,title) => {if(!trackOn()&&!(window.goatcounter&&window.goatcounter.count))return;trackQ.push({path,title:title||path,event:true});if(trackQ.length>50)trackQ.shift();trackFlush();if(trackQ.length&&!trackT){trackTries=0;trackT=setInterval(trackFlush,500)}};
+A.award = (gameId,points,max) => {
+  A.track("finish/"+gameId);
+  const prev=A.best[gameId];
+  if(!prev||points>prev.points){A.best[gameId]={points,max};store.set("best",A.best)}
+};
+A.fbUrl = () => ((window.SS_CONFIG||{}).feedbackUrl||"");
+
+/* ---------- hints ---------- */
+A.curHints=[];
+A.hintUI=(box,penalty,onUse,given)=>{const hs=given||A.curHints||[];if(!hs.length)return;let k=0;
+  const wrap=A.h("div",{class:"hintwrap",style:"display:flex;flex-direction:column;gap:8px"},`<button class="btn ghost hintbtn" type="button" style="align-self:flex-start">Show a hint${penalty?" (half points for this question)":""}</button><div class="hints"></div>`);
+  box.appendChild(wrap);const btn=wrap.querySelector(".hintbtn"),list=wrap.querySelector(".hints");
+  btn.addEventListener("click",()=>{if(k>=hs.length)return;if(k===0&&onUse)onUse();list.insertAdjacentHTML("beforeend",`<p class="hint" style="background:var(--mean-soft);color:var(--ink);border-radius:10px;padding:8px 12px;font-size:.92rem"><strong>Hint ${k+1}:</strong> ${A.esc(hs[k])}</p>`);k++;btn.textContent=k<hs.length?"Another hint":"No more hints";if(k>=hs.length)btn.disabled=true})};
+
+/* a shuffled deck that deals n items per round and reshuffles when it runs out */
+A.deck = arr => {let d=S.shuffle(arr),p=0;return {take:n=>{const out=[];for(let k=0;k<n;k++){if(p>=d.length){d=S.shuffle(arr);p=0}out.push(d[p++])}return out}}};
+A.mc = (choices,answer) => {const idx=S.shuffle(choices.map((_,k)=>k));return {choices:idx.map(k=>choices[k]),answer:idx.indexOf(answer)}};
+const choiceHTML = c => typeof c==="object"?`<span class="pic" aria-hidden="true">${c.pic}</span><span>${c.label}</span>`:c;
+const starsHTML = (score,max) => {const n=Math.max(1,Math.round(score/max*5));return `<div class="stars" aria-label="${n} of 5 stars">${"⭐".repeat(n)}${"☆".repeat(5-n)}</div>`};
+const endMsg = (score,max) => score>=max*0.8?"Excellent work, mā shāʾ Allāh!":score>=max*0.5?"Good effort! Play again to remember even more.":"Nice try! Read the answers again, then play another round.";
+
+/* ---------- question banks ----------
+   Item: {b:["k2","35","69"], pic?, q, c:[correct, wrong, wrong], e (explanation), ref?}
+   Choices may be strings or {pic,label} tiles. The first choice is the correct one; it is shuffled on display
+   unless the item has keep:true. */
+A.pickBand = (bank,band) => {const b=band||A.band;let l=b==="all"?bank:bank.filter(q=>q.b.includes(b));return l.length?l:bank};
+A.asQ = it => {const m=it.keep?{choices:it.c,answer:it.a||0}:A.mc(it.c,it.a||0);return {pic:it.pic,hint:it.h,html:`<p>${it.q}</p>`,choices:m.choices,answer:m.answer,explain:`<p>${it.e}</p>`+(it.ref?`<p class="ref">${it.ref}</p>`:"")}};
+/* a question set that games, occasions and class host mode can all draw from */
+A.addSet = set => {const decks={};set.take=set.take||((band,n)=>{const k=band||"all";if(!decks[k])decks[k]=A.deck(A.pickBand(set.bank,k));return decks[k].take(n)});A.sets.push(set);return set};
+A.bankQuiz = (el,cfg) => {const set=cfg.set;let order=[];A.quiz(el,{id:cfg.id,n:cfg.n||5,intro:cfg.intro,onStart(){order=set.take(A.band,cfg.n||5)},gen:i=>A.asQ(order[i])})};
+
+/* ---------- quiz engine ----------
+   cfg: {id, n, points=10, intro?, onStart?(), gen(i) -> {pic?, role?, html, choices[], answer, explain}}
+   multi-step: gen returns {html, steps:[{html, choices, answer, explain}, …]} */
+A.quiz = (el,cfg) => {
+  const pts=cfg.points||10;let hinted=false,i=0,score=0,res=[],q=null,step=0;
+  const box=A.h("div",{class:"card"});el.appendChild(box);
+  const start=()=>{if(cfg.onStart)cfg.onStart();i=0;score=0;res=[];next()};
+  const next=()=>{q=cfg.gen(i);step=0;q._miss=false;draw()};
+  const cur=()=>q.steps?q.steps[step]:q;
+  function draw(){
+    const s=cur(),tiles=s.choices.some(c=>typeof c==="object");
+    box.innerHTML=`<div class="row between"><div class="dots">${Array.from({length:cfg.n},(_,k)=>`<i class="${k<res.length?(res[k]?"ok":"no"):k===i?"cur":""}"></i>`).join("")}</div><span class="num lead">${score} pts</span></div>`+
+      (q.role?`<span class="tag">Your role: ${A.esc(q.role)}</span>`:"")+
+      (step===0&&q.pic?`<div class="bigpic" aria-hidden="true">${q.pic}</div>`:"")+
+      (step===0&&q.html?`<div class="stem">${q.html}</div>`:"")+(s.html&&q.steps?`<div class="stem">${s.html}</div>`:"")+
+      `<div class="${tiles?"tiles"+(s.choices.length===3?" three":""):"choices"}">${s.choices.map((c,k)=>`<button class="choice" data-k="${k}">${choiceHTML(c)}</button>`).join("")}</div><div class="fb"></div>`;
+    box.querySelectorAll(".choice").forEach(b=>b.addEventListener("click",()=>answer(+b.dataset.k)));
+    hinted=false;const hl=s.hint?[s.hint]:(step===0&&q.hint?[q.hint]:[]);A.hintUI(box.querySelector(".fb").parentNode.insertBefore(A.h("div"),box.querySelector(".fb")),true,()=>{hinted=true},hl);
+  }
+  function answer(k){
+    const s=cur(),ok=k===s.answer;
+    box.querySelectorAll(".choice").forEach((b,j)=>{b.disabled=true;if(j===s.answer)b.classList.add("right");else if(j===k)b.classList.add("wrong")});
+    const last=!q.steps||step===q.steps.length-1;
+    const hw=box.querySelector(".hintwrap .hintbtn");if(hw)hw.disabled=true;
+    if(ok)score+=Math.round((q.steps?pts/q.steps.length:pts)*(hinted?0.5:1));
+    if(!ok)q._miss=true;
+    const fb=box.querySelector(".fb");
+    fb.innerHTML=`<div class="feedback ${ok?"":"no"}"><p><strong>${ok?"Well done!":"Not quite."}</strong></p>${s.explain||""}</div><div class="row" style="margin-top:10px"><button class="btn" id="qn">${last?(i===cfg.n-1?"See results":"Next"):"Continue"}</button></div>`;
+    box.querySelector("#qn").addEventListener("click",()=>{
+      if(!last){step++;draw();return}
+      res.push(!q._miss);i++;
+      if(i<cfg.n)next();else finish();
+    });
+    fb.scrollIntoView&&fb.scrollIntoView({block:"nearest",behavior:"smooth"});
+  }
+  function finish(){
+    const max=cfg.n*pts;A.award(cfg.id,score,max);
+    box.innerHTML=`${starsHTML(score,max)}<h2>${score} / ${max} points</h2><p class="lead">${endMsg(score,max)}</p><p class="lead" style="font-size:.85rem">Best scores are saved on this device.</p><div class="row"><button class="btn" id="again">Play another round</button></div>`;
+    box.querySelector("#again").addEventListener("click",start);
+  }
+  if(cfg.intro){box.innerHTML=`<p>${cfg.intro}</p><div class="row"><button class="btn" id="go">Start</button></div>`;box.querySelector("#go").addEventListener("click",start)}else start();
+};
+/* Tap engine for the youngest players: the same quiz with big picture tiles */
+A.tap = (el,cfg) => A.quiz(el,cfg);
+
+/* ---------- rounds engine (hands-on games with custom scoring) ----------
+   cfg: {id, n, max, onStart?(), render(body, api)}  api: {round, add(points), next()} */
+A.rounds = (el,cfg) => {
+  let r=0,score=0,rh=null;const box=A.h("div",{class:"card"});el.appendChild(box);
+  const api={get round(){return r},add:p=>{score+=p},get score(){return score},setHints:l=>{rh=l},
+    next:()=>{r++;if(r<cfg.n)paint();else{const max=cfg.n*cfg.max,sc=Math.round(score);A.award(cfg.id,sc,max);box.innerHTML=`${starsHTML(sc,max)}<h2>${sc} / ${max} points</h2><p class="lead">${endMsg(sc,max)}</p><p class="lead" style="font-size:.85rem">Best scores are saved on this device.</p><div class="row"><button class="btn" id="again">Play another round</button></div>`;box.querySelector("#again").addEventListener("click",()=>{r=0;score=0;if(cfg.onStart)cfg.onStart();paint()})}}};
+  const paint=()=>{box.innerHTML=`<div class="row between"><span class="eyebrow">Round ${r+1} of ${cfg.n}</span><span class="num lead">${Math.round(score)} pts</span></div><div class="body" style="display:flex;flex-direction:column;gap:12px"></div><div class="hb"></div>`;rh=null;cfg.render(box.querySelector(".body"),api);A.hintUI(box.querySelector(".hb"),false,null,rh||A.curHints)};
+  if(cfg.onStart)cfg.onStart();paint();
+};
+/* Ordering helper used by rounds games: tap items in the right order.
+   After 3 wrong taps the right order is shown, so young players never get stuck. */
+A.orderTask = (body,api,{prompt,items,max=10,explain=""}) => {
+  let pos=0,miss=0;const sh=S.shuffle(items.map((_,k)=>k));
+  body.innerHTML=`<p class="stem"><strong>${prompt}</strong></p><ol class="seq"></ol><div class="choices">${sh.map(k=>`<button class="choice" data-k="${k}">${items[k]}</button>`).join("")}</div><div class="fb"></div>`;
+  const seq=body.querySelector(".seq"),fb=body.querySelector(".fb");
+  const add=k=>{seq.insertAdjacentHTML("beforeend",`<li><b>${k+1}</b><span>${items[k]}</span></li>`)};
+  const end=shown=>{body.querySelectorAll(".choice").forEach(b=>b.disabled=true);const p=shown?0:Math.max(0,max-2*miss);api.add(p);
+    fb.innerHTML=`<div class="feedback ${shown?"no":""}"><p><strong>${shown?"Here is the right order.":miss?"Well done! You got there.":"Perfect order!"}</strong> +${p} points</p>${explain}</div><div class="row" style="margin-top:10px"><button class="btn" id="nx">Next</button></div>`;
+    body.querySelector("#nx").addEventListener("click",api.next)};
+  body.querySelectorAll(".choice").forEach(b=>b.addEventListener("click",()=>{const k=+b.dataset.k;
+    if(k===pos){b.disabled=true;b.classList.add("done");add(k);pos++;if(pos===items.length)end(false)}
+    else{miss++;b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake");if(miss>=3){for(let j=pos;j<items.length;j++)add(j);end(true)}}}));
+};
+
+/* One multiple-choice question inside a rounds game, with its own hint. */
+A.askTask = (body,api,q,pts=10) => {
+  api.setHints(q.hint?[q.hint]:[]);
+  const tiles=q.choices.some(c=>typeof c==="object");
+  body.innerHTML=`${q.pic?`<div class="bigpic" aria-hidden="true">${q.pic}</div>`:""}<div class="stem">${q.html}</div><div class="${tiles?"tiles"+(q.choices.length===3?" three":""):"choices"}">${q.choices.map((c,j)=>`<button class="choice" data-j="${j}">${choiceHTML(c)}</button>`).join("")}</div><div class="fb"></div>`;
+  body.querySelectorAll(".choice").forEach(b=>b.addEventListener("click",()=>{const j=+b.dataset.j,ok=j===q.answer;
+    body.querySelectorAll(".choice").forEach((x,k)=>{x.disabled=true;if(k===q.answer)x.classList.add("right");else if(k===j)x.classList.add("wrong")});
+    if(ok)api.add(pts);
+    body.querySelector(".fb").innerHTML=`<div class="feedback ${ok?"":"no"}"><p><strong>${ok?"Well done!":"Not quite."}</strong></p>${q.explain}</div><div class="row" style="margin-top:10px"><button class="btn" id="nx">Next</button></div>`;
+    body.querySelector("#nx").addEventListener("click",api.next)}));
+};
+/* question-bank item: b = bands, c[0] = correct answer, h = hint for this question */
+A.Q = (b,pic,q,c,e,ref,h) => ({b,pic,q,c,e,ref,h});
+A.T = (pic,label) => ({pic,label});
+
+/* ---------- install guide (web build only) ---------- */
+A.installEvt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();A.installEvt=e;if(view==="home")renderHome()});
+window.addEventListener("appinstalled",()=>{A.installEvt=null;store.set("installed",true);if(view==="home")renderHome()});
+function installCard(){
+  if(!window.SS_CONFIG||!window.SS_CONFIG.installable)return "";
+  const standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+  if(standalone||store.get("installHidden",false))return "";
+  const ua=navigator.userAgent||"",ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&"ontouchend" in document),android=/Android/.test(ua);
+  const steps=ios?`<ol style="margin:0;padding-left:20px"><li>Open this page in <strong>Safari</strong>.</li><li>Tap the <strong>Share</strong> button (square with an up arrow).</li><li>Tap <strong>Add to Home Screen</strong>, then <strong>Add</strong>.</li></ol>`
+    :android?`<ol style="margin:0;padding-left:20px"><li>In <strong>Chrome</strong>, tap the <strong>⋮</strong> menu (top right).</li><li>Tap <strong>Add to home screen</strong> (or <strong>Install app</strong>).</li><li>Choose <strong>Install</strong>, not “Create shortcut”.</li></ol>`
+    :`<p>Open this page on your phone, then:</p><ul style="margin:0;padding-left:20px"><li><strong>iPhone:</strong> Safari → Share → Add to Home Screen</li><li><strong>Android:</strong> Chrome → ⋮ → Add to home screen → Install</li></ul>`;
+  return `<section class="card" id="installcard"><div class="row between"><h2>Install iLearnDeen on your phone</h2><button class="back" id="hideinst" aria-label="Hide install guide">Hide</button></div><p class="lead">It opens full-screen like a normal app and works offline.</p>${A.installEvt?`<button class="btn" id="doinst" style="align-self:flex-start">Install app</button><p class="lead" style="font-size:.85rem">Or do it from the menu:</p>`:""}${steps}</section>`;
+}
+
+/* ---------- hub ---------- */
+const STAR = `<svg viewBox="0 0 40 40" aria-hidden="true"><g fill="var(--mean)"><rect x="9" y="9" width="22" height="22" rx="2"/><rect x="9" y="9" width="22" height="22" rx="2" transform="rotate(45 20 20)"/></g><circle cx="20" cy="20" r="6.5" fill="var(--gold)"/></svg>`;
+let starRot=null,filter=store.get("filter","all"),query="",cleanup=null,view="home";
+const app=document.getElementById("app");
+const bandTags = g => (g.bands||[]).map(b=>`<span class="tag">${A.esc(A.BANDS.find(x=>x.id===b).yrs)}</span>`).join("");
+function unitTags(g){return g.units.map(([u,l])=>`<span class="tag">${A.esc(A.UNITS[u].name)} · Outcome ${l.join(", ")}</span>`).join("")}
+function footer(){const c=window.SS_CONFIG;if(!c)return "";const y=new Date().getFullYear();
+  return `<footer class="row" style="justify-content:center;gap:16px;font-size:.82rem;color:var(--muted);padding-top:8px"><span>© ${y>2026?"2026–"+y:"2026"} ${A.esc(c.owner||"")}. All rights reserved.</span>${c.installable?`<a href="#home" id="showinst" style="color:var(--muted)">How to install</a>`:""}${c.pages?`<a href="about.html" style="color:var(--muted)">About &amp; sources</a><a href="privacy.html" style="color:var(--muted)">Privacy</a>`:""}${A.fbUrl()?`<a href="${A.esc(A.fbUrl())}" target="_blank" rel="noopener" style="color:var(--muted)">Send feedback (parents and teachers)</a>`:""}<span>Free beta ${A.esc(c.version||"")}</span></footer>`}
+function renderHome(){
+  view="home";app.classList.remove("wide");
+  const q=query.toLowerCase();
+  let list=A.games.filter(g=>A.inBand(g.bands)&&(filter==="all"||g.units.some(u=>u[0]===filter))&&(!q||((g.title+" "+g.topics+" "+g.blurb+" "+g.units.map(u=>A.UNITS[u[0]].name).join(" ")+(A.tr?" "+[g.title,g.blurb].map(A.tr).join(" "):"")).toLowerCase().includes(q))));
+  if(!starRot){const st=A.games.filter(g=>g.star).map(g=>g.id),k=Math.floor(S.r()*st.length);starRot=st.slice(k).concat(st.slice(0,k))}
+  list=[...starRot.map(id=>list.find(g=>g.id===id)).filter(Boolean),...list.filter(g=>!g.star)];
+  const occs=A.occasions;
+  app.innerHTML=`
+  <header style="display:flex;flex-direction:column;gap:10px">
+    <div class="row between"><span class="eyebrow">Learn about Islam by playing</span>${A.LANGS&&A.LANGS.length>1?`<div class="row" role="group" aria-label="Language" translate="no">${A.LANGS.map(l=>`<button class="chip lang" data-lang="${l.id}" aria-pressed="${A.lang===l.id}" style="padding:4px 10px;font-size:.8rem">${l.name}</button>`).join("")}</div>`:""}</div>
+    <div class="brand">${STAR}<h1 translate="no">iLearnDeen</h1></div>
+    <p class="lead">Short games about our faith for children from Kindy to Year 9. Play at home, in class or at community programs.</p>
+    <div class="row"><button class="btn" id="quick">Play a quick game</button><span class="lead" style="font-size:.85rem">About 2 minutes</span></div>
+  </header>
+  <section class="card"><h2>Who is playing?</h2>
+    <div class="seg" role="group" aria-label="Age group"><button class="chip" data-band="all" aria-pressed="${A.band==="all"}">All ages</button>${A.BANDS.map(b=>`<button class="chip" data-band="${b.id}" aria-pressed="${A.band===b.id}">${b.name} · ${b.yrs}</button>`).join("")}</div>
+    <p class="lead" style="font-size:.85rem">${A.band==="all"?"Showing games for every age.":`Showing games for ${A.esc(A.bandName(A.band))}.`}</p></section>
+  ${installCard()}
+  ${occs.length?`<section class="card"><h2>Occasions</h2><p class="lead">Ready-made questions for special days and community programs.</p>
+    <div class="games">${occs.map(o=>`<button class="gcard occ" data-occ="${o.id}"><span class="gpic" aria-hidden="true">${o.pic}</span><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h3>${A.esc(o.title)}</h3><p>${A.esc(o.blurb)}</p></button>`).join("")}</div>
+    <p class="lead" style="font-size:.85rem">More occasions are coming: 13 Rajab, Eid al-Ghadīr, Ramaḍān and more.</p></section>`:""}
+  <section class="card accent"><h2>Teaching a class?</h2><p>Show the questions on a TV or projector. Children answer out loud in teams, and you tap who got it right.</p><button class="btn" id="hostbtn" style="align-self:flex-start">Open class host mode</button></section>
+  <section class="card"><h2>Your progress</h2><div class="stats"><div class="stat"><b>${Object.keys(A.best).filter(k=>A.games.some(g=>g.id===k)).length} / ${A.games.length}</b><span>games played</span></div><div class="stat"><b>${A.games.reduce((a,g)=>a+(A.best[g.id]?A.best[g.id].points:0),0)}</b><span>total best points</span></div><div class="stat"><b>${Object.values(A.best).filter(b=>b.points>=b.max*0.8).length}</b><span>top scores</span></div></div></section>
+  <section class="card"><h2>Games</h2>
+    <input type="search" id="q" placeholder="Search games, e.g. wuḍūʾ, Prophets, Imams" value="${A.esc(query)}" aria-label="Search games">
+    <div class="row" id="filters"><button class="chip" data-f="all" aria-pressed="${filter==="all"}">All units</button>${Object.entries(A.UNITS).filter(([k])=>A.games.some(g=>g.units.some(u=>u[0]===k))).map(([k,u])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${u.name}</button>`).join("")}</div></section>
+  <div class="games">${list.map(g=>`<button class="gcard" data-g="${g.id}"><span class="gpic" aria-hidden="true">${g.pic||""}</span><div class="row">${g.star?`<span class="tag star">Start here</span>`:""}${bandTags(g)}</div><h3>${A.esc(g.title)}</h3><p>${A.esc(g.blurb)}</p>${A.best[g.id]?`<span class="best">Best: ${A.best[g.id].points}/${A.best[g.id].max}</span>`:""}</button>`).join("")||`<p class="lead">No games match. Try another age group or search.</p>`}</div>
+  ${footer()}`;
+  const si=app.querySelector("#showinst");if(si)si.addEventListener("click",e=>{e.preventDefault();store.set("installHidden",false);renderHome();window.scrollTo(0,0)});
+  const hi=app.querySelector("#hideinst");if(hi)hi.addEventListener("click",()=>{store.set("installHidden",true);renderHome();A.toast("Hidden. Tap How to install at the bottom to show it again.")});
+  const di=app.querySelector("#doinst");if(di)di.addEventListener("click",async()=>{const e=A.installEvt;if(!e)return;e.prompt();try{await e.userChoice}catch(x){}A.installEvt=null;renderHome()});
+  app.querySelector("#quick").addEventListener("click",()=>{const pool=A.games.filter(g=>g.star&&A.inBand(g.bands)).map(g=>g.id);const all=pool.length?pool:A.games.filter(g=>g.star).map(g=>g.id);const fresh=all.filter(id=>!A.best[id]);A.track("quick-play");location.hash=S.pick(fresh.length?fresh:all)});
+  app.querySelector("#hostbtn").addEventListener("click",()=>{location.hash="host"});
+  app.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.lang!==A.lang)A.setLang(b.dataset.lang)}));
+  app.querySelectorAll("[data-band]").forEach(b=>b.addEventListener("click",()=>{A.band=b.dataset.band;store.set("band",A.band);A.track("band/"+A.band);renderHome()}));
+  app.querySelectorAll("[data-f]").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.f;store.set("filter",filter);renderHome()}));
+  app.querySelectorAll("[data-g]").forEach(b=>b.addEventListener("click",()=>{location.hash=b.dataset.g}));
+  app.querySelectorAll("[data-occ]").forEach(b=>b.addEventListener("click",()=>{location.hash="occasion-"+b.dataset.occ}));
+  const qi=app.querySelector("#q");qi.addEventListener("input",()=>{query=qi.value;const pos=qi.selectionStart;renderHome();const n=app.querySelector("#q");n.focus();n.setSelectionRange(pos,pos)});
+}
+function topbar(label){return `<div class="topbar"><button class="back" id="back">← Home</button><span class="eyebrow">${label}</span></div>`}
+function bindBack(){app.querySelector("#back").addEventListener("click",()=>{location.hash="home"})}
+function markPlay(id){let played=false;const stg=app.querySelector("#stage");const mark=e=>{if(played)return;const b=e.target.closest&&e.target.closest("button");if(!b||b.classList.contains("hintbtn")||b.id==="go"||b.id==="again")return;played=true;A.track("play/"+id)};stg.addEventListener("click",mark)}
+function renderGame(g){
+  view="game";app.classList.remove("wide");
+  app.innerHTML=`${topbar(A.esc(g.mode))}
+  <header style="display:flex;flex-direction:column;gap:8px"><h1 style="font-size:1.9rem">${g.pic?`<span aria-hidden="true">${g.pic}</span> `:""}${A.esc(g.title)}</h1><div class="row">${bandTags(g)}${unitTags(g)}</div></header>
+  ${(()=>{const hp=A.HELP&&A.HELP[g.id];const seen=store.get("seen."+g.id,false);store.set("seen."+g.id,true);
+    return `<details class="card howto" ${seen?"":"open"}><summary style="cursor:pointer;font-family:var(--display);font-weight:600;font-size:1.05rem">How to play</summary><p>${A.esc(g.how)}</p>${hp?`<ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">${hp.steps.map(x=>`<li>${A.esc(x)}</li>`).join("")}</ol>`:""}<p class="lead" style="font-size:.85rem">Stuck? Tap <strong>Show a hint</strong> during the game.</p></details>`})()}
+  <div id="stage" style="display:flex;flex-direction:column;gap:16px"></div>`;
+  bindBack();
+  A.track("open/"+g.id,g.title);A.track("play-lang/"+(A.lang||"en"));markPlay(g.id);
+  A.curHints=(A.HELP&&A.HELP[g.id]&&A.HELP[g.id].hints)||[];
+  try{cleanup=g.mount(app.querySelector("#stage"))||null}catch(e){app.querySelector("#stage").innerHTML=`<p class="lead">This game hit a problem loading. Go back and try again.</p>`;console.error(e)}
+}
+
+/* ---------- occasions ---------- */
+/* A.addOccasion({id, title, date, pic, blurb, about, bank, mix}) — mix = a general akhlāq bank;
+   each draw is about 60% occasion questions and 40% general questions. */
+A.addOccasion = o => {const d1={},d2={};
+  const take=(band,n)=>{const k=band||"all";if(!d1[k])d1[k]=A.deck(A.pickBand(o.bank,k));if(!d2[k])d2[k]=A.deck(A.pickBand(o.mix,k));const m=o.mix&&o.mix.length?Math.floor(n*0.4):0;return S.shuffle(d1[k].take(n-m).concat(m?d2[k].take(m):[]))};
+  A.occasions.push(o);A.addSet({id:o.id,title:o.title+" ("+o.date+")",occ:true,bank:o.bank.concat(o.mix||[]),take});return o};
+function renderOcc(o){
+  view="occ";app.classList.remove("wide");
+  app.innerHTML=`${topbar("Occasion")}
+  <header style="display:flex;flex-direction:column;gap:8px"><div class="bigpic" style="text-align:start" aria-hidden="true">${o.pic}</div><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h1 style="font-size:1.9rem">${A.esc(o.title)}</h1><p class="lead">${o.about}</p></header>
+  <section class="card"><h2>Play on this device</h2><p class="lead">Five questions about ${A.esc(o.title)} plus some about good character, for ${A.esc(A.bandName(A.band))}. Change the age group on the home screen.</p><button class="btn" id="occplay" style="align-self:flex-start">Play now</button></section>
+  <section class="card accent"><h2>Running a program?</h2><p>Show the questions on a big screen and play in teams.</p><button class="btn" id="occhost" style="align-self:flex-start">Host for a class</button></section>
+  <div id="stage" style="display:flex;flex-direction:column;gap:16px"></div>`;
+  bindBack();A.track("occ/"+o.id);A.curHints=[];
+  app.querySelector("#occhost").addEventListener("click",()=>{location.hash="host-"+o.id});
+  app.querySelector("#occplay").addEventListener("click",e=>{e.target.closest("section").remove();const set=A.sets.find(s=>s.id===o.id);const stage=app.querySelector("#stage");markPlay("occ-"+o.id);A.bankQuiz(stage,{id:"occ-"+o.id,set,n:5})});
+}
+
+/* ---------- class host mode ---------- */
+function renderHost(preset){
+  view="host";app.classList.add("wide");A.curHints=[];
+  const cfg={set:(preset&&A.sets.some(s=>s.id===preset))?preset:store.get("hostSet",A.sets.length?A.sets[0].id:""),band:store.get("hostBand","all"),teams:store.get("hostTeams",2),n:store.get("hostN",8)};
+  if(!A.sets.some(s=>s.id===cfg.set)&&A.sets.length)cfg.set=A.sets[0].id;
+  const seg=(key,opts)=>`<div class="seg" role="group">${opts.map(([v,l])=>`<button class="chip" data-${key}="${v}" aria-pressed="${String(cfg[key])===String(v)}">${l}</button>`).join("")}</div>`;
+  function setup(){
+    const occ=A.sets.filter(s=>s.occ),gm=A.sets.filter(s=>!s.occ);
+    app.innerHTML=`${topbar("Class host mode")}
+    <header style="display:flex;flex-direction:column;gap:8px"><h1 style="font-size:1.9rem">Class host mode</h1><p class="lead">For classes and community programs. Show this screen on a TV or projector. Read each question aloud, let the teams answer, then tap <strong>Show answer</strong> and pick the teams that got it right.</p></header>
+    <section class="card host"><h2>Question set</h2><select id="hset" aria-label="Question set">${occ.length?`<optgroup label="Occasions">${occ.map(s=>`<option value="${s.id}" ${s.id===cfg.set?"selected":""}>${A.esc(s.title)}</option>`).join("")}</optgroup>`:""}<optgroup label="Games">${gm.map(s=>`<option value="${s.id}" ${s.id===cfg.set?"selected":""}>${A.esc(s.title)}</option>`).join("")}</optgroup></select>
+      <h2>Age group</h2>${seg("band",[["all","Mixed ages"],...A.BANDS.map(b=>[b.id,`${b.name} · ${b.yrs}`])])}
+      <h2>Teams</h2>${seg("teams",[[2,"2 teams"],[3,"3 teams"],[4,"4 teams"]])}
+      <p class="lead" style="font-size:.85rem">Team names: Noor (light), Ṣabr (patience), Ṣidq (truthfulness), Shukr (thankfulness).</p>
+      <h2>Questions</h2>${seg("n",[[5,"5"],[8,"8"],[10,"10"]])}
+      <button class="btn gold" id="hstart" style="align-self:flex-start;font-size:1.1rem">Start</button></section>`;
+    bindBack();
+    app.querySelector("#hset").addEventListener("change",e=>{cfg.set=e.target.value});
+    ["band","teams","n"].forEach(k=>app.querySelectorAll(`[data-${k}]`).forEach(b=>b.addEventListener("click",()=>{const v=b.dataset[k];cfg[k]=k==="band"?v:+v;app.querySelectorAll(`[data-${k}]`).forEach(x=>x.setAttribute("aria-pressed",String(x===b)))})));
+    app.querySelector("#hstart").addEventListener("click",()=>{store.set("hostSet",cfg.set);store.set("hostBand",cfg.band);store.set("hostTeams",cfg.teams);store.set("hostN",cfg.n);play()});
+  }
+  function play(){
+    const set=A.sets.find(s=>s.id===cfg.set);const items=set.take(cfg.band,cfg.n).map(A.asQ);
+    const teams=A.TEAMS.slice(0,cfg.teams).map(t=>Object.assign({pts:0},t));let i=0;
+    A.track("host/"+set.id);
+    const board=()=>`<div class="scores">${teams.map(t=>`<div class="score" style="border-inline-start-color:${t.c}"><span>${t.name}</span><b>${t.pts}</b></div>`).join("")}</div>`;
+    const draw=()=>{const q=items[i];const tiles=q.choices.some(c=>typeof c==="object");
+      app.innerHTML=`${topbar(A.esc(set.title))}<section class="card host">${board()}<span class="eyebrow">Question ${i+1} of ${items.length}</span>${q.pic?`<div class="bigpic" aria-hidden="true">${q.pic}</div>`:""}<div class="hostq">${q.html}</div>
+        <div class="${tiles?"tiles"+(q.choices.length===3?" three":""):"choices"}">${q.choices.map((c,k)=>`<button class="choice" data-k="${k}" disabled>${tiles?"":`<span class="let">${"ABCD"[k]}</span>`}${choiceHTML(c)}</button>`).join("")}</div>
+        <div class="fb"><button class="btn" id="reveal" style="font-size:1.1rem">Show answer</button></div></section>`;
+      bindBack();
+      app.querySelector("#reveal").addEventListener("click",()=>{
+        app.querySelectorAll(".choice").forEach((b,j)=>{b.disabled=true;if(j===q.answer)b.classList.add("right")});
+        const fb=app.querySelector(".fb");
+        fb.innerHTML=`<div class="feedback">${q.explain}</div><h2>Who got it right?</h2><div class="row">${teams.map((t,k)=>`<button class="chip" data-t="${k}" aria-pressed="false"><span class="dot" style="background:${t.c}"></span>${t.name}</button>`).join("")}</div><div class="row"><button class="btn" id="hnext" style="font-size:1.1rem">${i===items.length-1?"See final scores":"Next question"}</button></div>`;
+        fb.querySelectorAll("[data-t]").forEach(b=>b.addEventListener("click",()=>b.setAttribute("aria-pressed",String(b.getAttribute("aria-pressed")!=="true"))));
+        fb.querySelector("#hnext").addEventListener("click",()=>{fb.querySelectorAll('[data-t][aria-pressed="true"]').forEach(b=>teams[+b.dataset.t].pts+=10);i++;if(i<items.length)draw();else end()});
+      })};
+    const end=()=>{const top=Math.max(...teams.map(t=>t.pts));const win=teams.filter(t=>t.pts===top&&top>0);
+      app.innerHTML=`${topbar(A.esc(set.title))}<section class="card host"><div class="bigpic" aria-hidden="true">🎉</div><h1 style="font-size:2rem;text-align:center">${win.length===1?`${win[0].name} has the most points!`:win.length?"It's a tie!":"Well played, everyone!"}</h1>${board()}<p class="lead" style="text-align:center">Well done, everyone. What matters most is what we learned together.</p>
+        <div class="row" style="justify-content:center"><button class="btn" id="hagain">Play again</button><button class="btn ghost" id="hset2">Change settings</button></div></section>`;
+      bindBack();A.track("host-finish/"+set.id);
+      app.querySelector("#hagain").addEventListener("click",play);app.querySelector("#hset2").addEventListener("click",setup)};
+    draw();
+  }
+  setup();
+}
+
+function route(){
+  if(cleanup){try{cleanup()}catch(e){}cleanup=null}
+  const h=decodeURIComponent(location.hash.replace("#",""));
+  const g=A.games.find(x=>x.id===h);
+  if(g)renderGame(g);
+  else if(h==="host"||h.startsWith("host-"))renderHost(h.slice(5));
+  else if(h.startsWith("occasion-")&&A.occasions.some(o=>o.id===h.slice(9)))renderOcc(A.occasions.find(o=>o.id===h.slice(9)));
+  else renderHome();
+  window.scrollTo(0,0);
+}
+A.start = () => {A.track("app-lang/"+(A.lang||"en"));window.addEventListener("hashchange",route);route()};
+})();
+
+/* ================= How to play (+ hints for ordering rounds only) =================
+   Quiz questions carry their own hint (field h in each item), so a hint always fits the question on screen.
+   The hints below are shown only in ordering rounds, where they always apply. */
+(function(){
+const st=(...x)=>x;
+APP.HELP={
+ "gifts-from-allah":{steps:st("Look at the picture.","Tap the answer. A grown-up can read the words with you.","Read why: everything we have comes from Allah, al-Khāliq.")},
+ "names-match":{steps:st("Read the Name of Allah or the example.","Choose the matching meaning or Name.","Read the explanation to learn more about each Name.")},
+ "roots-branches":{steps:st("First, tap the five roots of Islam in order.","Then sort beliefs (roots) from practices (branches).","Match each root or branch to its meaning."),
+  hints:["Tawḥīd comes first: Allah is One.","Nubuwwah (Prophets) comes before Imāmah (Imams).","The Day of Judgement (Maʿād) comes last."]},
+ "fair-or-not":{steps:st("Read the question about Allah's justice.","Choose the answer that fits the Qur'an.","Read the verse in the explanation.")},
+ "why-a-guide":{steps:st("Read the short story.","Answer the three steps in order.","See how each step leads to why we need Prophets and Imams.")},
+ "wudu-steps":{steps:st("First, tap the six steps of wuḍūʾ in order.","Then answer: what comes after this step?","If you get stuck, the game shows you the right order."),
+  hints:["We start with the intention, then wash the face.","Right comes before left.","We wash the face and arms, then wipe the head and feet."]},
+ "prayer-positions-boys":{steps:st("Look at the picture of the position.","Tap its name, or tap the picture that matches the name.","Learn the order of the positions in the second rakʿah.")},
+ "prayer-positions-girls":{steps:st("Look at the picture of the position.","Tap its name, or tap the picture that matches the name.","Learn the order of the positions in the second rakʿah.")},
+ "prayer-clock":{steps:st("First, tap the five daily prayers in order through the day.","Then answer questions about prayer times and rakʿahs."),
+  hints:["The day's first prayer is at dawn.","Maghrib is just after sunset, and ʿIshāʾ is at night."]},
+ "fast-check":{steps:st("Read each case.","Decide what the ruling is.","Only rulings all our marājiʿ agree on are used. For anything else, check your marjaʿ.")},
+ "valid-or-not":{steps:st("Read each case.","Decide whether it is valid.","Only rulings all our marājiʿ agree on are used. For anything else, check your marjaʿ.")},
+ "ask-the-expert":{steps:st("Read each everyday question.","Choose the best answer.","See how taqlīd follows the same idea as asking an expert.")},
+ "line-up-14":{steps:st("In the ordering rounds, tap the four Imams from first to last.","In the question rounds, choose the Imam who matches the title or fact.","Play again to learn all twelve Imams.")},
+ "under-the-cloak":{steps:st("A grown-up can tell the story of the cloak first.","Listen to each question.","Tap the answer.")},
+ "lives-of-the-imams":{steps:st("Read the event.","Choose whose life it is from, or the value it teaches.","Read the source in the explanation.")},
+ "the-day-of-ghadir":{steps:st("Each question has three steps.","Answer each step to move through the story of Ghadīr.","Read the verses in the explanations.")},
+ "prophet-clues":{steps:st("Read the clue (or ask a grown-up to read it).","Think of the story from the Qur'an.","Tap the Prophet the clue is about.")},
+ "story-and-lesson":{steps:st("Read about a Prophet.","Choose the lesson his story teaches, or the Prophet who taught that lesson.","Read the verse in the explanation.")},
+ "prophets-timeline":{steps:st("Read the four events.","Tap them in the order they happened.","Check the order in the explanation.")},
+ "say-it-right":{steps:st("Look at the picture.","Listen to the question.","Tap what we say at that moment.")},
+ "month-wheel":{steps:st("Tap four Islamic months in order.","Then say which month each special day is in."),
+  hints:["The year starts with Muḥarram and ends with Dhul-Ḥijjah.","Rajab, Shaʿbān and Ramaḍān come one after another."]},
+ "surah-meanings":{steps:st("Read the question about a short sūrah.","Choose its meaning or main idea.","Try reciting the sūrah afterwards.")},
+ "kind-choice":{steps:st("Look at the picture.","Listen to the question.","Tap the kind choice.")},
+ "better-words":{steps:st("Read the short story.","Choose the best thing to do.","Read the verse in the explanation.")},
+ "real-life-choices":{steps:st("Read the situation.","Choose what you think is the best thing to do.","Read the explanation and the verse it comes from.")}
+};
+})();
+
+/* ================= iLearnDeen games 1: Unit 1 (beliefs) and Unit 2 (worship) =================
+   Content rules: only Shia (Imāmī) teachings, only points all marājiʿ agree on,
+   no pictures of the Prophets, the Imams, Sayyidah Fāṭimah (ʿa) or other holy figures.
+   Every item lists its original source for the scholars' review. */
+(function(){
+const A=APP,S=A.S,Q=A.Q,T=A.T;
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+/* ---------- Gifts from Allah (K–2, Unit 1, outcome 1.1) ----------
+   Message: Allah is al-Khāliq, the Creator of everything. Even what people make comes from His gifts:
+   the materials He created and the minds and hands He gave us. */
+const SRC={cow:["🐄","the cow"],bee:["🐝","the bee"],wheat:["🌾","wheat plants"],tree:["🌳","trees"],sheep:["🐑","the sheep"],sand:["🏖️","sand"],hen:["🐔","the hen"],orange:["🍊","orange trees"],sea:["🌊","the sea"],rain:["🌧️","the rain"],cotton:["🌱","cotton plants"],cacao:["🫘","cacao trees"]};
+/* wrong answers that could also be right are never offered together */
+const NOT_WITH={tree:["orange","cacao"],orange:["tree"],cacao:["tree","cow"],cow:["sheep"],sheep:["cow","cotton"],cotton:["sheep"],wheat:["hen"],sea:["rain"],rain:["sea"]};
+const BLESS_REF="Qur'an 14:34: “If you tried to count Allah's blessings, you could never count them.”";
+const GIFTS=[["🥛","milk","cow","Qur'an 16:66","It is white, and it comes from an animal that says “moo”."],["🍯","honey","bee","Qur'an 16:68–69","A small buzzing insect makes it from flowers."],["🍞","bread","wheat",BLESS_REF,"Bread is made from flour. Flour comes from a plant that grows in fields."],["📄","paper","tree",BLESS_REF,"Paper is made from wood."],["🧶","a warm wool jumper","sheep","Qur'an 16:80","Wool is the soft, curly coat of a farm animal."],["🪟","glass for windows","sand",BLESS_REF,"Glass is made by heating something you find on the beach."],["🥚","eggs","hen",BLESS_REF,"A farm bird lays them."],["🧃","orange juice","orange",BLESS_REF,"Look at the name of the juice."],["🧂","salt","sea",BLESS_REF,"Sea water tastes salty."],["🚰","water to drink","rain","Qur'an 16:10","It falls from the clouds."],["👕","a cotton T-shirt","cotton",BLESS_REF,"Cotton is soft and fluffy, and it grows on a plant."],["🍫","chocolate","cacao",BLESS_REF,"Chocolate is made from beans that grow on a tree."],["🪑","a wooden chair","tree",BLESS_REF,"Wood comes from…?"],["🧀","cheese","cow","Qur'an 16:66","Cheese is made from milk."]];
+const ONLY_ALLAH=[["☀️","the sun"],["🌙","the moon"],["🌧️","rain"],["🐦","a living bird"],["⭐","the stars"],["🌊","the sea"],["⛰️","a mountain"],["🦋","a living butterfly"],["🌸","a growing flower"],["🪰","even one living fly"]];
+const PEOPLE_MAKE=[["🚲","a bike"],["🪑","a chair"],["🚗","a car"],["🏠","a house"],["⚽","a ball"],["📱","a phone"],["✏️","a pencil"],["🧸","a teddy bear"]];
+const giftQ=()=>{const [p,n,k,ref,h]=S.pick(GIFTS);const wrong=S.shuffle(Object.keys(SRC).filter(x=>x!==k&&!(NOT_WITH[k]||[]).includes(x))).slice(0,2);
+  return {b:["k2"],pic:p,q:`Where does <strong>${n}</strong> come from?`,c:[k,...wrong].map(x=>T(SRC[x][0],cap(SRC[x][1]))),e:`Allah created ${SRC[k][1]}, and from them we get ${n}. Alḥamdulillāh!`,ref,h}};
+const onlyQ=()=>{const [p,n]=S.pick(ONLY_ALLAH),made=S.shuffle(PEOPLE_MAKE).slice(0,2);
+  return {b:["k2"],q:"<strong>Which one could no person ever make?</strong>",c:[T(p,cap(n)),...made.map(([mp,mn])=>T(mp,cap(mn)))],e:`No one can create ${n}. Only Allah can. People can make things like ${made[0][1]}, but only with the minds, hands and materials Allah gave them.`,ref:"Qur'an 22:73: those worshipped besides Allah could never create even a fly.",h:"People can build things in a factory. Which one could never be built in a factory?"}};
+const mindQ=()=>{const [p,n]=S.pick(PEOPLE_MAKE);
+  return {b:["k2"],pic:p,q:`To make <strong>${n}</strong>, people used…`,c:[T("🧠","The mind and hands Allah gave them"),T("💤","Nothing; it made itself"),T("🍀","Just luck")],e:"Allah gave us minds to think, and hands to work. People use them, with materials Allah created, to make things. So we thank Allah for everything we make.",ref:"Qur'an 16:78: Allah gave you hearing, sight and hearts, so that you may be thankful.",h:"Can something make itself? Think about what you use when you build with blocks."}};
+const giftsSet=A.addSet({id:"gifts-from-allah",title:"Gifts from Allah",bank:[giftQ()],take:(band,n)=>S.shuffle(Array.from({length:n},(_,i)=>[giftQ,giftQ,onlyQ,mindQ,giftQ][i%5]()))});
+A.reg({id:"gifts-from-allah",title:"Gifts from Allah",pic:"🎁",star:true,mode:"At home or in class",bands:["k2"],units:[["u1",["1.1"]]],
+ topics:"Allah creator al-Khaliq creation blessings nature gifts thankful",
+ blurb:"Everything comes from Allah. Find where our food and things come from.",
+ how:"Look at the picture and tap the answer. You will find out how everything we have comes from Allah, the Creator.",
+ mount(el){A.bankQuiz(el,{id:"gifts-from-allah",set:giftsSet,n:5})}});
+
+/* ---------- Names Match (3–5, Unit 1, outcomes 1.1 and 1.4) ---------- */
+const NAMES=[
+ ["ar-Raḥmān","the Most Kind","Allah's kindness reaches every creature, believers and others.","Allah gives sunshine and rain to everyone in the world.","Qur'an 1:3"],
+ ["ar-Raḥīm","the Most Merciful","Allah has special mercy for the believers.","Allah forgives a believer who says sorry and means it.","Qur'an 1:3"],
+ ["al-Khāliq","the Creator","Allah made everything from nothing.","Allah made the stars, the oceans and you.","Qur'an 59:24"],
+ ["ar-Razzāq","the Provider","Allah gives every creature what it needs to live.","A tiny bird finds food every morning.","Qur'an 51:58"],
+ ["al-ʿAlīm","the All-Knowing","Allah knows everything, even what we hide in our hearts.","Allah knows what you are thinking right now.","Qur'an 2:29"],
+ ["as-Samīʿ","the All-Hearing","Allah hears every sound and every duʿā.","Allah hears your duʿā even when you whisper it.","Qur'an 2:127"],
+ ["al-Baṣīr","the All-Seeing","Allah sees everything, even in the dark.","Allah sees an ant walking on a black stone at night.","Qur'an 42:11"],
+ ["al-Ghafūr","the Forgiving","Allah forgives again and again when we truly repent.","Someone makes a mistake, says sorry to Allah and tries to change.","Qur'an 39:53"],
+ ["al-Karīm","the Generous","Allah gives much more than we deserve.","Allah gives us blessings we never even asked for.","Qur'an 82:6"],
+ ["al-Qadīr","the All-Powerful","Nothing is too hard for Allah.","Allah can make a huge mountain or a tiny seed grow.","Qur'an 2:20"],
+ ["al-Ḥakīm","the All-Wise","Everything Allah does has wisdom in it.","Even when we don't understand a test, Allah knows why.","Qur'an 2:32"],
+ ["al-Wadūd","the Loving","Allah loves those who do good.","Allah loves people who are kind to others.","Qur'an 85:14"],
+ ["al-Quddūs","the Most Pure","Allah is perfect, with no fault at all.","Allah never makes a mistake.","Qur'an 59:23"],
+ ["al-ʿAdl","the Just","Allah is always fair and never wrongs anyone.","Every good deed is rewarded, even a tiny one.","Qur'an 4:40"]
+];
+const nameQ=()=>{const k=S.int(0,NAMES.length-1),n=NAMES[k],w=S.shuffle(NAMES.filter((_,j)=>j!==k)).slice(0,2);
+  return S.r()<0.5
+   ?{b:["35","69"],pic:"✨",q:`What does the Name <strong>${n[0]}</strong> mean?`,c:[cap(n[1]),...w.map(x=>cap(x[1]))],e:`${n[0]} means ${n[1]}. ${n[2]}`,ref:n[4],h:`Here is an example: ${n[3]}`}
+   :{b:["35","69"],pic:"💡",q:`“${n[3]}” Which Name of Allah does this remind you of?`,c:[`${n[0]} (${n[1]})`,...w.map(x=>`${x[0]} (${x[1]})`)],e:`${n[0]} means ${n[1]}. ${n[2]}`,ref:n[4],h:"Read the meaning in brackets after each Name."}};
+const namesSet=A.addSet({id:"names-match",title:"Names Match",bank:[nameQ()],take:(band,n)=>Array.from({length:n},nameQ)});
+A.reg({id:"names-match",title:"Names Match",pic:"✨",mode:"At home or in class",bands:["35"],units:[["u1",["1.1","1.4"]]],
+ topics:"names of Allah asma ul husna Rahman Rahim Khaliq Razzaq Alim Sami Basir Ghafur",
+ blurb:"Match the Beautiful Names of Allah to their meanings.",
+ how:"Match each Name of Allah to its meaning or to an everyday example.",
+ mount(el){A.bankQuiz(el,{id:"names-match",set:namesSet,n:5})}});
+
+/* ---------- Roots and Branches Tree (3–5, Units 1 and 2, outcomes 1.3 and 2.4) ---------- */
+const USUL=[["Tawḥīd","Allah is One"],["ʿAdl","Allah is Just"],["Nubuwwah","Allah sent Prophets"],["Imāmah","Allah chose the Imams to guide us"],["Maʿād","The Day of Judgement"]];
+const FURU=[["Ṣalāh","the daily prayers"],["Ṣawm","fasting"],["Ḥajj","the pilgrimage to Makkah"],["Zakāt","giving charity from certain wealth"],["Khums","giving one fifth of yearly savings"],["Jihād","striving in the way of Allah"],["Amr bil-maʿrūf","encouraging what is good"],["Nahy ʿan al-munkar","stopping what is wrong"],["Tawallī","loving Allah's friends, the Prophet (ṣ) and his family"],["Tabarrī","staying away from the enemies of Allah"]];
+const TREE_REF="Shaykh al-Ṣadūq, al-Iʿtiqādāt; the books of rulings of the marājiʿ";
+const treeQ=()=>{const t=S.int(0,2);
+  if(t===0){const all=USUL.map(u=>[u,"root"]).concat(FURU.map(f=>[f,"branch"]));const [it,kind]=S.pick(all);
+    return {b:["35"],pic:"🌳",q:`Is <strong>${it[0]}</strong> (${it[1]}) a root or a branch?`,keep:true,a:kind==="root"?0:1,c:[T("🌱","Root: a belief (Uṣūl al-Dīn)"),T("🍃","Branch: a practice (Furūʿ al-Dīn)")],e:`${it[0]} is ${kind==="root"?"one of the five roots (Uṣūl al-Dīn): what we believe.":"one of the ten branches (Furūʿ al-Dīn): what we do."}`,ref:TREE_REF,h:"Roots are what we believe in our hearts. Branches are actions we do."}}
+  const pool=t===1?USUL:FURU,k=S.int(0,pool.length-1),w=S.shuffle(pool.filter((_,j)=>j!==k)).slice(0,2);
+  return {b:["35"],pic:t===1?"🌱":"🍃",q:`Which ${t===1?"root":"branch"} means <strong>${pool[k][1]}</strong>?`,c:[pool[k][0],...w.map(x=>x[0])],e:`${pool[k][0]} means ${pool[k][1]}.`,ref:TREE_REF,h:t===1?"Tawḥīd is about Allah being One. Nubuwwah is about Prophets.":"Ṣalāh is prayer, Ṣawm is fasting and Ḥajj is the pilgrimage."}};
+const treeSet=A.addSet({id:"roots-branches",title:"Roots and Branches Tree",bank:[treeQ()],take:(band,n)=>Array.from({length:n},treeQ)});
+A.reg({id:"roots-branches",title:"Roots and Branches Tree",pic:"🌳",mode:"At home or in class",bands:["35"],units:[["u1",["1.3"]],["u2",["2.4"]]],
+ topics:"usul al din furu al din roots branches tawhid adl nubuwwah imamah maad salah sawm hajj khums",
+ blurb:"Build the tree of Islam: five roots we believe, ten branches we do.",
+ how:"First, tap the five roots of Islam in order. Then sort roots and branches and match their meanings.",
+ mount(el){A.rounds(el,{id:"roots-branches",n:4,max:10,render(body,api){
+   if(api.round===0){A.orderTask(body,api,{prompt:"Tap the five roots of Islam (Uṣūl al-Dīn) in order.",items:USUL.map(u=>`🌱 ${u[0]}: ${u[1]}`),explain:`<p>Tawḥīd, ʿAdl, Nubuwwah, Imāmah, Maʿād.</p><p class="ref">${TREE_REF}</p>`});return}
+   A.askTask(body,api,A.asQ(treeQ()))}})}});
+
+/* ---------- Fair or Not? (6–9, Unit 1, outcome 1.6) ---------- */
+const FAIR=[
+ Q(["69"],"🧗","Sara is going through a hard time and asks: “Is Allah being unfair to me?” Which answer fits Islamic teaching?",["Allah never gives anyone more than they can bear, and tests help us grow","Allah forgot about her","Some people are just unlucky"],"Allah does not burden any soul beyond what it can bear. Tests are a chance to grow and earn reward.","Qur'an 2:286","Look for the answer that matches “Allah does not burden a soul beyond its capacity”."),
+ Q(["69"],"⚖️","Two students sit a test. One studies hard, the other cheats and gets a higher mark. How does Allah see it?",["Allah sees every deed; even an atom's weight of good or bad will be seen","Only the mark matters","Allah only cares about big deeds"],"Whoever does an atom's weight of good will see it, and whoever does an atom's weight of bad will see it.","Qur'an 99:7–8","Think of Sūrah al-Zalzalah: even the tiniest deed counts."),
+ Q(["69"],"🕵️","Someone did something wrong and was never caught. Does that mean it doesn't matter?",["No. Allah will set up the scales of justice and no one will be wronged","Yes, if nobody saw, it's fine","Only if they get caught later"],"Allah will set up the scales of justice on the Day of Judgement, and no soul will be wronged in anything.","Qur'an 21:47","Who sees everything, even when no person does?"),
+ Q(["69"],"🧭","Does Allah force people to do bad things?",["No. Allah gave us free will and showed us the right way","Yes, everything bad is forced","We have no choices at all"],"Allah showed us the way; we can choose to be thankful or not. The Imams taught that it is “a matter between two matters”: we are neither forced nor left completely on our own.","Qur'an 76:3; al-Kulaynī, al-Kāfī, Book of Tawḥīd","Remember: a just judge would never punish someone for something they were forced to do."),
+ Q(["69"],"⏳","Why doesn't Allah punish wrongdoers straight away?",["He gives people time to repent and change","He doesn't notice","He doesn't mind"],"If Allah punished people immediately for everything, no one would be left. He gives time so people can turn back to Him.","Qur'an 35:45","Allah is al-Ghafūr, the Forgiving. What does a forgiving person give others?"),
+ Q(["69"],"🤲","Someone says: “I've done too many bad things; Allah will never forgive me.” What does the Qur'an say?",["Never despair of Allah's mercy; He forgives all sins for those who sincerely repent","That's true, it's too late","Only small sins can be forgiven"],"Allah says: do not despair of the mercy of Allah; He forgives all sins.","Qur'an 39:53","Allah's justice comes together with His mercy."),
+ Q(["69"],"🪙","Does Allah ever wrong anyone, even a tiny bit?",["Never, not even by the weight of an atom","Sometimes, by mistake","Only people who don't pray"],"Allah does not wrong anyone even by the weight of an atom, and He multiplies good deeds.","Qur'an 4:40","Allah is al-ʿAdl, the Just."),
+ Q(["69"],"🎒","Does Allah ask a person to do something impossible for them?",["No. Duties match what a person is able to do","Yes, to test them","Only on Fridays"],"Allah only asks of each person what they are able to do. For example, someone who cannot stand may pray sitting.","Qur'an 2:286","Think about how ṣalāh is made easier for someone who is ill.")
+];
+const fairSet=A.addSet({id:"fair-or-not",title:"Fair or Not?",bank:FAIR});
+A.reg({id:"fair-or-not",title:"Fair or Not?",pic:"⚖️",mode:"At home or in class",bands:["69"],units:[["u1",["1.6"]]],
+ topics:"adl justice of Allah free will tests trials mercy forgiveness",
+ blurb:"Real questions about Allah's justice. What does Islam teach?",
+ how:"Read each question about Allah's justice and choose the answer that matches the Qur'an.",
+ mount(el){A.bankQuiz(el,{id:"fair-or-not",set:fairSet,n:5})}});
+
+/* ---------- Why a Guide? (6–9, Unit 1, outcome 1.5) ---------- */
+const GUIDE_CASES=[
+ {pic:"🏜️",s:"A group is crossing a huge desert with no map. Paths split in every direction.",g:"Someone who knows the desert perfectly and never leads people the wrong way",w:["The loudest person in the group","Whoever walks fastest"]},
+ {pic:"✈️",s:"You are about to fly across the ocean in a plane.",g:"A fully trained pilot who never makes a mistake with the controls",w:["A passenger who has watched videos of flying","Anyone who wants to try"]},
+ {pic:"🧗",s:"Your class is climbing a dangerous mountain trail in fog.",g:"An expert guide who knows every step of the trail and never misleads anyone",w:["A friend who climbed a small hill once","Nobody; everyone guesses"]}
+];
+const guideQ=()=>{const c=S.pick(GUIDE_CASES);const m=A.mc([c.g,...c.w],0);
+  return {pic:c.pic,html:`<p>${c.s}</p>`,hint:"Think about what happens if a guide gets the way wrong.",steps:[
+   {html:"<p><strong>What kind of guide would you trust with your life?</strong></p>",choices:m.choices,answer:m.answer,explain:"<p>When the way is dangerous, we need a guide who truly knows the way and won't mislead us.</p>"},
+   (()=>{const n=A.mc(["Prophets and, after the last Prophet (ṣ), the Imams","Anyone who is famous","Only our own guesses"],0);return {html:"<p><strong>For the journey of life, who are the guides Allah sent?</strong></p>",choices:n.choices,answer:n.answer,hint:"Think of the roots Nubuwwah and Imāmah.",explain:"<p>Allah sent a guide to every people. After Prophet Muḥammad (ṣ), the Imams from his family guide the believers.</p><p class=\"ref\">Qur'an 13:7; 16:36</p>"}})(),
+   (()=>{const n=A.mc(["So we can fully trust everything they teach","So they look important","There is no reason"],0);return {html:"<p><strong>Why must a guide from Allah be maʿṣūm (free of sin and error)?</strong></p>",choices:n.choices,answer:n.answer,hint:"If a guide could make mistakes in religion, could we be sure which teachings were right?",explain:"<p>If a guide could sin or make mistakes in religion, we could never be sure their guidance is right. Allah purified the Ahl al-Bayt.</p><p class=\"ref\">Qur'an 33:33 (the verse of purification); 4:59</p>"}})()
+  ]}};
+A.reg({id:"why-a-guide",title:"Why a Guide?",pic:"🧭",mode:"In class",bands:["69"],units:[["u1",["1.5"]]],
+ topics:"nubuwwah imamah prophets imams guidance ismah infallibility",
+ blurb:"A story in three steps: why we need Prophets and Imams.",
+ how:"Each story has three steps. Choose the best answer at each step to see why Allah sends guides.",
+ mount(el){A.quiz(el,{id:"why-a-guide",n:3,gen:()=>guideQ()})}});
+
+/* ---------- Wuḍūʾ Steps (K–2, Unit 2, outcome 2.1) ----------
+   Only the obligatory (wājib) acts, in the order all marājiʿ agree on. */
+const WUDU=[
+  "💭 Make the intention: “I do wuḍūʾ to get closer to Allah.”",
+  "💧 Wash your face, from the top of the forehead down to the chin.",
+  "💪 Wash your right arm, from the elbow down to the fingertips.",
+  "💪 Wash your left arm, from the elbow down to the fingertips.",
+  "✋ Wipe the front of your head with your wet right hand.",
+  "🦶 Wipe the top of your right foot, then your left foot, starting at the toes."
+];
+const WUDU_SHORT=["💭 Intention","💧 Wash the face","💪 Wash the right arm","💪 Wash the left arm","✋ Wipe the head","🦶 Wipe the feet"];
+const WUDU_REF="Qur'an 5:6 (the verse of wuḍūʾ)";
+const WUDU_HINT=["We always start with the intention in our heart.","After the intention, we wash the part of the body we see in the mirror.","Right comes before left.","Once both arms are washed, we stop washing and start wiping: head first.","The very last step is at the bottom of your body."];
+A.reg({id:"wudu-steps",title:"Wuḍūʾ Steps",pic:"💧",star:true,mode:"At home or in class",bands:["k2"],units:[["u2",["2.1"]]],
+ topics:"wudu wudhu ablution steps order prayer cleanliness",
+ blurb:"Put the steps of wuḍūʾ in the right order.",
+ how:"Tap the steps of wuḍūʾ in the right order, from first to last. Then answer: what comes next?",
+ mount(el){let asks=[];
+  A.rounds(el,{id:"wudu-steps",n:4,max:10,onStart(){asks=S.shuffle([0,1,2,3,4]).slice(0,3)},render(body,api){
+    if(api.round===0){A.orderTask(body,api,{prompt:"Tap the steps of wuḍūʾ in order.",items:WUDU_SHORT,explain:`<p>We wash the face, then the right arm, then the left arm. Then we wipe the head and the feet with the water still on our hands.</p><p class="ref">${WUDU_REF}</p>`});return}
+    const k=asks[api.round-1],wrong=S.shuffle([0,1,2,3,4,5].filter(j=>j!==k&&j!==k+1)).slice(0,2),m=A.mc([k+1,...wrong].map(j=>WUDU_SHORT[j]),0);
+    A.askTask(body,api,{html:`<p class="stem"><strong>What comes after this step?</strong></p><p class="stem" style="background:var(--mean-soft);border-radius:10px;padding:10px 12px">${WUDU[k]}</p>`,choices:m.choices,answer:m.answer,hint:WUDU_HINT[k],explain:`<p>Next comes: ${WUDU[k+1]}</p><p class="ref">${WUDU_REF}</p>`});
+  }});
+ }});
+
+/* ---------- Prayer Positions: boys' and girls' versions (K–2, Unit 2, outcome 2.2) ----------
+   Simple stick figures with no faces. The steps are the same for everyone; the pictures show a boy or a girl. */
+const fig=(pos,girl)=>{const st='stroke="currentColor" stroke-width="5" stroke-linecap="round" fill="none"';
+  const head=(x,y)=>girl?`<circle cx="${x}" cy="${y}" r="9" fill="var(--mean)"/>`:`<circle cx="${x}" cy="${y}" r="7" fill="currentColor"/>`;
+  const P={
+   qiyam:`${girl?'<path d="M50 24 L36 90 L64 90 Z" fill="var(--mean)" opacity=".55"/>':''}${head(50,14)}<path ${st} d="M50 24 V58 M50 30 L43 55 M50 30 L57 55 M50 58 L45 92 M50 58 L55 92"/>`,
+   qunut:`${girl?'<path d="M50 24 L36 90 L64 90 Z" fill="var(--mean)" opacity=".55"/>':''}${head(50,14)}<path ${st} d="M50 24 V58 M50 32 L40 40 L41 26 M50 32 L60 40 L59 26 M50 58 L45 92 M50 58 L55 92"/>`,
+   ruku:`${girl?'<path d="M36 50 L27 92 L45 92 Z" fill="var(--mean)" opacity=".55"/>':''}${head(80,50)}<path ${st} d="M36 52 L72 52 M36 52 L36 92 M68 53 L38 70"/>`,
+   sajdah:`${girl?'<path d="M36 62 L20 93 L44 93 Z" fill="var(--mean)" opacity=".55"/>':''}${head(78,86)}<path ${st} d="M16 92 L40 92 L36 62 L68 80 M64 81 L70 93"/>`,
+   julus:`${girl?'<path d="M28 76 L14 93 L52 93 Z" fill="var(--mean)" opacity=".55"/>':''}${head(32,36)}<path ${st} d="M18 92 L48 92 M26 80 L30 46 M26 80 L48 90 M30 54 L44 82"/>`
+  };
+  return `<svg viewBox="0 0 100 100" width="100%" style="max-width:96px;color:var(--ink)" aria-hidden="true">${P[pos]}</svg>`};
+const POS=[
+ {id:"qiyam",name:"Qiyām (standing)",h:"The body is straight up, like when we stand in line.",e:"In qiyām we stand straight and recite Sūrah al-Ḥamd and another sūrah."},
+ {id:"ruku",name:"Rukūʿ (bowing)",h:"The back is flat like a table, and the hands are on the knees.",e:"In rukūʿ we bow with our hands on our knees and praise Allah."},
+ {id:"sajdah",name:"Sajdah (forehead on the ground)",h:"The forehead touches the ground.",e:"In sajdah we put our forehead on the ground, the closest we come to Allah in ṣalāh."},
+ {id:"julus",name:"Julūs (sitting)",h:"The person is sitting on the floor.",e:"We sit between the two sajdahs and for the tashahhud."},
+ {id:"qunut",name:"Qunūt (raising the hands in duʿā)",h:"The hands are up in front of the face, like making duʿā.",e:"In the second rakʿah, before rukūʿ, we raise our hands for qunūt and make duʿā."}
+];
+/* order of positions in the second rakʿah */
+const RAKAH=["qiyam","qunut","ruku","sajdah","julus","sajdah"];
+const SALAH_REF="Qur'an 22:77 (bow and prostrate); the books of rulings of the marājiʿ";
+const posName=id=>POS.find(p=>p.id===id).name;
+const posQ=girl=>()=>{const t=S.int(0,2),p=S.pick(POS),w=S.shuffle(POS.filter(x=>x!==p)).slice(0,2);
+  if(t===0)return {b:["k2"],pic:fig(p.id,girl).replace("max-width:96px","max-width:150px"),q:"<strong>What is this position called?</strong>",c:[p.name,...w.map(x=>x.name)],e:p.e,ref:SALAH_REF,h:p.h};
+  if(t===1)return {b:["k2"],q:`<strong>Tap the picture of ${p.name}.</strong>`,c:[T(fig(p.id,girl),""),...w.map(x=>T(fig(x.id,girl),""))],e:p.e,ref:SALAH_REF,h:p.h};
+  const k=S.int(0,RAKAH.length-2),nx=RAKAH[k+1],w2=S.shuffle(POS.filter(x=>x.id!==nx&&x.id!==RAKAH[k])).slice(0,2);
+  return {b:["k2"],pic:fig(RAKAH[k],girl).replace("max-width:96px","max-width:150px"),q:`In the second rakʿah, what comes after <strong>${posName(RAKAH[k])}</strong>?`,c:[posName(nx),...w2.map(x=>x.name)],e:"Second rakʿah: qiyām → qunūt → rukūʿ → sajdah → sitting → sajdah.",ref:SALAH_REF,h:["After qiyām in the second rakʿah, we raise our hands for duʿā.","After qunūt we bow.","After rukūʿ we stand up, then go down to the ground.","Between the two sajdahs we sit.","After sitting, we do the second sajdah."][k]}};
+[["boys",false,"👦"],["girls",true,"👧"]].forEach(([v,girl,pic])=>{
+  const set=A.addSet({id:"prayer-positions-"+v,title:`Prayer Positions (${v}' version)`,bank:[posQ(girl)()],take:(band,n)=>Array.from({length:n},posQ(girl))});
+  A.reg({id:"prayer-positions-"+v,title:`Prayer Positions (${v}' version)`,pic,mode:"At home or in class",bands:["k2"],units:[["u2",["2.2"]]],
+   topics:`salah prayer positions qiyam ruku sajdah julus qunut ${v}`,
+   blurb:`Learn the positions of ṣalāh, with pictures of a ${girl?"girl":"boy"}.`,
+   how:"Look at the picture and tap the name of the position, or tap the picture that matches the name. The steps are the same for boys and girls.",
+   mount(el){A.bankQuiz(el,{id:"prayer-positions-"+v,set,n:5})}});
+});
+
+/* ---------- Prayer Clock (3–5, Unit 2, outcome 2.3) ---------- */
+const PRAYERS=[["Fajr","🌅","at dawn, before sunrise",2],["Ẓuhr","☀️","at midday",4],["ʿAṣr","🌤️","in the afternoon",4],["Maghrib","🌇","after sunset",3],["ʿIshāʾ","🌙","at night",4]];
+const PRAYER_REF="Qur'an 17:78; 11:114";
+const clockQ=()=>{const t=S.int(0,2),k=S.int(0,4),p=PRAYERS[k];
+  if(t===0){const opts=S.shuffle([2,3,4].filter(x=>x!==p[3])).slice(0,2);return {b:["35"],pic:p[1],q:`How many rakʿahs is <strong>${p[0]}</strong> prayer?`,c:[String(p[3]),...opts.map(String)],e:`${p[0]} has ${p[3]} rakʿahs. In total the five daily prayers have 17 rakʿahs.`,ref:PRAYER_REF,h:"Fajr is the shortest prayer and Maghrib has an odd number."}}
+  if(t===1){const w=S.shuffle(PRAYERS.filter((_,j)=>j!==k)).slice(0,2);return {b:["35"],pic:p[1],q:`Which prayer do we pray <strong>${p[2]}</strong>?`,c:[p[0],...w.map(x=>x[0])],e:`${p[0]} is prayed ${p[2]}.`,ref:PRAYER_REF,h:"Fajr is at dawn, Ẓuhr at midday and ʿIshāʾ at night."}}
+  return {b:["35"],pic:"🕰️",q:"Which two prayers may be prayed one straight after the other, at the start of the afternoon?",c:["Ẓuhr and ʿAṣr","Fajr and Ẓuhr","ʿAṣr and Maghrib"],e:"Ẓuhr and ʿAṣr can be prayed together, and so can Maghrib and ʿIshāʾ, as the Prophet (ṣ) sometimes did.",ref:"al-Kulaynī, al-Kāfī, Book of Ṣalāh",h:"They are the midday and afternoon prayers."}};
+const clockSet=A.addSet({id:"prayer-clock",title:"Prayer Clock",bank:[clockQ()],take:(band,n)=>Array.from({length:n},clockQ)});
+A.reg({id:"prayer-clock",title:"Prayer Clock",pic:"🕰️",mode:"At home or in class",bands:["35"],units:[["u2",["2.3"]]],
+ topics:"daily prayers times rakahs fajr zuhr asr maghrib isha salah",
+ blurb:"Put the five daily prayers on the clock and count their rakʿahs.",
+ how:"First, tap the five daily prayers in order through the day. Then answer questions about their times and rakʿahs.",
+ mount(el){A.rounds(el,{id:"prayer-clock",n:4,max:10,render(body,api){
+   if(api.round===0){A.orderTask(body,api,{prompt:"Tap the five daily prayers in order, starting at dawn.",items:PRAYERS.map(p=>`${p[1]} ${p[0]}`),explain:`<p>Fajr (2), Ẓuhr (4), ʿAṣr (4), Maghrib (3), ʿIshāʾ (4).</p><p class="ref">${PRAYER_REF}</p>`});return}
+   A.askTask(body,api,A.asQ(clockQ()))}})}});
+
+/* ---------- Fast Check (3–5, Unit 2, outcome 2.5) — only rulings all marājiʿ agree on ---------- */
+const FAST_REF="Qur'an 2:183–187; the books of rulings of the marājiʿ";
+const FAST=[
+ Q(["35"],"🍎","While fasting, Ali forgets and eats an apple. When he remembers, he stops. Is his fast still okay?",["Yes, eating by mistake does not break the fast","No, he must start again tomorrow","Only if nobody saw him"],"Eating or drinking by mistake, when you truly forgot, does not break the fast. Stop as soon as you remember.",FAST_REF,"Did he eat on purpose?"),
+ Q(["35"],"🥤","Does drinking water on purpose during the day break the fast?",["Yes","No","Only cold water"],"Eating and drinking on purpose between dawn and maghrib break the fast.",FAST_REF,"Fasting means no food and no drink during the day."),
+ Q(["35"],"🪥","Zahra brushes her teeth while fasting and is careful not to swallow anything. Is her fast okay?",["Yes, as long as nothing is swallowed","No, it always breaks the fast","Only with no toothpaste"],"Brushing is fine as long as nothing goes down the throat.",FAST_REF,"What breaks the fast is swallowing food or drink."),
+ Q(["35"],"🌅","When does the fast start each day?",["At dawn (Fajr)","At sunrise","At midday"],"The fast starts at dawn, when the time of Fajr prayer begins.","Qur'an 2:187","It starts at the same time as the first prayer of the day."),
+ Q(["35"],"🌇","When do we break our fast (ifṭār)?",["At the time of Maghrib","When we feel hungry","At ʿAṣr"],"We complete the fast until the night, at the time of Maghrib.","Qur'an 2:187: “then complete the fast until the night”","It's the time of the prayer after sunset."),
+ Q(["35"],"🤒","Someone is ill and fasting would harm them. What should they do?",["Not fast now, and make up the days later when well","Fast anyway, even if it harms them","Never make up the days"],"Allah wants ease for us: a person who is ill makes up the fasts on other days.","Qur'an 2:184–185","Allah says He wants ease for us, not hardship."),
+ Q(["35"],"🍽️","What do we call the meal before dawn in Ramaḍān?",["Saḥūr","Ifṭār","ʿĪd"],"Saḥūr is the meal before dawn; ifṭār is the meal when we break the fast.","al-Kulaynī, al-Kāfī, Book of Fasting","Ifṭār is the meal at the end of the day, so this is the other one."),
+ Q(["35"],"👅","Mum tastes the soup with the tip of her tongue while cooking, then spits it out without swallowing. Is her fast okay?",["Yes, nothing was swallowed","No, tasting always breaks it","Only if the soup was cold"],"Tasting food without swallowing anything does not break the fast.",FAST_REF,"What matters is whether anything went down the throat."),
+ Q(["35"],"🗣️","Which of these breaks the fast, according to all our marājiʿ?",["Telling a lie about Allah or the Prophet (ṣ) on purpose","Smiling at a friend","Reading the Qur'an"],"Deliberately telling lies about Allah, the Prophet (ṣ) or the Imams breaks the fast.",FAST_REF,"Two of the choices are good deeds.")
+];
+const fastSet=A.addSet({id:"fast-check",title:"Fast Check",bank:FAST});
+A.reg({id:"fast-check",title:"Fast Check",pic:"🌙",mode:"At home or in class",bands:["35"],units:[["u2",["2.5"]]],
+ topics:"fasting sawm ramadan suhoor iftar breaks the fast",
+ blurb:"What breaks a fast and what doesn't? Check each case.",
+ how:"Read each case and decide. Only rulings that all our marājiʿ agree on are used. For anything else, check your marjaʿ.",
+ mount(el){A.bankQuiz(el,{id:"fast-check",set:fastSet,n:5})}});
+
+/* ---------- Valid or Not? (6–9, Unit 2, outcomes 2.6 and 2.8) — only rulings all marājiʿ agree on ---------- */
+const VALID_REF="Qur'an 5:6; the books of rulings of the marājiʿ";
+const VALID=[
+ Q(["69"],"💪","In wuḍūʾ, Hasan washes his arms from the fingertips up to the elbows. Is his wuḍūʾ valid?",["Not valid: arms are washed from the elbow down to the fingertips","Valid","Valid only for the right arm"],"In wuḍūʾ the face is washed from top to bottom and the arms from the elbow down.",VALID_REF,"Think of the direction: which way does the water run?"),
+ Q(["69"],"💧","After washing his arms, Reza dips his hand in fresh water and then wipes his head. Is his wuḍūʾ valid?",["Not valid: the wiping must use the wetness left from wuḍūʾ","Valid","Valid if the water is warm"],"Wiping the head and feet must be done with the wetness already on the hands, not fresh water.",VALID_REF,"Wiping is different from washing."),
+ Q(["69"],"⏱️","Maryam washes her face, then chats for so long that her face is completely dry before she washes her arm. Is her wuḍūʾ valid?",["Not valid: the steps must follow on without a long gap","Valid","Valid if she says sorry"],"The steps of wuḍūʾ must follow one another without a gap so long that the earlier parts dry.",VALID_REF,"The rule is called muwālāt (continuity)."),
+ Q(["69"],"😂","During ṣalāh, a friend makes a funny face and Ali laughs out loud on purpose. Is his ṣalāh still valid?",["Not valid: laughing out loud on purpose breaks the ṣalāh","Valid","Valid if he keeps going"],"Laughing out loud on purpose is one of the things that break ṣalāh.","al-Kulaynī, al-Kāfī, Book of Ṣalāh; the books of rulings","Ṣalāh needs our full attention."),
+ Q(["69"],"🗣️","In the middle of ṣalāh, Sara deliberately answers her brother's question about homework. Is her ṣalāh valid?",["Not valid: speaking on purpose breaks the ṣalāh","Valid","Valid if she whispers"],"Deliberately speaking to someone during ṣalāh breaks it.","the books of rulings of the marājiʿ","Can we have a conversation in the middle of ṣalāh?"),
+ Q(["69"],"🧭","Hussein knows where the qiblah is but deliberately prays facing the opposite way. Is his ṣalāh valid?",["Not valid","Valid","Valid if he prays faster"],"Facing the qiblah is a condition of ṣalāh. Turning away from it on purpose makes ṣalāh invalid.","Qur'an 2:144","Which direction do all Muslims face in ṣalāh?"),
+ Q(["69"],"🚰","Fatima has clean water and nothing stops her from using it, but she does tayammum instead of wuḍūʾ. Is it valid?",["Not valid: tayammum is only for when wuḍūʾ is not possible","Valid","Valid in summer"],"Tayammum replaces wuḍūʾ only when water can't be found or can't be used, for example because of illness.","Qur'an 5:6; 4:43","When does the Qur'an allow tayammum?"),
+ Q(["69"],"🪨","Mahdi can't use water because of an injury. He does tayammum on clean earth. Is it valid?",["Valid","Not valid","Only on a carpet"],"Tayammum is done on clean earth (ṣaʿīd) when wuḍūʾ is not possible.","Qur'an 5:6: “then seek clean earth”","The Qur'an says to use clean earth."),
+ Q(["69"],"🙏","Someone prays Ẓuhr without having done wuḍūʾ, and knows it. Is the prayer valid?",["Not valid: ṣalāh needs wuḍūʾ (or ghusl or tayammum when allowed)","Valid","Valid if it's short"],"Ṭahārah (purity) is a condition of ṣalāh.","Qur'an 5:6","What does Qur'an 5:6 say to do before standing for prayer?")
+];
+const validSet=A.addSet({id:"valid-or-not",title:"Valid or Not?",bank:VALID});
+A.reg({id:"valid-or-not",title:"Valid or Not?",pic:"✅",mode:"At home or in class",bands:["69"],units:[["u2",["2.6","2.8"]]],
+ topics:"wudu salah tayammum valid invalid rulings fiqh muwalat qiblah",
+ blurb:"Short wuḍūʾ, tayammum and ṣalāh cases: valid or not?",
+ how:"Read each case and decide whether the wuḍūʾ, tayammum or ṣalāh is valid. Only rulings all our marājiʿ agree on are used.",
+ mount(el){A.bankQuiz(el,{id:"valid-or-not",set:validSet,n:5})}});
+
+/* ---------- Ask the Expert (6–9, Unit 2, outcome 2.7) ---------- */
+const EXPERT=[
+ Q(["69"],"🩺","You feel very ill. Who do you ask about which medicine to take?",["A qualified doctor","A friend who saw an advert","Whoever answers first online"],"For things we don't know, we ask a qualified expert. Taqlīd works the same way for religious rulings.","Qur'an 16:43: “Ask the people of knowledge if you do not know.”","Who has studied medicine for many years?"),
+ Q(["69"],"📚","What is a marjaʿ al-taqlīd?",["A qualified scholar (mujtahid) whose rulings we follow","Any imam of a mosque","A popular speaker online"],"A marjaʿ is a mujtahid: an expert who can work out rulings from the Qur'an and the Sunnah.","Qur'an 9:122","The word mujtahid means someone who has made the great effort of deep study."),
+ Q(["69"],"🧩","In which matters do we follow a marjaʿ (taqlīd)?",["Practical rulings, like how to pray or fast","Our core beliefs, like Tawḥīd","Which football team to support"],"Uṣūl al-Dīn (our beliefs) should be understood with our own reasoning. Taqlīd is for practical rulings (fiqh).","the books of rulings of the marājiʿ (opening chapter on taqlīd)","Can someone else believe in Allah for you?"),
+ Q(["69"],"⚖️","Which two qualities must every marjaʿ have?",["Being a mujtahid and being just (ʿādil)","Being rich and famous","Being young and popular"],"A marjaʿ must be a mujtahid and must be just, among other conditions.","the books of rulings of the marājiʿ","One quality is about knowledge, the other about good character."),
+ Q(["69"],"🛤️","Which three ways can a person follow to act correctly in religious rulings?",["Ijtihād, taqlīd or iḥtiyāṭ (precaution)","Guessing, asking friends or ignoring","Only reading social media"],"A person either becomes a mujtahid, follows a mujtahid, or acts with full precaution.","the books of rulings of the marājiʿ (first ruling)","One of them means being very careful in every case."),
+ Q(["69"],"📖","Where can you check your marjaʿ's rulings?",["In their book of rulings (risālah) or their official office","In a random comment online","From a cartoon"],"Each marjaʿ publishes a book of rulings (risālah ʿamaliyyah), and their offices answer questions.","the books of rulings of the marājiʿ","Look for an official source."),
+ Q(["69"],"🧑‍🏫","In the time of the Imam's ghaybah, who did the Imam tell believers to turn to for new questions?",["The narrators of the Imams' teachings (the scholars)","Kings and rulers","No one"],"The Imam's letter told believers to turn to the narrators of the Imams' hadith in new events.","Shaykh al-Ṣadūq, Kamāl al-Dīn","Think of people who learn and teach the hadith."),
+ Q(["69"],"🎂","When do religious duties like ṣalāh and fasting become obligatory?",["When a person reaches bulūgh (the age of religious duty)","At age 30","Only after marriage"],"Duties become obligatory at bulūgh. It's good to practise before then, so it's easy when the time comes.","the books of rulings of the marājiʿ","It's the age when a child becomes religiously responsible.")
+];
+const expertSet=A.addSet({id:"ask-the-expert",title:"Ask the Expert",bank:EXPERT});
+A.reg({id:"ask-the-expert",title:"Ask the Expert",pic:"🧑‍🏫",mode:"At home or in class",bands:["69"],units:[["u2",["2.7"]]],
+ topics:"taqlid marja mujtahid ijtihad ihtiyat rulings fiqh bulugh",
+ blurb:"Why do we follow a marjaʿ? Everyday cases lead the way.",
+ how:"Answer everyday questions about asking experts, then see how taqlīd follows the same idea.",
+ mount(el){A.bankQuiz(el,{id:"ask-the-expert",set:expertSet,n:5})}});
+})();
+
+/* ================= iLearnDeen games 2: Unit 3 (the 14 Maʿṣūmīn) and Unit 4 (Prophets) ================= */
+(function(){
+const A=APP,S=A.S,Q=A.Q,T=A.T;
+
+/* ---------- shared: the twelve Imams ---------- */
+const IM=[
+  {n:1,name:"Imam ʿAlī (ʿa)",title:"Amīr al-Muʾminīn (Commander of the Faithful)"},
+  {n:2,name:"Imam Ḥasan (ʿa)",title:"al-Mujtabā (the Chosen One)"},
+  {n:3,name:"Imam Ḥusayn (ʿa)",title:"Sayyid al-Shuhadāʾ (Master of the Martyrs)"},
+  {n:4,name:"Imam ʿAlī Zayn al-ʿĀbidīn (ʿa)",title:"al-Sajjād (the one who prostrates a lot)"},
+  {n:5,name:"Imam Muḥammad al-Bāqir (ʿa)",title:"al-Bāqir (the one who opens up knowledge)"},
+  {n:6,name:"Imam Jaʿfar al-Ṣādiq (ʿa)",title:"al-Ṣādiq (the Truthful)"},
+  {n:7,name:"Imam Mūsā al-Kāẓim (ʿa)",title:"al-Kāẓim (the one who controls his anger)"},
+  {n:8,name:"Imam ʿAlī al-Riḍā (ʿa)",title:"al-Riḍā (the one who is pleasing)"},
+  {n:9,name:"Imam Muḥammad al-Jawād (ʿa)",title:"al-Jawād (the Generous)"},
+  {n:10,name:"Imam ʿAlī al-Hādī (ʿa)",title:"al-Hādī (the Guide)"},
+  {n:11,name:"Imam Ḥasan al-ʿAskarī (ʿa)",title:"al-ʿAskarī"},
+  {n:12,name:"Imam Muḥammad al-Mahdī (ʿaj)",title:"al-Mahdī (the Guided One)"}
+];
+A.IMAMS=IM;
+const ORD=["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"];
+const IMAMS_REF="Shaykh al-Mufīd, al-Irshād";
+const nameOf=n=>IM[n-1].name;
+const ORDER_HINT=n=>n<=3?"The first three Imams are Imam ʿAlī (ʿa) and his two sons, Imam Ḥasan (ʿa) then Imam Ḥusayn (ʿa).":n<=6?"Imams 4, 5 and 6 are Zayn al-ʿĀbidīn, al-Bāqir and al-Ṣādiq.":n<=9?"Imams 7, 8 and 9 are al-Kāẓim, al-Riḍā and al-Jawād.":"Imams 10, 11 and 12 are al-Hādī, al-ʿAskarī and al-Mahdī.";
+
+/* ---------- Line Up the 14 (3–5, Unit 3, outcomes 3.3 and 3.4) ---------- */
+const FACTS=[
+  {who:1,q:"Which Imam was born inside the Kaʿbah?",e:"Imam ʿAlī (ʿa) was born inside the Kaʿbah on 13 Rajab.",ref:IMAMS_REF,h:"He was the first Imam."},
+  {who:1,q:"Whose sermons, letters and sayings are collected in <em>Nahj al-Balāghah</em>?",e:"<em>Nahj al-Balāghah</em> was collected by al-Sharīf al-Raḍī from the words of Imam ʿAlī (ʿa).",ref:"al-Sharīf al-Raḍī, Nahj al-Balāghah",h:"He was the cousin and son-in-law of the Prophet (ṣ)."},
+  {who:3,q:"Whose shrine is in Karbalāʾ?",e:"Imam Ḥusayn (ʿa) is buried in Karbalāʾ.",ref:IMAMS_REF,h:"We remember him especially on ʿĀshūrāʾ."},
+  {who:1,q:"Whose shrine is in Najaf?",e:"Imam ʿAlī (ʿa) is buried in Najaf, in Iraq.",ref:IMAMS_REF,h:"He is the father of Imam Ḥasan (ʿa) and Imam Ḥusayn (ʿa)."},
+  {who:8,q:"Which Imam's shrine is in Mashhad, Iran?",e:"Imam ʿAlī al-Riḍā (ʿa) is buried in Mashhad.",ref:IMAMS_REF,h:"He is the 8th Imam."},
+  {who:4,q:"Whose beautiful duʿās are collected in <em>al-Ṣaḥīfah al-Sajjādiyyah</em>?",e:"<em>al-Ṣaḥīfah al-Sajjādiyyah</em> holds the duʿās of Imam Zayn al-ʿĀbidīn (ʿa).",ref:"al-Ṣaḥīfah al-Sajjādiyyah",h:"Look at the name of the book: al-Sajjād is his title."},
+  {who:6,q:"Which Imam taught so many students that Shia fiqh is often called the Jaʿfarī school?",e:"Imam Jaʿfar al-Ṣādiq (ʿa) taught thousands of students, and the Shia school of law is named after him.",ref:IMAMS_REF,h:"Look for the name Jaʿfar."},
+  {who:7,q:"Which Imam's title means “the one who controls his anger”?",e:"Imam Mūsā al-Kāẓim (ʿa) was known for holding back his anger, even with people who hurt him.",ref:IMAMS_REF,h:"The title al-Kāẓim comes from the Arabic for holding back anger."},
+  {who:9,q:"Which Imam became Imam while he was still a young child?",e:"Imam Muḥammad al-Jawād (ʿa) became Imam as a child, and scholars were amazed by his knowledge.",ref:IMAMS_REF,h:"He is the 9th Imam, the son of Imam al-Riḍā (ʿa)."},
+  {who:12,q:"Which Imam is alive today and hidden from our eyes (in ghaybah)?",e:"Imam al-Mahdī (ʿaj) is our living Imam. He is in ghaybah (occultation) and will return by Allah's command.",ref:"Shaykh al-Ṣadūq, Kamāl al-Dīn",h:"He is the last of the twelve Imams."},
+  {who:10,two:true,q:"Which two Imams are buried in Sāmarrāʾ?",e:"Imam ʿAlī al-Hādī (ʿa) and his son Imam Ḥasan al-ʿAskarī (ʿa) are buried in Sāmarrāʾ, Iraq.",ref:IMAMS_REF,h:"They are the 10th and 11th Imams."}
+];
+const fourteenQ=()=>{const t=S.int(0,3);
+  if(t===0){const im=S.pick(IM),w=S.shuffle(IM.filter(x=>x!==im)).slice(0,2);return {b:["35","69"],pic:"🌟",q:`Which Imam has the title <strong>${im.title}</strong>?`,c:[im.name,...w.map(x=>x.name)],e:`${im.name} is the ${ORD[im.n-1]} Imam. His title is ${im.title}.`,ref:IMAMS_REF,h:"Many Imams are known by their title, which is part of the name shown."}}
+  if(t===1){const im=S.pick(IM),w=S.shuffle(IM.filter(x=>Math.abs(x.n-im.n)<=3&&x!==im)).slice(0,2);return {b:["35","69"],pic:"🔢",q:`Who is the <strong>${ORD[im.n-1]} Imam</strong>?`,c:[im.name,...w.map(x=>x.name)],e:`The ${ORD[im.n-1]} Imam is ${im.name}.`,ref:IMAMS_REF,h:ORDER_HINT(im.n)}}
+  if(t===2){const w=S.shuffle(["Sayyidah Maryam (ʿa)","Sayyidah Khadījah (ʿa)","Sayyidah Zaynab (ʿa)"]).slice(0,2);return {b:["35","69"],pic:"🌹",q:"The 14 Maʿṣūmīn are the Prophet (ṣ), the twelve Imams, and one more. Who is she?",c:["Sayyidah Fāṭimah al-Zahrāʾ (ʿa)",...w],e:"Sayyidah Fāṭimah al-Zahrāʾ (ʿa), the daughter of the Prophet (ṣ), is one of the 14 Maʿṣūmīn.",ref:"Qur'an 33:33 (the verse of purification)",h:"She is the daughter of the Prophet (ṣ) and the mother of Imam Ḥasan (ʿa) and Imam Ḥusayn (ʿa)."}}
+  const f=S.pick(FACTS);if(f.two)return {b:["35","69"],pic:"🕌",q:f.q,c:["Imam ʿAlī al-Hādī (ʿa) and Imam Ḥasan al-ʿAskarī (ʿa)","Imam Mūsā al-Kāẓim (ʿa) and Imam Muḥammad al-Jawād (ʿa)","Imam Ḥasan (ʿa) and Imam Ḥusayn (ʿa)"],e:f.e,ref:f.ref,h:f.h};
+  const w=S.shuffle(IM.filter(x=>x.n!==f.who)).slice(0,2);return {b:["35","69"],pic:"🕌",q:f.q,c:[nameOf(f.who),...w.map(x=>x.name)],e:f.e,ref:f.ref,h:f.h}};
+const fourteenSet=A.addSet({id:"line-up-14",title:"Line Up the 14",bank:[fourteenQ()],take:(band,n)=>Array.from({length:n},fourteenQ)});
+A.reg({id:"line-up-14",title:"Line Up the 14",pic:"🌟",star:true,mode:"At home or in class",bands:["35"],units:[["u3",["3.3","3.4"]]],
+ topics:"14 masumeen twelve imams order titles shrines Ali Hasan Husayn Mahdi Fatimah",
+ blurb:"Put the Imams in order, then match their titles and stories.",
+ how:"Two kinds of rounds: tap four Imams in the right order, then answer a question about a title or a fact.",
+ mount(el){A.rounds(el,{id:"line-up-14",n:4,max:10,render(body,api){
+    if(api.round%2===0){const s=S.int(0,8);api.setHints([ORDER_HINT(s+1),ORDER_HINT(s+4)].filter((x,i,a)=>a.indexOf(x)===i));
+      A.orderTask(body,api,{prompt:`Tap these four Imams in order, starting with the ${ORD[s]} Imam.`,items:IM.slice(s,s+4).map(x=>x.name),explain:`<p>${IM.slice(s,s+4).map(x=>`${ORD[x.n-1]}: ${x.name}`).join(" · ")}</p><p class="ref">${IMAMS_REF}</p>`});return}
+    A.askTask(body,api,A.asQ(fourteenQ()))}})}});
+
+/* ---------- Under the Cloak (K–2, Unit 3, outcome 3.1) ----------
+   The event of the Cloak and the verse of purification (33:33). Names only, no pictures of people. */
+const KISA_REF="Qur'an 33:33; Ḥadīth al-Kisāʾ";
+const KISA=[
+ Q(["k2"],"🧥","Under the cloak, how many special people gathered together?",[T("🖐️","Five"),T("✌️","Two")],"Five special people gathered under the cloak: the Prophet (ṣ), Imam ʿAlī (ʿa), Sayyidah Fāṭimah (ʿa), Imam Ḥasan (ʿa) and Imam Ḥusayn (ʿa). We call them the Ahl al-Kisāʾ.",KISA_REF,"Count the fingers on one hand."),
+ Q(["k2"],"🏠","In whose house did the story of the cloak happen?",[T("🌹","Sayyidah Fāṭimah (ʿa)"),T("🕋","Inside the Kaʿbah")],"The Prophet (ṣ) came to the house of his daughter, Sayyidah Fāṭimah (ʿa), and rested under a cloak.",KISA_REF,"It was the home of the Prophet's (ṣ) daughter."),
+ Q(["k2"],"👴","Who came to the house first and rested under the cloak?",[T("🌟","The Prophet (ṣ)"),T("🌙","Imam al-Mahdī (ʿaj)")],"The Prophet (ṣ) came first and rested under the cloak. Then his grandsons, Imam ʿAlī (ʿa) and Sayyidah Fāṭimah (ʿa) joined him.",KISA_REF,"He is the grandfather of Imam Ḥasan (ʿa) and Imam Ḥusayn (ʿa)."),
+ Q(["k2"],"👦","Which two brothers joined their grandfather under the cloak?",[T("🌸","Imam Ḥasan (ʿa) and Imam Ḥusayn (ʿa)"),T("🚢","Prophet Nūḥ (ʿa) and Prophet Hūd (ʿa)")],"Imam Ḥasan (ʿa) and Imam Ḥusayn (ʿa) joined their grandfather, the Prophet (ṣ), under the cloak.",KISA_REF,"They are the sons of Imam ʿAlī (ʿa) and Sayyidah Fāṭimah (ʿa)."),
+ Q(["k2"],"👼","Which angel came with a message from Allah?",[T("✨","Jibrāʾīl"),T("🌧️","No angel came")],"The angel Jibrāʾīl came and brought Allah's words about the Ahl al-Bayt.",KISA_REF,"He is the angel who brought the Qur'an to the Prophet (ṣ)."),
+ Q(["k2"],"💎","Allah said He wants to keep the Ahl al-Bayt…",[T("✨","Pure and free from all bad things"),T("😴","Asleep all day")],"Allah says He wants to keep all impurity away from the Ahl al-Bayt and make them completely pure.","Qur'an 33:33 (the verse of purification)","The verse is called the verse of purification."),
+ Q(["k2"],"👨‍👩‍👧‍👦","Who are the Ahl al-Kisāʾ?",[T("🖐️","The Prophet (ṣ), ʿAlī, Fāṭimah, Ḥasan and Ḥusayn (ʿa)"),T("🐪","The people of a desert town")],"Ahl al-Kisāʾ means the people of the cloak: the Prophet (ṣ), Imam ʿAlī, Sayyidah Fāṭimah, Imam Ḥasan and Imam Ḥusayn (ʿa).",KISA_REF,"Kisāʾ means cloak.")
+];
+const kisaSet=A.addSet({id:"under-the-cloak",title:"Under the Cloak",bank:KISA});
+A.reg({id:"under-the-cloak",title:"Under the Cloak",pic:"🧥",mode:"At home or in class",bands:["k2"],units:[["u3",["3.1"]]],
+ topics:"hadith al kisa ahl al bayt ahl al kisa cloak verse of purification",
+ blurb:"The story of the cloak: who gathered under it?",
+ how:"A grown-up can tell the story of the cloak first. Then tap the answers.",
+ mount(el){A.bankQuiz(el,{id:"under-the-cloak",set:kisaSet,n:5})}});
+
+/* ---------- Lives of the Imams (6–9, Unit 3, outcome 3.5) ---------- */
+const LIVES=[
+ [0,"Prophet Muḥammad (ṣ)","Even before he became a Prophet, people in Makkah called him al-Amīn and trusted him with their valuables.","honesty and trustworthiness","Ibn Hishām, al-Sīrah; Shaykh al-Mufīd, al-Irshād"],
+ [0,"Sayyidah Fāṭimah (ʿa)","While fasting, she and her family gave their own food to a poor person, an orphan and a captive, three days in a row.","generosity, even when it is hard","Qur'an 76:8–9 (Sūrah al-Insān); Shia tafsīr"],
+ [1,"Imam ʿAlī (ʿa)","On the night of the Hijrah he slept in the Prophet's (ṣ) bed so the Prophet (ṣ) could leave Makkah safely.","courage and sacrifice","Qur'an 2:207 and its tafsīr; Shaykh al-Mufīd, al-Irshād"],
+ [2,"Imam Ḥasan (ʿa)","He agreed to a peace treaty to protect the lives of the believers and keep the true message alive.","wisdom and protecting the community","Shaykh al-Mufīd, al-Irshād"],
+ [3,"Imam Ḥusayn (ʿa)","At Karbalāʾ he and his family and companions stood up for truth and against injustice, even though they were few.","standing up for what is right","Shaykh al-Mufīd, al-Irshād"],
+ [4,"Imam Zayn al-ʿĀbidīn (ʿa)","He taught people through beautiful duʿās and a famous letter explaining the rights everyone has.","teaching through worship, and respecting others' rights","al-Ṣaḥīfah al-Sajjādiyyah; Risālat al-Ḥuqūq"],
+ [5,"Imam Muḥammad al-Bāqir (ʿa)","He opened up many fields of knowledge and taught students who came from far away.","seeking and sharing knowledge","Shaykh al-Mufīd, al-Irshād"],
+ [6,"Imam Jaʿfar al-Ṣādiq (ʿa)","He taught thousands of students in many subjects, and the Shia school of law carries his name.","learning and teaching","Shaykh al-Mufīd, al-Irshād"],
+ [7,"Imam Mūsā al-Kāẓim (ʿa)","He spent many years in prison and stayed patient, praying and worshipping Allah.","patience and controlling anger","Shaykh al-Mufīd, al-Irshād"],
+ [8,"Imam ʿAlī al-Riḍā (ʿa)","He held respectful discussions with scholars of many religions and answered their questions with knowledge.","respectful dialogue and knowledge","Shaykh al-Ṣadūq, ʿUyūn Akhbār al-Riḍā"],
+ [9,"Imam Muḥammad al-Jawād (ʿa)","He answered difficult questions from senior scholars while he was still a child.","knowledge and wisdom do not depend on age","Shaykh al-Mufīd, al-Irshād"],
+ [10,"Imam ʿAlī al-Hādī (ʿa)","He taught the believers Ziyārat al-Jāmiʿah al-Kabīrah, which describes the Imams' high place.","love and knowledge of the Ahl al-Bayt","Shaykh al-Ṣadūq, Man lā yaḥḍuruhu al-faqīh"],
+ [11,"Imam Ḥasan al-ʿAskarī (ʿa)","Though closely watched by the rulers in Sāmarrāʾ, he prepared the believers for the time of ghaybah through trusted representatives.","planning ahead and caring for the community","Shaykh al-Mufīd, al-Irshād"],
+ [12,"Imam al-Mahdī (ʿaj)","He lives in ghaybah, and believers prepare for his return by doing good and working for justice.","hope, and actively waiting for justice","Shaykh al-Ṣadūq, Kamāl al-Dīn"]
+];
+const livesQ=()=>{const k=S.int(0,LIVES.length-1),L=LIVES[k],w=S.shuffle(LIVES.filter((_,j)=>j!==k));
+  return S.r()<0.5
+   ?{b:["69"],pic:"📜",q:`“${L[2]}” Whose life is this event from?`,c:[L[1],...w.slice(0,2).map(x=>x[1])],e:`This is from the life of ${L[1]}. It teaches us ${L[3]}.`,ref:L[4],h:`The value it teaches is ${L[3]}.`}
+   :{b:["69"],pic:"💎",q:`${L[1]}: “${L[2]}” Which value does this teach us most?`,c:[cap(L[3]),...w.filter(x=>x[3]!==L[3]).slice(0,2).map(x=>cap(x[3]))],e:`It teaches us ${L[3]}.`,ref:L[4],h:"Ask yourself: what would you need inside you to do this?"}};
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const livesSet=A.addSet({id:"lives-of-the-imams",title:"Lives of the Imams",bank:[livesQ()],take:(band,n)=>{const out=[],seen=new Set();while(out.length<n){const q=livesQ();if(!seen.has(q.q)||seen.size>30){seen.add(q.q);out.push(q)}}return out}});
+A.reg({id:"lives-of-the-imams",title:"Lives of the Imams",pic:"📜",mode:"At home or in class",bands:["69"],units:[["u3",["3.5"]]],
+ topics:"lives of the imams masumeen values events Karbala Ali Hasan Husayn Sajjad Baqir Sadiq Kazim Rida",
+ blurb:"Match key events in the lives of the 14 Maʿṣūmīn to the values they teach.",
+ how:"Read an event from the life of one of the 14 Maʿṣūmīn. Choose whose life it is from, or the value it teaches.",
+ mount(el){A.bankQuiz(el,{id:"lives-of-the-imams",set:livesSet,n:5})}});
+
+/* ---------- The Day of Ghadīr (6–9, Unit 3, outcome 3.6) ---------- */
+const GHADIR_REF="Qur'an 5:67; 5:3; Shaykh al-Mufīd, al-Irshād; ʿAllāmah al-Amīnī, al-Ghadīr";
+const ghadirQ=()=>{const mk=(html,c,explain,hint)=>{const m=A.mc(c,0);return {html,choices:m.choices,answer:m.answer,explain:`<p>${explain}</p>`,hint}};
+  const steps=[
+   mk("<p><strong>When did the event of Ghadīr happen?</strong></p>",["On the way back from the Prophet's (ṣ) last Ḥajj, in 10 AH","At the start of the Prophet's (ṣ) mission","Many years after the Prophet (ṣ) passed away"],"It happened on the way home from the Farewell Ḥajj (Ḥajjat al-Wadāʿ), in 10 AH.","It was the Prophet's (ṣ) last Ḥajj."),
+   mk("<p><strong>Where did the Prophet (ṣ) stop the huge crowd of pilgrims?</strong></p>",["At Ghadīr Khumm, a place with a pool of water","Inside the Kaʿbah","In the city of Madīnah"],"He stopped the pilgrims at Ghadīr Khumm, where the routes divided, so everyone would hear before going home.","The event is named after the place."),
+   mk("<p><strong>Which verse told the Prophet (ṣ) to deliver this message?</strong></p>",["“O Messenger, convey what has been sent down to you from your Lord…” (5:67)","“Read in the name of your Lord” (96:1)","“Say: He is Allah, the One” (112:1)"],"Allah commanded the Prophet (ṣ) to convey the message, and promised to protect him from the people.","It's a verse from Sūrah al-Māʾidah addressing the Messenger."),
+   mk("<p><strong>What did the Prophet (ṣ) announce, holding up Imam ʿAlī's (ʿa) hand?</strong></p>",["“Whoever I am his mawlā (master), ʿAlī is his mawlā”","“ʿAlī is my neighbour”","“Everyone may go home now”"],"The Prophet (ṣ) said: “Man kuntu mawlāhu fa-hādhā ʿAliyyun mawlāh”: whoever I am his master, this ʿAlī is his master.","The famous words begin “Man kuntu mawlāhu…”."),
+   mk("<p><strong>After this, which verse was revealed?</strong></p>",["“Today I have perfected your religion for you…” (5:3)","“Do not despair of the mercy of Allah” (39:53)","“Indeed, with hardship comes ease” (94:5)"],"Allah revealed: “Today I have perfected your religion for you, completed My blessing upon you and approved Islam as your religion.”","The religion was now complete."),
+   mk("<p><strong>What does Ghadīr teach us about Imāmah?</strong></p>",["The leader after the Prophet (ṣ) is chosen by Allah and announced by the Prophet (ṣ)","People should choose any leader they like","There is no need for a guide after the Prophet (ṣ)"],"Ghadīr shows that Imāmah, like Nubuwwah, is chosen by Allah. We celebrate Eid al-Ghadīr on 18 Dhul-Ḥijjah.","Remember the root Imāmah: who chooses the Imam?")
+  ];const pick=S.shuffle([0,1,2,3,4,5]).slice(0,3).sort((a,b)=>a-b);
+  return {pic:"🤝",html:"<p>The event of Ghadīr Khumm.</p>",steps:pick.map(i=>steps[i])}};
+A.reg({id:"the-day-of-ghadir",title:"The Day of Ghadīr",pic:"🤝",mode:"At home or in class",bands:["69"],units:[["u3",["3.6"]]],
+ topics:"ghadir khumm eid al ghadir imamah Ali mawla farewell hajj 5:67 5:3",
+ blurb:"Walk through the event of Ghadīr step by step.",
+ how:"Each question has three steps through the event of Ghadīr. Answer each step to complete the story.",
+ mount(el){A.quiz(el,{id:"the-day-of-ghadir",n:3,gen:()=>ghadirQ()})}});
+A.addSet({id:"the-day-of-ghadir",title:"The Day of Ghadīr",bank:[],take:(band,n)=>{const all=ghadirQ().steps.concat(ghadirQ().steps);const out=[],seen=new Set();for(const st of S.shuffle(all.concat(ghadirQ().steps,ghadirQ().steps))){if(seen.has(st.html))continue;seen.add(st.html);out.push({b:["69"],pic:"🤝",q:st.html.replace(/<\/?p>|<\/?strong>/g,""),c:[st.choices[st.answer],...st.choices.filter((_,j)=>j!==st.answer)],e:st.explain.replace(/<\/?p>/g,""),ref:GHADIR_REF,h:st.hint});if(out.length>=n)break}return out}});
+
+/* ---------- Prophet Clues (K–2 and 3–5, Unit 4, outcomes 4.1 and 4.4) ---------- */
+const P={adam:"Prophet Ādam (ʿa)",nuh:"Prophet Nūḥ (ʿa)",ibrahim:"Prophet Ibrāhīm (ʿa)",musa:"Prophet Mūsā (ʿa)",isa:"Prophet ʿĪsā (ʿa)",yunus:"Prophet Yūnus (ʿa)",muhammad:"Prophet Muḥammad (ṣ)",sulayman:"Prophet Sulaymān (ʿa)",yusuf:"Prophet Yūsuf (ʿa)",salih:"Prophet Ṣāliḥ (ʿa)",dawud:"Prophet Dāwūd (ʿa)",ayyub:"Prophet Ayyūb (ʿa)",hud:"Prophet Hūd (ʿa)"};
+A.PROPHETS=P;
+const LITTLE=["adam","nuh","ibrahim","musa","isa","yunus","muhammad"],MIDDLE=Object.keys(P);
+/* wrong choices are re-drawn every time the item is shown */
+const clue=(b,pic,who,q,e,ref,h)=>{const pool=(b[0]==="k2"?LITTLE:MIDDLE).filter(x=>x!==who);return {b,pic,q,who,c:[P[who],...S.shuffle(pool).slice(0,2).map(x=>P[x])],e,ref,h}};
+const clueItems=()=>[
+  clue(["k2","35"],"🚢","nuh","He built a big ship when Allah told him a great flood was coming.","Prophet Nūḥ (ʿa) built the ark, and the believers were saved in it.","Qur'an 11:37–42","His name sounds like the word “Noah”."),
+  clue(["k2","35"],"🔥","ibrahim","He was thrown into a fire, and Allah made the fire cool and safe for him.","Allah said: “O fire, be cool and safe for Ibrāhīm.”","Qur'an 21:68–69","He broke the idols his people worshipped."),
+  clue(["k2","35"],"🌊","musa","Allah split the sea so he and his people could cross safely.","Allah told Prophet Mūsā (ʿa) to strike the sea with his staff, and it parted.","Qur'an 26:63","He struck the sea with his staff and escaped from Pharaoh."),
+  clue(["k2"],"🐍","musa","By Allah's power, his wooden staff turned into a snake.","Allah showed this miracle through the staff of Prophet Mūsā (ʿa).","Qur'an 20:17–21","He is the same Prophet who crossed the sea."),
+  clue(["k2","35"],"💬","isa","With Allah's permission, he spoke when he was a tiny baby.","Prophet ʿĪsā (ʿa) spoke from the cradle and said he was Allah's servant and Prophet.","Qur'an 19:29–30","His mother is Sayyidah Maryam (ʿa)."),
+  clue(["k2","35"],"🐋","yunus","A big fish swallowed him, and he prayed to Allah inside it.","Prophet Yūnus (ʿa) said, “There is no god but You”, and Allah saved him.","Qur'an 21:87–88; 37:139–144","He is called “the companion of the fish”."),
+  clue(["k2"],"🌱","adam","He was the first human being Allah created.","Allah created Prophet Ādam (ʿa) and taught him the names of all things.","Qur'an 2:30–31","He was the very first Prophet."),
+  clue(["k2","35"],"🕋","ibrahim","He and his son Ismāʿīl built the Kaʿbah.","Prophet Ibrāhīm (ʿa) and Prophet Ismāʿīl (ʿa) raised the walls of the Kaʿbah.","Qur'an 2:127","He is the father of Prophet Ismāʿīl (ʿa)."),
+  clue(["k2"],"📖","muhammad","He is the last Prophet, and Allah sent the Qur'an to him.","Prophet Muḥammad (ṣ) is the Seal of the Prophets: no Prophet comes after him.","Qur'an 33:40","When we hear his name we say ṣalawāt."),
+  clue(["35"],"🐜","sulayman","He heard an ant warn the other ants to hide, and he smiled.","Allah taught Prophet Sulaymān (ʿa) to understand the speech of birds and ants.","Qur'an 27:18–19","He was a king and the son of Prophet Dāwūd (ʿa)."),
+  clue(["35"],"⭐","yusuf","As a boy, he dreamed that eleven stars, the sun and the moon bowed to him.","Prophet Yūsuf (ʿa) told his father Prophet Yaʿqūb (ʿa) about this dream.","Qur'an 12:4","He had eleven brothers."),
+  clue(["35"],"🕳️","yusuf","His brothers threw him into a well, but Allah protected him.","Prophet Yūsuf (ʿa) was patient, and Allah raised him to a high position.","Qur'an 12:15","He later became a minister in Egypt."),
+  clue(["35"],"🐪","salih","Allah sent a special she-camel as a sign for his people.","Prophet Ṣāliḥ (ʿa) warned his people, Thamūd, not to harm the she-camel.","Qur'an 11:61–64","He was sent to the people of Thamūd."),
+  clue(["35"],"⚒️","dawud","Allah made iron soft in his hands.","Allah gave Prophet Dāwūd (ʿa) skill with iron, and the mountains and birds praised Allah with him.","Qur'an 34:10","He was the father of Prophet Sulaymān (ʿa)."),
+  clue(["35"],"🤲","ayyub","He stayed patient through a long illness, and Allah praised him.","Allah said of Prophet Ayyūb (ʿa): “We found him patient. What an excellent servant!”","Qur'an 38:41–44","He is famous for patience (ṣabr)."),
+  clue(["35"],"🐦","sulayman","A hoopoe bird brought him news of the Queen of Sabaʾ.","The hoopoe told Prophet Sulaymān (ʿa) about a people who worshipped the sun.","Qur'an 27:20–24","He understood the language of birds."),
+  clue(["35"],"⛰️","muhammad","The first verses of the Qur'an were revealed to him in the Cave of Ḥirāʾ.","The first verses revealed were the opening of Sūrah al-ʿAlaq: “Read in the name of your Lord…”","Qur'an 96:1–5","He is the last Prophet."),
+  clue(["35"],"🌬️","hud","He called the people of ʿĀd to worship Allah alone.","Prophet Hūd (ʿa) was sent to the people of ʿĀd.","Qur'an 11:50","A sūrah of the Qur'an is named after him: Sūrah Hūd.")
+];
+const ULUL=["nuh","ibrahim","musa","isa","muhammad"],NOT_ULUL=["yunus","sulayman","yusuf","salih","dawud","ayyub","hud","adam"];
+const ululItem=()=>{const yes=S.pick(ULUL),no=S.shuffle(NOT_ULUL).slice(0,2);return {b:["35"],pic:"🏔️",q:"Which of these is one of the five <strong>Ulul ʿAzm</strong> Prophets (the Prophets of firm resolve)?",c:[P[yes],...no.map(x=>P[x])],e:"The five Ulul ʿAzm Prophets are Nūḥ, Ibrāhīm, Mūsā, ʿĪsā and Muḥammad (ṣ).",ref:"Qur'an 33:7; 42:13; 46:35",h:"Each of the five brought a major message or law: think of the ark, the Kaʿbah, the Tawrāt, the Injīl and the Qur'an."}};
+const clueSet=A.addSet({id:"prophet-clues",title:"Prophet Clues",bank:clueItems(),take(band,n){const out=S.shuffle(A.pickBand(clueItems(),band)).slice(0,n);if((band==="35"||band==="all")&&out.length>=n)out[n-1]=ululItem();return S.shuffle(out)}});
+A.reg({id:"prophet-clues",title:"Prophet Clues",pic:"🚢",star:true,mode:"At home or in class",bands:["k2","35"],units:[["u4",["4.1","4.4"]]],
+ topics:"prophets stories Nuh Ibrahim Musa Isa Yunus Adam Muhammad Sulayman Yusuf Ulul Azm Quran",
+ blurb:"Read the clue from the Qur'an and guess the Prophet.",
+ how:"Each card has a clue from a Prophet's story in the Qur'an. Tap the Prophet it belongs to. Older players get harder clues.",
+ mount(el){A.bankQuiz(el,{id:"prophet-clues",set:clueSet,n:5})}});
+
+/* ---------- Story and Lesson (3–5, Unit 4, outcome 4.3) ---------- */
+const STORIES=[
+ ["yusuf","forgave his brothers after everything they had done to him","forgiveness","Qur'an 12:92","Think of what Prophet Yūsuf (ʿa) said to his brothers in Egypt: “No blame on you today.”"],
+ ["ayyub","stayed thankful to Allah through years of illness and loss","patience (ṣabr)","Qur'an 38:41–44","This Prophet is the example everyone gives for ṣabr."],
+ ["yunus","called out to Allah from the darkness inside the fish","turning to Allah in hard times","Qur'an 21:87–88","Where was he when he made his famous duʿā?"],
+ ["nuh","kept inviting his people to Allah for hundreds of years, even when most refused","never giving up on doing good","Qur'an 29:14; 71:5–9","He preached for a very long time."],
+ ["musa","went to Pharaoh, a cruel king, to tell him the truth, and was told to speak gently","speaking the truth to the powerful, with gentle words","Qur'an 20:43–44","Allah told him and his brother Hārūn to speak to Pharaoh gently."],
+ ["sulayman","heard the ant and thanked Allah for his blessings","thankfulness for Allah's blessings","Qur'an 27:19","After hearing the ant, he made a duʿā of thanks."],
+ ["ibrahim","welcomed guests he didn't know and quickly served them a meal","generosity to guests","Qur'an 51:24–27","He brought a roasted calf to his guests."],
+ ["dawud","was made a ruler and told to judge between people with justice","being fair to everyone","Qur'an 38:26","Allah told him to judge between people with truth."],
+ ["muhammad","was sent as a mercy to all the worlds","mercy and kindness to everyone","Qur'an 21:107","The last Prophet (ṣ) was described as “a mercy to the worlds”."]
+];
+const storyQ=()=>{const k=S.int(0,STORIES.length-1),s=STORIES[k],w=S.shuffle(STORIES.filter((_,j)=>j!==k));const P_=A.PROPHETS;
+  return S.r()<0.5
+   ?{b:["35"],pic:"📖",q:`${P_[s[0]]} ${s[1]}. What lesson does this teach us?`,c:[cap(s[2]),...w.slice(0,2).map(x=>cap(x[2]))],e:`The story of ${P_[s[0]]} teaches ${s[2]}.`,ref:s[3],h:s[4]}
+   :{b:["35"],pic:"🔎",q:`Which Prophet's story teaches us <strong>${s[2]}</strong>? He ${s[1]}.`,c:[P_[s[0]],...w.slice(0,2).map(x=>P_[x[0]])],e:`${P_[s[0]]} ${s[1]}.`,ref:s[3],h:s[4]}};
+const storySet=A.addSet({id:"story-and-lesson",title:"Story and Lesson",bank:[storyQ()],take:(band,n)=>Array.from({length:n},storyQ)});
+A.reg({id:"story-and-lesson",title:"Story and Lesson",pic:"📖",mode:"At home or in class",bands:["35"],units:[["u4",["4.3"]]],
+ topics:"prophets stories lessons Yusuf Ayyub Yunus Nuh Musa Sulayman Ibrahim Dawud patience forgiveness",
+ blurb:"Match each Prophet's story to the lesson it teaches.",
+ how:"Read about a Prophet and choose the lesson his story teaches, or choose the Prophet whose story teaches the lesson.",
+ mount(el){A.bankQuiz(el,{id:"story-and-lesson",set:storySet,n:5})}});
+
+/* ---------- The Prophet's Timeline (3–5 and 6–9, Unit 4, outcomes 4.5 and 4.6) ---------- */
+const MAKKAH=["👶 Born in Makkah, in the Year of the Elephant","🤝 Known as al-Amīn, the trustworthy","💍 Married Sayyidah Khadījah (ʿa)","⛰️ First revelation in the Cave of Ḥirāʾ, at age 40","📣 Invited his close family to Islam","🏜️ Boycott in the valley of Abū Ṭālib","💔 The Year of Sorrow: Sayyidah Khadījah (ʿa) and Abū Ṭālib passed away","🐪 The Hijrah to Madīnah"];
+const MADINAH=["🕌 Built the Masjid in Madīnah","⚔️ Battle of Badr","⛰️ Battle of Uḥud","🪨 Battle of the Trench","📜 Treaty of Ḥudaybiyyah","🕋 Makkah opened peacefully","🤝 The Farewell Ḥajj and Ghadīr","🌙 The Prophet (ṣ) passed away"];
+const MADINAH_YEARS=["1 AH","2 AH","3 AH","5 AH","6 AH","8 AH","10 AH","11 AH"];
+const SIRA_REF="Ibn Hishām, al-Sīrah; Shaykh al-Mufīd, al-Irshād";
+A.reg({id:"prophets-timeline",title:"The Prophet's Timeline",pic:"🗓️",mode:"At home or in class",bands:["35","69"],units:[["u4",["4.5","4.6"]]],
+ topics:"seerah sira life of the prophet timeline makkah madinah hijrah badr uhud",
+ blurb:"Put events from the Prophet's (ṣ) life in order: Makkah for Middle, Madīnah for Older.",
+ how:"Tap four events in the order they happened. Middle players get events in Makkah; Older players get events after the Hijrah.",
+ mount(el){A.rounds(el,{id:"prophets-timeline",n:4,max:10,render(body,api){
+   const older=A.band==="69"||(A.band==="all"&&api.round%2===1),L=older?MADINAH:MAKKAH,s=S.int(0,L.length-4);
+   api.setHints(older?["The Masjid was built in the first year after the Hijrah.","Badr came before Uḥud, and Uḥud before the Trench.","The Farewell Ḥajj was near the end of the Prophet's (ṣ) life."]:["He was born first, and the Hijrah came last.","He married Sayyidah Khadījah (ʿa) before the first revelation."]);
+   A.orderTask(body,api,{prompt:`Tap these events in the order they happened${older?" (after the Hijrah)":" (in Makkah)"}.`,items:L.slice(s,s+4),explain:`<p>${L.slice(s,s+4).map((x,j)=>older?`${x} (${MADINAH_YEARS[s+j]})`:x).join(" → ")}</p><p class="ref">${SIRA_REF}</p>`})}})}});
+})();
+
+/* ================= iLearnDeen games 3: Unit 5 (Qur'an, duʿā, Islamic year) and Unit 6 (good character) ================= */
+(function(){
+const A=APP,S=A.S,Q=A.Q,T=A.T;
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+/* ---------- Say It Right (K–2, Unit 5, outcomes 5.1 and 5.2) ---------- */
+const PH={bism:T("🌱","Bismillāh"),hamd:T("🤲","Alḥamdulillāh"),insha:T("📅","Inshāʾ Allāh"),masha:T("🌸","Mā shāʾ Allāh"),salawat:T("🌟","Allāhumma ṣalli ʿalā Muḥammad wa āli Muḥammad"),jazak:T("💐","Jazākallāh khayr"),salam:T("👋","Assalāmu ʿalaykum"),wsalam:T("🙂","Wa ʿalaykum al-salām"),astagh:T("🙏","Astaghfirullāh"),inna:T("🕊️","Innā lillāhi wa innā ilayhi rājiʿūn")};
+const say=(pic,q,k,e,ref,h)=>{const w=S.shuffle(Object.keys(PH).filter(x=>x!==k&&!(k==="hamd"&&x==="masha")&&!(k==="masha"&&x==="hamd"))).slice(0,1);return {b:["k2"],pic,q,c:[PH[k],PH[w[0]]],e,ref,h}};
+const sayItems=()=>[
+ say("🍽️","We are about to start eating. We say…","bism","We begin with Bismillāh: in the name of Allah.","al-Kulaynī, al-Kāfī, Book of Food and Drink","It means “in the name of Allah”."),
+ say("😋","We have finished our meal. We say…","hamd","After eating we thank Allah: Alḥamdulillāh, all praise is for Allah.","al-Kulaynī, al-Kāfī, Book of Food and Drink","It means “thank You, Allah”."),
+ say("🤧","You just sneezed. You say…","hamd","When we sneeze, we say Alḥamdulillāh.","al-Kulaynī, al-Kāfī, Book of Social Life","We thank Allah after sneezing."),
+ say("🗓️","“I'll visit Grandma tomorrow…” What do we add?","insha","For plans in the future we say Inshāʾ Allāh: if Allah wills.","Qur'an 18:23–24","We say it about things we plan to do later."),
+ say("🌈","You see a beautiful rainbow. You say…","masha","Mā shāʾ Allāh: this is what Allah has willed. It reminds us that Allah made everything beautiful.","Qur'an 18:39","We say it when we see something lovely Allah has made."),
+ say("📣","You hear the name of Prophet Muḥammad (ṣ). We send…","salawat","We send ṣalawāt: Allāhumma ṣalli ʿalā Muḥammad wa āli Muḥammad.","Qur'an 33:56","We send blessings on him and his family."),
+ say("🎁","Your friend gives you a present. You say…","jazak","Jazākallāh khayr: may Allah reward you with good.","al-Kulaynī, al-Kāfī","We ask Allah to reward the person."),
+ say("🚪","You meet your teacher at the masjid. You say…","salam","Assalāmu ʿalaykum: peace be upon you.","Qur'an 24:61","It means “peace be upon you”."),
+ say("👋","A friend says “Assalāmu ʿalaykum” to you. You reply…","wsalam","We reply with Wa ʿalaykum al-salām, or even better.","Qur'an 4:86","We give the greeting back."),
+ say("😔","You did something wrong and feel sorry. You say to Allah…","astagh","Astaghfirullāh: I ask Allah to forgive me.","Qur'an 71:10","We ask Allah to forgive us."),
+ say("🕊️","We hear sad news that someone has passed away. We say…","inna","Innā lillāhi wa innā ilayhi rājiʿūn: we belong to Allah, and to Him we return.","Qur'an 2:156","We say it when something sad happens.")
+];
+const saySet=A.addSet({id:"say-it-right",title:"Say It Right",bank:sayItems(),take:(band,n)=>S.shuffle(sayItems()).slice(0,n)});
+A.reg({id:"say-it-right",title:"Say It Right",pic:"💬",mode:"At home or in class",bands:["k2"],units:[["u5",["5.1"]]],
+ topics:"bismillah alhamdulillah inshallah mashallah salawat jazakallah salam phrases",
+ blurb:"What do we say when…? Tap the right words.",
+ how:"Look at the picture and tap what we say at that moment.",
+ mount(el){A.bankQuiz(el,{id:"say-it-right",set:saySet,n:5})}});
+
+/* ---------- Month Wheel (3–5, Unit 5, outcome 5.3) ---------- */
+const MONTHS=["Muḥarram","Ṣafar","Rabīʿ al-Awwal","Rabīʿ al-Thānī","Jumādā al-Ūlā","Jumādā al-Ākhirah","Rajab","Shaʿbān","Ramaḍān","Shawwāl","Dhul-Qaʿdah","Dhul-Ḥijjah"];
+const OCC=[["ʿĀshūrāʾ, when we remember Imam Ḥusayn (ʿa)",0,"10 Muḥarram"],["The birthday of Prophet Muḥammad (ṣ)",2,"17 Rabīʿ al-Awwal"],["The birthday of Sayyidah Fāṭimah (ʿa)",5,"20 Jumādā al-Ākhirah"],["The birthday of Imam ʿAlī (ʿa)",6,"13 Rajab"],["The Mabʿath, when the Prophet (ṣ) was given his mission",6,"27 Rajab"],["The birthday of Imam Ḥusayn (ʿa)",7,"3 Shaʿbān"],["The birthday of Imam al-Mahdī (ʿaj)",7,"15 Shaʿbān"],["Laylat al-Qadr and fasting",8,"the month of fasting"],["Eid al-Fiṭr",9,"1 Shawwāl"],["The birthday of Imam al-Riḍā (ʿa)",10,"11 Dhul-Qaʿdah"],["Eid al-Aḍḥā and the Ḥajj",11,"10 Dhul-Ḥijjah"],["Eid al-Ghadīr",11,"18 Dhul-Ḥijjah"]];
+const MONTH_REF="Qur'an 9:36 (twelve months); Shaykh ʿAbbās al-Qummī, Mafātīḥ al-Jinān";
+const monthQ=()=>{const t=S.int(0,1);
+  if(t===0){const o=S.pick(OCC),w=S.shuffle(MONTHS.filter((_,j)=>j!==o[1])).slice(0,2);return {b:["35"],pic:"🗓️",q:`In which month is <strong>${o[0]}</strong>?`,c:[MONTHS[o[1]],...w],e:`${o[0]}: ${o[2]}.`,ref:MONTH_REF,h:`It is the ${["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"][o[1]]} month of the Islamic year.`}}
+  const k=S.int(0,10),w=S.shuffle(MONTHS.filter((_,j)=>j!==k+1&&j!==k)).slice(0,2);return {b:["35"],pic:"🌙",q:`Which month comes right after <strong>${MONTHS[k]}</strong>?`,c:[MONTHS[k+1],...w],e:`After ${MONTHS[k]} comes ${MONTHS[k+1]}.`,ref:MONTH_REF,h:k===7?"It is the month of fasting.":k===8?"Eid al-Fiṭr is on its first day.":"Say the months from Muḥarram in your head."}};
+const monthSet=A.addSet({id:"month-wheel",title:"Month Wheel",bank:[monthQ()],take:(band,n)=>Array.from({length:n},monthQ)});
+A.reg({id:"month-wheel",title:"Month Wheel",pic:"🌙",mode:"At home or in class",bands:["35"],units:[["u5",["5.3"]]],
+ topics:"islamic months calendar hijri muharram ramadan shaban rajab occasions eid",
+ blurb:"Put the Islamic months in order and find each special day.",
+ how:"Tap four months in order, then say which month each special day is in.",
+ mount(el){A.rounds(el,{id:"month-wheel",n:4,max:10,render(body,api){
+   if(api.round%2===0){const s=S.int(0,8);api.setHints(["The year starts with Muḥarram and ends with Dhul-Ḥijjah.","Rajab, Shaʿbān and Ramaḍān come one after another."]);
+     A.orderTask(body,api,{prompt:`Tap these four months in order, starting with ${MONTHS[s]}.`,items:MONTHS.slice(s,s+4),explain:`<p>${MONTHS.join(" → ")}</p><p class="ref">${MONTH_REF}</p>`});return}
+   A.askTask(body,api,A.asQ(monthQ()))}})}});
+
+/* ---------- Sūrah Meanings (3–5 and 6–9, Unit 5, outcomes 5.4–5.6) ---------- */
+const SURAH=[
+ Q(["35","69"],"📖","Sūrah al-Fātiḥah is the opening of the Qur'an. What do we ask Allah for in it?",["To guide us to the straight path","For a new bike","For rain"],"In al-Fātiḥah we praise Allah and ask: “Guide us to the straight path.”","Qur'an 1:6","Look for the words “ihdinā al-ṣirāṭ al-mustaqīm”."),
+ Q(["35","69"],"☝️","What is Sūrah al-Ikhlāṣ mainly about?",["Allah is One; He has no child or parent, and nothing is like Him","The story of Prophet Mūsā (ʿa)","The rules of fasting"],"Sūrah al-Ikhlāṣ teaches Tawḥīd: Allah is One, He needs nothing, and nothing is like Him.","Qur'an 112","It starts “Qul huwa Allāhu aḥad”."),
+ Q(["35","69"],"🌙","Sūrah al-Qadr says one night is better than a thousand months. Which night?",["Laylat al-Qadr","The night of Eid","Every Friday night"],"Laylat al-Qadr, in the month of Ramaḍān, is better than a thousand months. The Qur'an was sent down on it.","Qur'an 97:1–3","The sūrah is named after it."),
+ Q(["35","69"],"🌊","In Sūrah al-Kawthar, Allah tells the Prophet (ṣ) He has given him al-Kawthar. What does al-Kawthar mean?",["Abundant good","A small gift","A river of fire"],"Al-Kawthar means abundant good. Many scholars explain that it includes the Prophet's (ṣ) blessed family through Sayyidah Fāṭimah (ʿa).","Qur'an 108; ʿAllāmah Ṭabāṭabāʾī, Tafsīr al-Mīzān","The word comes from “kathīr”, meaning a lot."),
+ Q(["35","69"],"🛡️","In Sūrah al-Nās, what do we ask Allah to protect us from?",["The whispering of shayṭān","Rain","Homework"],"In Sūrah al-Nās we seek Allah's protection from the sneaky whisperer who whispers into people's hearts.","Qur'an 114","Think of a whisper that tempts us to do wrong."),
+ Q(["35","69"],"🌄","Sūrah al-Falaq asks Allah to protect us from harm. Which of these is one thing it mentions?",["The harm of an envious person when they envy","Losing a game","Cold weather"],"Sūrah al-Falaq seeks protection from the harm of what Allah created, the darkness, and the envious person when they envy.","Qur'an 113","One of the things it mentions is jealousy (ḥasad)."),
+ Q(["69"],"⏳","Sūrah al-ʿAṣr says all people are in loss except those who…",["Believe, do good, and encourage each other to truth and patience","Become rich","Never make friends"],"Sūrah al-ʿAṣr: everyone is losing time except those who believe, do good deeds, and advise one another to truth and to patience.","Qur'an 103","There are four things in the answer."),
+ Q(["69"],"🤲","Sūrah al-Māʿūn criticises people who pray for show and refuse…",["Small acts of kindness and help to others","Expensive presents","To speak in class"],"Sūrah al-Māʿūn warns about those who are careless in prayer, pray to show off, and refuse even small kindnesses.","Qur'an 107","Māʿūn means small everyday help."),
+ Q(["69"],"🏆","In Sūrah al-Naṣr, when victory comes, what are believers told to do?",["Praise Allah and ask His forgiveness","Boast about winning","Stop praying"],"When Allah's help and victory come, glorify your Lord, praise Him and ask His forgiveness.","Qur'an 110:3","Even in success, believers stay humble before Allah."),
+ Q(["69"],"🐘","Sūrah al-Fīl tells the story of an army with elephants that tried to destroy the Kaʿbah. What happened?",["Allah sent flocks of birds and the army was defeated","The army destroyed the Kaʿbah","The elephants ran home"],"Allah protected His House: He sent flocks of birds against the army. This happened in the year the Prophet (ṣ) was born.","Qur'an 105","The sūrah's name means “the elephant”.")
+];
+const surahSet=A.addSet({id:"surah-meanings",title:"Sūrah Meanings",bank:SURAH});
+A.reg({id:"surah-meanings",title:"Sūrah Meanings",pic:"📖",mode:"At home or in class",bands:["35","69"],units:[["u5",["5.4","5.5","5.6"]]],
+ topics:"surah meanings fatiha ikhlas qadr kawthar nas falaq asr maun nasr fil short surahs quran",
+ blurb:"What do the short sūrahs teach us? Choose the meaning.",
+ how:"Read the question about a short sūrah and choose its meaning or main idea.",
+ mount(el){A.bankQuiz(el,{id:"surah-meanings",set:surahSet,n:5})}});
+
+/* ---------- good-character banks ---------- */
+const AK_K2=[
+  Q(["k2"],"🍎","Your friend has no snack today. What do you do?",[T("🤝","Share my snack"),T("🙈","Hide my snack")],"Sharing makes people happy, and Allah loves those who are generous.","Qur'an 76:8","How would your friend feel?"),
+  Q(["k2"],"🍽️","Before we start eating, we say…",[T("🌱","Bismillāh"),T("👋","Goodbye")],"We start eating with “Bismillāh”, in the name of Allah, and we finish with “Alḥamdulillāh”.","al-Kulaynī, al-Kāfī, Book of Food and Drink","It means “in the name of Allah”."),
+  Q(["k2"],"🎁","Someone gives you a present. What do you say?",[T("💐","Jazākallāh khayr, thank you!"),T("😶","Nothing")],"Thanking people is part of thanking Allah.","Qur'an 14:7","What do we say when someone is kind to us?"),
+  Q(["k2"],"🫂","You bumped into your friend by mistake and they fell over. What do you do?",[T("🙏","Say sorry and help them up"),T("🏃","Run away")],"Saying sorry and helping shows a kind heart.","Qur'an 2:83","What would you want a friend to do for you?"),
+  Q(["k2"],"🕌","In the masjid, we…",[T("🤫","Speak softly and walk calmly"),T("📣","Run and shout")],"The masjid is the house of Allah, so we keep it calm and clean.","Qur'an 24:36","People are praying there."),
+  Q(["k2"],"🛍️","Grandma is carrying heavy shopping bags. What do you do?",[T("💪","Help carry them"),T("📺","Keep watching TV")],"Helping our elders and family is a good deed Allah loves.","Qur'an 17:23–24","Who needs help here?"),
+  Q(["k2"],"🧸","Your little brother wants a turn with your toy. What do you do?",[T("🔄","Take turns kindly"),T("😠","Grab it back")],"Taking turns is fair and kind.","Qur'an 16:90","Is it fair if only one person plays?"),
+  Q(["k2"],"🧹","You made a mess at home. What do you do?",[T("🧽","Help clean it up"),T("🙈","Walk away")],"Keeping things clean is part of faith.","al-Kulaynī, al-Kāfī","Who made the mess?"),
+  Q(["k2"],"🛏️","Before sleeping, a good habit is to…",[T("🤲","Remember Allah and say a short duʿā"),T("📱","Play on a phone for hours")],"Remembering Allah before sleep brings peace to the heart.","Qur'an 13:28","Something that makes the heart calm."),
+  Q(["k2"],"🐱","A hungry kitten is outside. What could you do?",[T("🥣","Ask a grown-up to help give it water and food"),T("🪨","Throw things at it")],"Being kind to animals is loved by Allah.","al-Kulaynī, al-Kāfī","Animals feel hungry and thirsty too."),
+  Q(["k2"],"🙋","Your teacher is talking. What do you do?",[T("👂","Listen quietly"),T("🗣️","Talk over the teacher")],"Respecting our teachers helps us learn.","Imam al-Sajjād (ʿa), Risālat al-Ḥuqūq","How do we learn the most?"),
+  Q(["k2"],"💧","You are washing your hands. What should you remember?",[T("🚰","Don't waste water"),T("🌊","Leave the tap running")],"Allah does not love those who waste.","Qur'an 7:31","Water is a gift from Allah.")
+];
+const AK_35=[
+  Q(["35"],"🤫","Your friend tells you a secret and asks you to keep it. What do you do?",["Keep the secret","Tell one other friend","Post a hint about it online"],"Keeping a trust is a sign of a true believer.","Qur'an 23:8","A secret is a kind of trust (amānah)."),
+  Q(["35"],"🪙","You find some money on the school floor. What do you do?",["Give it to a teacher so it can be returned","Keep it, because nobody saw","Spend it on lunch"],"What belongs to someone else must be returned to its owner.","Qur'an 4:58","Whose money is it?"),
+  Q(["35"],"👕","Some classmates tease a boy about his old clothes. What do you do?",["Don't join in, and be kind to him","Laugh along so you fit in","Take a photo to share"],"Allah tells us not to mock others; they may be better than us.","Qur'an 49:11","How would you feel if it were you?"),
+  Q(["35"],"🍪","You told your mum you didn't take the last biscuit, but you did. What now?",["Tell her the truth and say sorry","Say nothing; it was only a biscuit","Blame your little sister"],"Being truthful matters even in small things.","Qur'an 9:119","Even small lies are still lies."),
+  Q(["35"],"🏠","Your elderly neighbour has been sick all week. What could you do?",["Visit with your parents or ask if they need anything","Nothing; it's not your problem","Make noise outside their window"],"Islam teaches us to care for our neighbours.","Qur'an 4:36","Neighbours have rights in Islam."),
+  Q(["35"],"🥇","Your friend wins a prize you wanted. You feel jealous. What do you do?",["Say “Mā shāʾ Allāh” and congratulate them","Say the prize is silly","Stop talking to them"],"Being happy for others protects our hearts from jealousy.","Qur'an 4:32","Jealousy hurts our own heart most."),
+  Q(["35"],"🗣️","Friends start saying unkind things about a classmate who isn't there. What is this called, and what do you do?",["Backbiting (ghībah); change the topic or speak up for them","Just chatting; join in","Good advice; pass it on"],"Saying something about someone behind their back that they would dislike is backbiting.","Qur'an 49:12","The person is not there to hear it."),
+  Q(["35"],"🤥","You told a lie and now feel bad. What is the best thing to do?",["Tell the truth, say sorry and ask Allah's forgiveness","Tell another lie to cover it","Forget about it"],"Allah loves those who turn back to Him, and the truth leads to goodness.","Qur'an 66:8","Fixing a mistake starts with honesty."),
+  Q(["35"],"😠","Your brother breaks your model by accident. You feel very angry. What do you do?",["Take a deep breath, calm down, and forgive him","Break something of his","Shout and say mean words"],"Allah praises those who hold back their anger and forgive.","Qur'an 3:134","It was an accident."),
+  Q(["35"],"👵","Your grandmother tells the same story again. What do you do?",["Listen kindly and respectfully","Say “You already told me!”","Walk away"],"We speak to our elders with respect and gentle words.","Qur'an 17:23","How should we speak to our elders?"),
+  Q(["35"],"🎮","A friend asks you to play a game your parents don't allow. What do you do?",["Politely say no and suggest something else","Play secretly","Lie to your parents about it"],"Obeying parents in what is good is part of our religion.","Qur'an 31:14–15","Would your parents be pleased?"),
+  Q(["35"],"🍞","There's leftover food after dinner. What should we do?",["Save it or share it, not waste it","Throw it all away","Leave it out to spoil"],"Allah does not love those who waste.","Qur'an 7:31","Many people in the world are hungry.")
+];
+A.AKHLAQ_K2=AK_K2;A.AKHLAQ_35=AK_35;
+
+/* ---------- Kind Choice (K–2, Unit 6, outcomes 6.1 and 6.2) ---------- */
+const kindSet=A.addSet({id:"kind-choice",title:"Kind Choice",bank:AK_K2});
+A.reg({id:"kind-choice",title:"Kind Choice",pic:"💚",mode:"At home or in class",bands:["k2"],units:[["u6",["6.1","6.2"]]],
+ topics:"akhlaq manners kindness sharing sorry helping masjid manners",
+ blurb:"Tap the kind or polite choice in everyday scenes.",
+ how:"Look at the picture, listen to the question and tap the kind choice.",
+ mount(el){A.bankQuiz(el,{id:"kind-choice",set:kindSet,n:5})}});
+
+/* ---------- Better Words (3–5, Unit 6, outcomes 6.3 and 6.4) ---------- */
+const betterSet=A.addSet({id:"better-words",title:"Better Words",bank:AK_35});
+A.reg({id:"better-words",title:"Better Words",pic:"🗨️",mode:"At home or in class",bands:["35"],units:[["u6",["6.3","6.4"]]],
+ topics:"akhlaq backbiting lying teasing jealousy anger neighbours parents rights",
+ blurb:"Spot lying, teasing, backbiting or jealousy, and choose a better way.",
+ how:"Read each short story and choose the best thing to do.",
+ mount(el){A.bankQuiz(el,{id:"better-words",set:betterSet,n:5})}});
+
+/* ---------- Real-Life Choices (6–9, Unit 6, outcomes 6.5 and 6.6) ---------- */
+const life=(pic,q,c,e,ref,h)=>({b:["69"],pic,q,c,e,ref,h});
+A.LIFE=[
+  life("💬","In your class group chat, some students start making fun of a new student's accent. What do you do?",["Don't join in, and say something kind or ask them to stop","Add a laughing emoji so you fit in","Stay quiet and forward the jokes to another chat"],"Mocking others hurts them, and the person being mocked may be better than those mocking.","Qur'an 49:11","Imagine you were the new student."),
+  life("📲","A friend sends you a shocking rumour about a teacher and asks you to share it. What do you do?",["Don't share it; check whether it's true, and usually just let it go","Share it, since everyone else is","Share it but add “not sure if true”"],"The Qur'an tells us to check news before we act on it, so we don't harm people out of ignorance.","Qur'an 49:6","Could the rumour be false? Who could it hurt?"),
+  life("🗣️","Your friends start talking about another friend behind his back. What do you do?",["Change the topic or speak up for him","Join in, since he'll never know","Listen quietly and tell him later what they said"],"Backbiting means saying something about a person that they would dislike to hear. The Qur'an compares it to eating your dead brother's flesh.","Qur'an 49:12","Would he be happy to hear what's being said?"),
+  life("🤝","You promised to help your younger brother with his homework, but friends invite you to play online. What do you do?",["Keep your promise first, then join your friends later","Play now and tell him tomorrow","Tell him you never promised"],"Keeping promises is part of faith, and we will be asked about our promises.","Qur'an 17:34","A promise is a promise."),
+  life("✏️","You broke a classmate's pen by accident and nobody saw. What do you do?",["Tell the truth, say sorry and offer to replace it","Put it back and say nothing","Blame someone sitting nearby"],"Truthfulness takes courage. Allah tells the believers to be with the truthful.","Qur'an 9:119","Allah saw, even if no one else did."),
+  life("😤","Someone pushes in front of you in the canteen line and you feel very angry. What do you do?",["Take a breath, stay calm and speak politely or tell a teacher","Push them back harder","Shout at them in front of everyone"],"Allah praises those who hold back their anger and forgive people.","Qur'an 3:134","Which choice controls the anger instead of letting it control you?"),
+  life("🎮","Your mum asks you to stop gaming and help with dinner. You feel annoyed. What do you do?",["Stop politely and help, then talk calmly later if you need to","Sigh loudly and roll your eyes","Pretend you didn't hear"],"The Qur'an tells us not to say even “uff” to our parents, and to speak to them gently.","Qur'an 17:23–24","Even a sigh can hurt a parent's feelings."),
+  life("🚶","A new friend keeps pushing you to lie to your parents about where you go after school. What do you do?",["Say no, and think again about this friendship","Lie just this once","Lie, but only about small things"],"Friends shape who we become. The Qur'an describes someone on the Day of Judgement wishing they had never taken a certain person as a friend.","Qur'an 25:27–29","Is this friend leading you towards good or bad?"),
+  life("📱","Your friend gets an expensive new phone and you feel jealous. What do you do?",["Be happy for your friend and thank Allah for what you have","Say the phone is ugly","Ask your parents until they give in"],"Allah tells us not to long for what others have been given, and to be thankful.","Qur'an 20:131; 14:7","Think about the blessings you already have."),
+  life("🏆","You beat a younger student in a game and feel like showing off. What do you do?",["Stay humble and encourage them","Tell everyone how easily you won","Laugh at how badly they played"],"Allah dislikes arrogance and boasting.","Qur'an 31:18","How would a humble winner act?"),
+  life("⏳","You've been scrolling short videos for two hours and your homework is waiting. What do you do?",["Put the phone away and set a time limit for next time","Keep scrolling; homework can wait","Copy the homework from a friend in the morning"],"Believers turn away from what wastes their time and brings no benefit.","Qur'an 23:1–3","Time is one of Allah's gifts."),
+  life("📝","A classmate asks to copy your homework. What do you do?",["Offer to explain it so they can do it themselves","Let them copy all of it","Charge them money to copy it"],"Allah tells us to help one another in goodness, not in wrongdoing.","Qur'an 5:2","Which choice actually helps them learn?")
+];
+const lifeSet=A.addSet({id:"real-life-choices",title:"Real-Life Choices",bank:A.LIFE});
+A.reg({id:"real-life-choices",title:"Real-Life Choices",pic:"🧭",star:true,mode:"At home or in class",bands:["69"],units:[["u6",["6.5","6.6"]]],
+ topics:"akhlaq character friends speech promises media backbiting anger honesty",
+ blurb:"Real situations with friends, family and phones. What would you do?",
+ how:"Read each situation and choose the best response. The explanation shows what the Qur'an teaches about it.",
+ mount(el){A.bankQuiz(el,{id:"real-life-choices",set:lifeSet,n:5})}});
+
+A.AKHLAQ=AK_K2.concat(AK_35,A.LIFE);
+})();
+
+/* ================= iLearnDeen occasions =================
+   Each pack = questions about the occasion + general good-character questions (mixed in about 40%).
+   Muḥarram is introduced gently: values and love, no distressing detail. */
+(function(){
+const A=APP,Q=A.Q,T=A.T;
+const MAHDI_REF="Shaykh al-Ṣadūq, Kamāl al-Dīn; Shaykh al-Mufīd, al-Irshād";
+const IRSHAD="Shaykh al-Mufīd, al-Irshād";
+const MAFATIH="Shaykh ʿAbbās al-Qummī, Mafātīḥ al-Jinān";
+
+/* ---------- 15 Shaʿbān: Imam al-Mahdī (ʿaj) ---------- */
+A.addOccasion({id:"shaban-15",title:"Imam al-Mahdī (ʿaj)",date:"15 Shaʿbān",pic:"🌕",
+ blurb:"The birthday of our living Imam.",
+ about:"On 15 Shaʿbān we celebrate the birth of Imam al-Mahdī (ʿaj), the twelfth Imam. He is alive today, hidden from our eyes, and we wait for his return by doing good.",
+ mix:A.AKHLAQ,
+ bank:[
+  Q(["k2"],"🎂","On 15 Shaʿbān we celebrate the birthday of…",[T("🌕","Imam al-Mahdī (ʿaj)"),T("🚢","Prophet Nūḥ (ʿa)")],"15 Shaʿbān is the birthday of Imam al-Mahdī (ʿaj), our twelfth Imam.",MAHDI_REF,"Look at the moon picture: it's the Imam we celebrate in Shaʿbān."),
+  Q(["k2"],"🌟","Which Imam is alive today?",[T("🌕","Imam al-Mahdī (ʿaj)"),T("🕌","Imam ʿAlī (ʿa)")],"Imam al-Mahdī (ʿaj) is our living Imam. Allah keeps him hidden until the time he returns.",MAHDI_REF,"He is the Imam we are waiting for."),
+  Q(["k2"],"🤲","What can we do for Imam al-Mahdī (ʿaj)?",[T("🤲","Pray for him and be good"),T("😴","Forget about him")],"We pray for the Imam and try to be good, so he is happy with us.",MAFATIH,"Which choice would make the Imam happy?"),
+  Q(["k2"],"⚖️","When Imam al-Mahdī (ʿaj) returns, he will fill the world with…",[T("⚖️","Justice and fairness"),T("🔊","Noise")],"The Prophet (ṣ) told us the Mahdī will fill the earth with justice after it has been filled with injustice.",MAHDI_REF,"Look at the scales in the picture."),
+  Q(["k2"],"🔢","Imam al-Mahdī (ʿaj) is our ___ Imam.",[T("1️⃣2️⃣","Twelfth"),T("1️⃣","First")],"Imam al-Mahdī (ʿaj) is the twelfth and last Imam.",MAHDI_REF,"He is the last Imam."),
+  Q(["35"],"👨‍👦","Who is the father of Imam al-Mahdī (ʿaj)?",["Imam Ḥasan al-ʿAskarī (ʿa)","Imam ʿAlī al-Riḍā (ʿa)","Imam Jaʿfar al-Ṣādiq (ʿa)"],"Imam al-Mahdī (ʿaj) is the son of the eleventh Imam, Imam Ḥasan al-ʿAskarī (ʿa).",MAHDI_REF,"His father is the 11th Imam."),
+  Q(["35"],"🏙️","In which city was Imam al-Mahdī (ʿaj) born?",["Sāmarrāʾ","Makkah","Najaf"],"Imam al-Mahdī (ʿaj) was born in Sāmarrāʾ, in Iraq.",MAHDI_REF,"It's the city where his father, Imam al-ʿAskarī (ʿa), lived."),
+  Q(["35"],"🌫️","The time when Imam al-Mahdī (ʿaj) is hidden from people is called…",["Ghaybah (occultation)","Hijrah (migration)","Ḥajj (pilgrimage)"],"Ghaybah means being hidden. The Imam is alive, but Allah keeps him hidden from our eyes.",MAHDI_REF,"The Arabic word means “being absent” or “hidden”."),
+  Q(["35"],"🏷️","Which of these is a title of Imam al-Mahdī (ʿaj)?",["Ṣāḥib al-Zamān (Master of the Age)","al-Kāẓim","al-Mujtabā"],"Imam al-Mahdī (ʿaj) is also called Ṣāḥib al-Zamān, al-Qāʾim and al-Ḥujjah.",MAHDI_REF,"The other two are titles of the 7th and 2nd Imams."),
+  Q(["35"],"⏳","Waiting for the Imam (intiẓār) means…",["Trying to be a better person every day","Doing nothing until he comes","Only waiting at home"],"True waiting means getting ready: praying, learning and doing good deeds.",MAHDI_REF,"Waiting for a guest means getting the house ready."),
+  Q(["35"],"📅","Which month comes right after Shaʿbān?",["Ramaḍān","Muḥarram","Rajab"],"Shaʿbān is the eighth month, and the blessed month of Ramaḍān comes next.","Qur'an 2:185","It's the month of fasting."),
+  Q(["35"],"📛","Imam al-Mahdī (ʿaj) has the same name as the Prophet (ṣ). What is it?",["Muḥammad","ʿAlī","Ḥasan"],"His name is Muḥammad, the same as the Prophet (ṣ).",MAHDI_REF,"What is the Prophet's (ṣ) name?"),
+  Q(["69"],"🗓️","In which year (AH) was Imam al-Mahdī (ʿaj) born?",["255 AH","260 AH","329 AH"],"He was born in 255 AH. He became Imam in 260 AH, when his father was martyred, and the Minor Occultation lasted until 329 AH.",MAHDI_REF,"He was a small child when he became Imam in 260 AH."),
+  Q(["69"],"✉️","During the Minor Occultation (al-Ghaybah al-Ṣughrā), how did believers reach the Imam?",["Through four special deputies","By writing to the caliph","There was no way at all"],"For about 70 years, four special deputies carried letters and questions between the believers and the Imam. Then the Major Occultation began.",MAHDI_REF,"The deputies are called al-nuwwāb al-arbaʿah."),
+  Q(["69"],"🧑‍🏫","During the Major Occultation, who do believers turn to for religious rulings?",["Qualified scholars (the marājiʿ)","Anyone popular online","No one; everyone decides alone"],"In the Major Occultation, believers follow qualified, just scholars for religious rulings.","Shaykh al-Ṣadūq, Kamāl al-Dīn (the Imam's letter about turning to the narrators of hadith)","Think of taqlīd."),
+  Q(["69"],"🌅","Duʿā al-ʿAhd, often recited in the morning, is mainly about…",["Renewing our promise of loyalty to the Imam","Asking for rain","Thanking Allah for food"],"In Duʿā al-ʿAhd we renew our pledge to Imam al-Mahdī (ʿaj) and ask to be among his helpers.",MAFATIH,"ʿAhd means a promise or pledge."),
+  Q(["69"],"🌱","Which choice best shows real intiẓār (waiting) for the Imam?",["Working on your character and helping others now","Waiting for others to fix the world","Only talking about when he will come"],"Waiting is active: we prepare ourselves and our communities by doing good.",MAHDI_REF,"Which one is active, not passive?"),
+  Q(["69"],"⚖️","The Prophet (ṣ) said the Mahdī will fill the earth with justice after it has been filled with…",["Injustice and oppression","Water","Buildings"],"This hadith is narrated in many sources: the Mahdī will fill the earth with justice and fairness, as it was filled with injustice and oppression.",MAHDI_REF,"It's the opposite of justice.")
+ ]});
+
+/* ---------- 13 Rajab: Imam ʿAlī (ʿa) ---------- */
+A.addOccasion({id:"rajab-13",title:"Imam ʿAlī (ʿa)",date:"13 Rajab",pic:"🕋",
+ blurb:"The birthday of the first Imam, born inside the Kaʿbah.",
+ about:"On 13 Rajab we celebrate the birth of Imam ʿAlī (ʿa), the first Imam, who was born inside the Kaʿbah. He is famous for his courage, justice, knowledge and care for orphans and the poor.",
+ mix:A.AKHLAQ,
+ bank:[
+  Q(["k2"],"🕋","Where was Imam ʿAlī (ʿa) born?",[T("🕋","Inside the Kaʿbah"),T("🏰","In a castle")],"Imam ʿAlī (ʿa) was born inside the Kaʿbah, the House of Allah.",IRSHAD,"Look at the picture: it's the House of Allah in Makkah."),
+  Q(["k2"],"1️⃣","Imam ʿAlī (ʿa) is our ___ Imam.",[T("1️⃣","First"),T("🔟","Tenth")],"Imam ʿAlī (ʿa) is the first Imam.",IRSHAD,"He came before all the other Imams."),
+  Q(["k2"],"🍞","At night, Imam ʿAlī (ʿa) secretly carried food to…",[T("🧒","Orphans and poor families"),T("🏆","Rich kings")],"Imam ʿAlī (ʿa) used to carry food to orphans and the poor at night, so no one would know.",IRSHAD,"Who needs food the most?"),
+  Q(["k2"],"👨‍👩‍👦‍👦","Imam ʿAlī (ʿa) is the father of…",[T("🌸","Imam Ḥasan (ʿa) and Imam Ḥusayn (ʿa)"),T("🚢","Prophet Nūḥ (ʿa)")],"Imam ʿAlī (ʿa) and Sayyidah Fāṭimah (ʿa) are the parents of Imam Ḥasan (ʿa) and Imam Ḥusayn (ʿa).",IRSHAD,"Think of the second and third Imams."),
+  Q(["35"],"🛏️","On the night of the Hijrah, what did Imam ʿAlī (ʿa) do?",["Slept in the Prophet's (ṣ) bed to protect him","Went on a trip","Hid in a cave"],"He slept in the Prophet's (ṣ) bed so the Prophet (ṣ) could leave Makkah safely.","Qur'an 2:207 and its tafsīr; "+IRSHAD,"It was very brave, because enemies were waiting outside."),
+  Q(["35"],"📚","The Prophet (ṣ) said: “I am the city of knowledge and ʿAlī is its…”",["Gate","Roof","Garden"],"The Prophet (ṣ) said: “I am the city of knowledge and ʿAlī is its gate.”","Shaykh al-Ṣadūq, ʿUyūn Akhbār al-Riḍā","To enter a city, you go through its…"),
+  Q(["35"],"👑","Which title of Imam ʿAlī (ʿa) means “Commander of the Faithful”?",["Amīr al-Muʾminīn","al-Mujtabā","al-Bāqir"],"Imam ʿAlī (ʿa) is called Amīr al-Muʾminīn.",IRSHAD,"Amīr means leader."),
+  Q(["35"],"🕌","In which city is the shrine of Imam ʿAlī (ʿa)?",["Najaf","Mashhad","Sāmarrāʾ"],"Imam ʿAlī (ʿa) is buried in Najaf, in Iraq.",IRSHAD,"It's in Iraq, near Kūfah."),
+  Q(["35"],"👶","Who was the first male to believe in the Prophet (ṣ)?",["Imam ʿAlī (ʿa)","Abū Lahab","Pharaoh"],"Imam ʿAlī (ʿa) was the first male to believe in the Prophet (ṣ), while still young.",IRSHAD,"He grew up in the Prophet's (ṣ) home."),
+  Q(["69"],"📜","Which famous book collects Imam ʿAlī's (ʿa) sermons, letters and sayings?",["Nahj al-Balāghah","al-Ṣaḥīfah al-Sajjādiyyah","Mafātīḥ al-Jinān"],"al-Sharīf al-Raḍī collected Imam ʿAlī's (ʿa) words in Nahj al-Balāghah, “the peak of eloquence”.","al-Sharīf al-Raḍī, Nahj al-Balāghah","Its name means “the path of eloquence”."),
+  Q(["69"],"⚖️","In his letter to Mālik al-Ashtar, Imam ʿAlī (ʿa) said people are of two kinds: your brother in faith, or…",["Your equal in humanity","Your enemy","Your servant"],"He wrote that people are either your brother in religion or your equal in creation, so treat everyone with mercy and fairness.","Nahj al-Balāghah, Letter 53","It teaches respect for every human being."),
+  Q(["69"],"👨‍👩‍👦","Who were Imam ʿAlī's (ʿa) parents?",["Abū Ṭālib and Fāṭimah bint Asad","ʿAbdullāh and Āminah","ʿAbd al-Muṭṭalib and Ḥalīmah"],"Imam ʿAlī (ʿa) is the son of Abū Ṭālib and Fāṭimah bint Asad.",IRSHAD,"His father raised the Prophet (ṣ) as a boy."),
+  Q(["69"],"🤝","On the Day of Ghadīr the Prophet (ṣ) said about Imam ʿAlī (ʿa): “Whoever I am his mawlā…”",["“…ʿAlī is his mawlā”","“…ʿAlī is his neighbour”","“…should go home”"],"The Prophet (ṣ) announced: “Whoever I am his mawlā, ʿAlī is his mawlā.”","Shaykh al-Mufīd, al-Irshād; ʿAllāmah al-Amīnī, al-Ghadīr","Mawlā means master or guardian.")
+ ]});
+
+/* ---------- 20 Jumādā al-Ākhirah: Sayyidah Fāṭimah (ʿa) ---------- */
+const FATIMA_REF="Shaykh al-Ṣadūq, ʿIlal al-Sharāʾiʿ; "+IRSHAD;
+A.addOccasion({id:"jumada-20",title:"Sayyidah Fāṭimah al-Zahrāʾ (ʿa)",date:"20 Jumādā al-Ākhirah",pic:"🌹",
+ blurb:"The birthday of the Prophet's (ṣ) beloved daughter.",
+ about:"On 20 Jumādā al-Ākhirah we celebrate the birth of Sayyidah Fāṭimah al-Zahrāʾ (ʿa), the daughter of the Prophet (ṣ) and one of the 14 Maʿṣūmīn.",
+ mix:A.AKHLAQ,
+ bank:[
+  Q(["k2"],"🌹","Sayyidah Fāṭimah (ʿa) is the daughter of…",[T("🌟","Prophet Muḥammad (ṣ)"),T("🚢","Prophet Nūḥ (ʿa)")],"Sayyidah Fāṭimah (ʿa) is the beloved daughter of Prophet Muḥammad (ṣ) and Sayyidah Khadījah (ʿa).",FATIMA_REF,"Her father is the last Prophet."),
+  Q(["k2"],"👩‍👦‍👦","Sayyidah Fāṭimah (ʿa) is the mother of…",[T("🌸","Imam Ḥasan (ʿa) and Imam Ḥusayn (ʿa)"),T("🐋","Prophet Yūnus (ʿa)")],"Sayyidah Fāṭimah (ʿa) is the mother of Imam Ḥasan (ʿa), Imam Ḥusayn (ʿa) and Sayyidah Zaynab (ʿa).",FATIMA_REF,"Think of the second and third Imams."),
+  Q(["k2"],"📿","After ṣalāh we can say the tasbīḥ of Sayyidah Fāṭimah (ʿa). It starts with…",[T("📿","Allāhu Akbar"),T("👋","Hello")],"The tasbīḥ of Sayyidah Fāṭimah (ʿa) is: Allāhu Akbar 34 times, Alḥamdulillāh 33 times and Subḥān Allāh 33 times.","al-Kulaynī, al-Kāfī, Book of Ṣalāh","It means “Allah is the Greatest”."),
+  Q(["k2"],"🧥","Sayyidah Fāṭimah (ʿa) is one of the five people of the…",[T("🧥","Cloak (Kisāʾ)"),T("🚗","Car")],"She is one of the five Ahl al-Kisāʾ, the people of the cloak.","Qur'an 33:33; Ḥadīth al-Kisāʾ","Think of the story of the cloak."),
+  Q(["35"],"✨","What does her title al-Zahrāʾ mean?",["The Radiant (the shining one)","The Strong","The Traveller"],"al-Zahrāʾ means the radiant or shining one.",FATIMA_REF,"It's connected to light."),
+  Q(["35"],"👩","Who is the mother of Sayyidah Fāṭimah (ʿa)?",["Sayyidah Khadījah (ʿa)","Sayyidah Maryam (ʿa)","Sayyidah Āsiyah"],"Her mother is Sayyidah Khadījah (ʿa), the first wife of the Prophet (ṣ).",FATIMA_REF,"She was the Prophet's (ṣ) first wife."),
+  Q(["35"],"🔢","How many times do we say “Allāhu Akbar” in the tasbīḥ of Sayyidah Fāṭimah (ʿa)?",["34","33","10"],"Allāhu Akbar 34 times, Alḥamdulillāh 33 times and Subḥān Allāh 33 times: 100 in total.","al-Kulaynī, al-Kāfī, Book of Ṣalāh","It's one more than the other two."),
+  Q(["35"],"🍲","While fasting, Sayyidah Fāṭimah (ʿa) and her family gave away their food. To whom?",["A poor person, an orphan and a captive","Their rich neighbours","Nobody"],"Sūrah al-Insān praises the Ahl al-Bayt, who gave their food to the poor, the orphan and the captive for the love of Allah.","Qur'an 76:8–9 and its tafsīr","There were three people, on three days."),
+  Q(["69"],"❤️","The Prophet (ṣ) said: “Fāṭimah is a part of me…”",["“…whoever pleases her pleases me”","“…and she likes the colour green”","“…and she lives in Makkah”"],"The Prophet (ṣ) said: “Fāṭimah is a part of me; whoever pleases her pleases me, and whoever angers her angers me.”","Shaykh al-Mufīd, al-Amālī","It shows how close she was to her father."),
+  Q(["69"],"👑","Which title shows that Sayyidah Fāṭimah (ʿa) is the leader of all women?",["Sayyidat Nisāʾ al-ʿĀlamīn","Umm al-Muʾminīn","al-Ṣiddīqah al-Ṣughrā"],"The Prophet (ṣ) called her Sayyidat Nisāʾ al-ʿĀlamīn, the leader of the women of the worlds.","Shaykh al-Ṣadūq, al-Amālī","Sayyidah means leader or lady."),
+  Q(["69"],"👨‍👧","The Prophet (ṣ) gave her a loving title meaning “mother of her father”. What is it?",["Umm Abīhā","Umm Kulthūm","Umm al-Banīn"],"Because she cared for her father so much, the Prophet (ṣ) called her Umm Abīhā.",FATIMA_REF,"Umm means mother and Abīhā means her father."),
+  Q(["69"],"🌊","Many scholars explain that al-Kawthar (abundant good) in Sūrah al-Kawthar includes…",["The Prophet's (ṣ) blessed family through Sayyidah Fāṭimah (ʿa)","A large house","Many camels"],"Sūrah al-Kawthar answered those who mocked the Prophet (ṣ) for having no sons. Many scholars explain al-Kawthar to include his family through Sayyidah Fāṭimah (ʿa).","Qur'an 108; ʿAllāmah Ṭabāṭabāʾī, Tafsīr al-Mīzān","Think of the Prophet's (ṣ) descendants.")
+ ]});
+
+/* ---------- 17 Rabīʿ al-Awwal: the Prophet's (ṣ) birthday ---------- */
+const SIRA="Ibn Hishām, al-Sīrah; "+IRSHAD;
+A.addOccasion({id:"rabi-17",title:"Prophet Muḥammad (ṣ)",date:"17 Rabīʿ al-Awwal",pic:"🌟",
+ blurb:"The birthday of the last Prophet, a mercy to the worlds.",
+ about:"On 17 Rabīʿ al-Awwal we celebrate the birth of Prophet Muḥammad (ṣ), the last Prophet, sent as a mercy to all the worlds. The same day is the birthday of Imam Jaʿfar al-Ṣādiq (ʿa).",
+ mix:A.AKHLAQ,
+ bank:[
+  Q(["k2"],"🏙️","In which city was Prophet Muḥammad (ṣ) born?",[T("🕋","Makkah"),T("🗼","Paris")],"Prophet Muḥammad (ṣ) was born in Makkah, the city of the Kaʿbah.",SIRA,"It's the city of the Kaʿbah."),
+  Q(["k2"],"💛","Allah sent Prophet Muḥammad (ṣ) as a ___ to all the worlds.",[T("💛","Mercy"),T("⛈️","Storm")],"Allah says: “We have not sent you except as a mercy to the worlds.”","Qur'an 21:107","It means kindness and care."),
+  Q(["k2"],"📣","When we hear the Prophet's (ṣ) name, we say…",[T("🌟","Ṣalawāt"),T("👋","Bye-bye")],"We send ṣalawāt: Allāhumma ṣalli ʿalā Muḥammad wa āli Muḥammad.","Qur'an 33:56","We send blessings on him and his family."),
+  Q(["k2"],"🤝","People called the Prophet (ṣ) al-Amīn. It means…",[T("🤝","The trustworthy one"),T("🏃","The fast runner")],"Even before he became a Prophet, everyone trusted him, so they called him al-Amīn.",SIRA,"People trusted him with their things."),
+  Q(["35"],"👨‍👩‍👦","Who were the parents of Prophet Muḥammad (ṣ)?",["ʿAbdullāh and Āminah","Abū Ṭālib and Fāṭimah bint Asad","Ibrāhīm and Hājar"],"His father was ʿAbdullāh and his mother was Āminah. His father passed away before he was born.",SIRA,"His father's name means “servant of Allah”."),
+  Q(["35"],"🐘","The Prophet (ṣ) was born in a year named after an animal. Which one?",["The Year of the Elephant","The Year of the Camel","The Year of the Lion"],"He was born in the Year of the Elephant, when Allah protected the Kaʿbah from an army with elephants.","Qur'an 105; "+SIRA,"Think of Sūrah al-Fīl."),
+  Q(["35"],"👴","Who looked after the Prophet (ṣ) after his grandfather passed away?",["His uncle Abū Ṭālib","His uncle Abū Lahab","A king of Yemen"],"After his grandfather ʿAbd al-Muṭṭalib, his uncle Abū Ṭālib raised and protected him.",SIRA,"He was also the father of Imam ʿAlī (ʿa)."),
+  Q(["35"],"🎂","Which Imam shares the Prophet's (ṣ) birthday, 17 Rabīʿ al-Awwal?",["Imam Jaʿfar al-Ṣādiq (ʿa)","Imam ʿAlī (ʿa)","Imam al-Mahdī (ʿaj)"],"Imam Jaʿfar al-Ṣādiq (ʿa), the 6th Imam, was also born on 17 Rabīʿ al-Awwal.",IRSHAD,"He is the 6th Imam."),
+  Q(["69"],"🌺","Allah describes the Prophet's (ṣ) character as…",["“Truly great” (khuluqin ʿaẓīm)","Strict and harsh","Shy and quiet"],"Allah says: “Indeed, you are of a great moral character.”","Qur'an 68:4","Sūrah al-Qalam praises his character."),
+  Q(["69"],"🫶","The Qur'an says that if the Prophet (ṣ) had been harsh, people would have…",["Run away from him","Followed him more","Not noticed"],"Because of Allah's mercy he was gentle; if he had been harsh, people would have scattered from around him.","Qur'an 3:159","Gentleness brings people close."),
+  Q(["69"],"📿","What did the Prophet (ṣ) say he was sent to do?",["To perfect noble character","To become rich","To build palaces"],"The Prophet (ṣ) said he was sent to complete the noblest character traits.","al-Ṭabrisī, Makārim al-Akhlāq","It's about akhlāq."),
+  Q(["69"],"🔚","What does it mean that the Prophet (ṣ) is “the Seal of the Prophets”?",["He is the last Prophet; no Prophet comes after him","He used a seal on letters only","He was the first Prophet"],"Allah calls him the Seal of the Prophets: prophethood ended with him.","Qur'an 33:40","A seal closes something.")
+ ]});
+
+/* ---------- Ramaḍān and Laylat al-Qadr ---------- */
+A.addOccasion({id:"ramadan",title:"Ramaḍān and Laylat al-Qadr",date:"Month of Ramaḍān",pic:"🌙",
+ blurb:"The month of fasting, the Qur'an and the Night of Power.",
+ about:"Ramaḍān is the month in which the Qur'an was sent down. We fast, pray, read the Qur'an and help others, and we spend the nights of Qadr in worship.",
+ mix:A.AKHLAQ,
+ bank:[
+  Q(["k2"],"🌙","In Ramaḍān, grown-ups…",[T("🍽️","Fast from dawn to maghrib"),T("🛌","Sleep all month")],"In Ramaḍān, those who have reached the age of duty fast from dawn until maghrib.","Qur'an 2:183–187","They don't eat or drink during the day."),
+  Q(["k2"],"📖","Which book was sent down in Ramaḍān?",[T("📖","The Qur'an"),T("📒","A colouring book")],"Allah sent down the Qur'an in the month of Ramaḍān.","Qur'an 2:185","It's Allah's book."),
+  Q(["k2"],"🎉","After Ramaḍān we celebrate…",[T("🎉","Eid al-Fiṭr"),T("🎂","My birthday")],"After Ramaḍān comes Eid al-Fiṭr on the first day of Shawwāl.","Shaykh ʿAbbās al-Qummī, Mafātīḥ al-Jinān","It's an Eid."),
+  Q(["k2"],"🌇","When the fast ends at maghrib, the meal is called…",[T("🍲","Ifṭār"),T("🥞","Breakfast in bed")],"Ifṭār is the meal when we open our fast at maghrib.","al-Kulaynī, al-Kāfī, Book of Fasting","It means “breaking the fast”."),
+  Q(["35"],"🌌","Laylat al-Qadr is better than…",["A thousand months","One week","One day"],"Laylat al-Qadr is better than a thousand months.","Qur'an 97:3","Sūrah al-Qadr tells us."),
+  Q(["35"],"🗓️","Which nights of Ramaḍān do Shia Muslims spend in worship looking for Laylat al-Qadr?",["The 19th, 21st and 23rd nights","The 1st, 2nd and 3rd nights","Only the last night"],"Following the Ahl al-Bayt, we spend the 19th, 21st and 23rd nights in worship, especially the 23rd.",MAFATIH,"They are odd-numbered nights in the last part of the month."),
+  Q(["35"],"🤲","What is the main purpose of fasting, according to the Qur'an?",["To gain taqwā (awareness of Allah)","To lose weight","To skip school"],"Allah says fasting was prescribed so that we may have taqwā.","Qur'an 2:183","The verse ends “laʿallakum tattaqūn”."),
+  Q(["35"],"🪙","Before the Eid prayer, every family gives zakāt al-fiṭrah. Who receives it?",["People in need","The richest family","Nobody"],"Zakāt al-fiṭrah is given to those in need, so everyone can celebrate Eid.","the books of rulings of the marājiʿ","It's a kind of charity."),
+  Q(["69"],"📜","Which famous duʿā, full of Allah's Names, is often recited on the Nights of Qadr?",["Duʿā al-Jawshan al-Kabīr","Duʿā al-Ṣabāḥ","Ziyārat ʿĀshūrāʾ"],"Duʿā al-Jawshan al-Kabīr, with a thousand Names and attributes of Allah, is recited on the Nights of Qadr.",MAFATIH,"Jawshan means armour."),
+  Q(["69"],"🗣️","What did the Imams teach about fasting with the body but not the tongue?",["Real fasting also means keeping away from lies and bad words","Only food matters","Talking is not allowed at all"],"The Imams taught that when you fast, your hearing, sight and tongue should fast too, keeping away from sin.","al-Kulaynī, al-Kāfī, Book of Fasting","A fast is not only about food."),
+  Q(["69"],"🕰️","What happens on Laylat al-Qadr according to Sūrah al-Qadr?",["Angels and the Spirit descend with every decree, and it is peace until dawn","Nothing special","The sun doesn't set"],"The angels and the Spirit descend with every command, and the night is peace until dawn.","Qur'an 97:4–5","Read the last two verses of the sūrah."),
+  Q(["69"],"🤒","A person who is ill or travelling misses some fasts. What do they do?",["Make them up on other days","Never make them up","Fast twice as long next year"],"Whoever is ill or on a journey makes up the same number of days later.","Qur'an 2:184–185","Allah wants ease for us.")
+ ]});
+
+/* ---------- 18 Dhul-Ḥijjah: Eid al-Ghadīr ---------- */
+const GHADIR="Qur'an 5:67; 5:3; Shaykh al-Mufīd, al-Irshād; ʿAllāmah al-Amīnī, al-Ghadīr";
+A.addOccasion({id:"ghadir",title:"Eid al-Ghadīr",date:"18 Dhul-Ḥijjah",pic:"🤝",
+ blurb:"The day the Prophet (ṣ) announced Imam ʿAlī (ʿa) as leader.",
+ about:"On 18 Dhul-Ḥijjah, on the way back from his last Ḥajj, the Prophet (ṣ) stopped the pilgrims at Ghadīr Khumm and announced Imam ʿAlī (ʿa) as the leader of the believers after him. It is one of the greatest Eids.",
+ mix:A.AKHLAQ,
+ bank:[
+  Q(["k2"],"🤝","On Eid al-Ghadīr, the Prophet (ṣ) announced that our leader after him is…",[T("🕌","Imam ʿAlī (ʿa)"),T("🐋","Prophet Yūnus (ʿa)")],"At Ghadīr the Prophet (ṣ) announced Imam ʿAlī (ʿa) as the leader after him.",GHADIR,"He is the first Imam."),
+  Q(["k2"],"🎉","Eid al-Ghadīr is a day to…",[T("😊","Thank Allah and be happy"),T("😢","Be sad")],"Eid al-Ghadīr is a happy day: we thank Allah for completing the religion.",MAFATIH,"It's an Eid!"),
+  Q(["k2"],"🐪","The Prophet (ṣ) stopped the pilgrims on their way home from…",[T("🕋","The Ḥajj in Makkah"),T("🏖️","The beach")],"They were coming home from the Ḥajj, the Prophet's (ṣ) last one.",GHADIR,"Where do pilgrims go?"),
+  Q(["k2"],"✋","The Prophet (ṣ) held up Imam ʿAlī's (ʿa)…",[T("✋","Hand"),T("🎒","Bag")],"He raised Imam ʿAlī's (ʿa) hand so everyone could see him.",GHADIR,"So everyone could see who he meant."),
+  Q(["35"],"📍","What is the name of the place where it happened?",["Ghadīr Khumm","Karbalāʾ","Badr"],"It happened at Ghadīr Khumm, a place with a pool of water between Makkah and Madīnah.",GHADIR,"The Eid is named after it."),
+  Q(["35"],"🗓️","On which date is Eid al-Ghadīr?",["18 Dhul-Ḥijjah","1 Shawwāl","10 Muḥarram"],"Eid al-Ghadīr is on 18 Dhul-Ḥijjah.",MAFATIH,"It's in the month of Ḥajj."),
+  Q(["35"],"🗣️","The Prophet (ṣ) said: “Whoever I am his mawlā…”",["“…ʿAlī is his mawlā”","“…let him go home”","“…should eat now”"],"“Man kuntu mawlāhu fa-hādhā ʿAliyyun mawlāh”: whoever I am his master, this ʿAlī is his master.",GHADIR,"Mawlā means master or guardian."),
+  Q(["35"],"🎁","Which is a recommended act on Eid al-Ghadīr?",["Thanking Allah, visiting family and giving gifts","Arguing with friends","Staying alone all day"],"On Eid al-Ghadīr it is recommended to thank Allah, be cheerful, visit believers and give gifts.",MAFATIH,"It's a joyful Eid."),
+  Q(["69"],"📖","Which verse did Allah reveal before the announcement?",["5:67: “O Messenger, convey what has been sent down to you…”","96:1: “Read in the name of your Lord”","112:1: “Say: He is Allah, the One”"],"Allah commanded the Prophet (ṣ) to convey the message and promised to protect him.","Qur'an 5:67","It's from Sūrah al-Māʾidah."),
+  Q(["69"],"✅","Which verse was revealed after the announcement?",["“Today I have perfected your religion for you…” (5:3)","“Indeed, with hardship comes ease” (94:5)","“By time” (103:1)"],"After Ghadīr, Allah revealed that the religion was perfected and His blessing completed.","Qur'an 5:3","The religion became complete."),
+  Q(["69"],"🧭","What does Ghadīr teach us about Imāmah?",["The Imam is chosen by Allah and announced by the Prophet (ṣ)","Leaders are chosen by whoever is strongest","There's no need for a leader"],"Ghadīr shows that Imāmah, like Nubuwwah, is chosen by Allah.",GHADIR,"Who chooses Prophets? The same applies to Imams."),
+  Q(["69"],"🧳","Why did the Prophet (ṣ) stop the pilgrims at Ghadīr Khumm rather than in Makkah?",["It was where the routes divided, so everyone would hear before going home","It was the shadiest place","He was lost"],"Ghadīr Khumm was near the place where the pilgrims' routes split, so the message reached everyone.",GHADIR,"After that point, the pilgrims would go different ways.")
+ ]});
+
+/* ---------- Muḥarram: Imam Ḥusayn (ʿa) — gentle, values-focused ---------- */
+A.addOccasion({id:"muharram",title:"Imam Ḥusayn (ʿa)",date:"Muḥarram",pic:"💚",
+ blurb:"Remembering Imam Ḥusayn (ʿa) and what he stood for.",
+ about:"In Muḥarram we remember Imam Ḥusayn (ʿa), the grandson of the Prophet (ṣ), who stood up for truth and justice at Karbalāʾ with his family and loyal companions. We learn from his courage, loyalty and love for Allah.",
+ mix:A.AKHLAQ,
+ bank:[
+  Q(["k2"],"💚","Imam Ḥusayn (ʿa) is the grandson of…",[T("🌟","Prophet Muḥammad (ṣ)"),T("🚢","Prophet Nūḥ (ʿa)")],"Imam Ḥusayn (ʿa) is the grandson of Prophet Muḥammad (ṣ), who loved him very much.",IRSHAD,"His mother is Sayyidah Fāṭimah (ʿa)."),
+  Q(["k2"],"⚖️","Imam Ḥusayn (ʿa) taught us to always stand up for…",[T("⚖️","What is right and fair"),T("🍬","More sweets")],"Imam Ḥusayn (ʿa) taught us to stand up for truth and justice.",IRSHAD,"Look at the scales."),
+  Q(["k2"],"💧","How can we remember Imam Ḥusayn (ʿa) in a kind way?",[T("💧","Share water and food with others"),T("🙉","Ignore people")],"Many people share water and food in Muḥarram, remembering Imam Ḥusayn's (ʿa) love and generosity.",MAFATIH,"Which choice helps others?"),
+  Q(["k2"],"🫶","Who was Imam Ḥusayn's (ʿa) loyal brother, famous for his bravery?",[T("🛡️","Ḥaḍrat ʿAbbās (ʿa)"),T("🐟","Prophet Yūnus (ʿa)")],"Ḥaḍrat ʿAbbās (ʿa) was Imam Ḥusayn's (ʿa) brave and loyal brother.",IRSHAD,"He is known as the flag-bearer."),
+  Q(["35"],"🗓️","ʿĀshūrāʾ is on which day of Muḥarram?",["The 10th","The 1st","The 27th"],"ʿĀshūrāʾ is the 10th of Muḥarram.",IRSHAD,"ʿĀshūrāʾ comes from the Arabic word for ten."),
+  Q(["35"],"📍","In which place did Imam Ḥusayn (ʿa) make his stand?",["Karbalāʾ","Makkah","Najaf"],"Imam Ḥusayn (ʿa) made his stand at Karbalāʾ, in Iraq, where his shrine is today.",IRSHAD,"His shrine is there today."),
+  Q(["35"],"🎯","Imam Ḥusayn (ʿa) said he set out to…",["Reform the community of his grandfather and promote good","Become rich","Go on holiday"],"He said he set out to seek reform in the ummah of his grandfather, to promote good and forbid wrong.","Ibn Shahrāshūb, Manāqib Āl Abī Ṭālib (his will to Muḥammad ibn al-Ḥanafiyyah)","Think of amr bil-maʿrūf."),
+  Q(["35"],"🗣️","After ʿĀshūrāʾ, who spoke bravely in front of the rulers to tell the truth about Karbalāʾ?",["Sayyidah Zaynab (ʿa)","Sayyidah Maryam (ʿa)","Sayyidah Āsiyah"],"Sayyidah Zaynab (ʿa), Imam Ḥusayn's (ʿa) sister, gave powerful speeches so the message of Karbalāʾ would never be forgotten.","al-Ṭabrisī, al-Iḥtijāj","She was Imam Ḥusayn's (ʿa) sister."),
+  Q(["69"],"🛡️","Which quality are Ḥaḍrat ʿAbbās (ʿa) and the companions of Imam Ḥusayn (ʿa) most remembered for?",["Loyalty","Wealth","Fame"],"Imam Ḥusayn (ʿa) said he knew of no companions more loyal than his own.",IRSHAD,"They stayed with the Imam to the end."),
+  Q(["69"],"🕊️","Imam Ḥusayn (ʿa) taught that a life with dignity is better than…",["A life of humiliation under injustice","A life of hard work","A life of learning"],"Imam Ḥusayn (ʿa) is remembered for teaching that honour and truth are worth more than giving in to injustice.","Ibn Ṭāwūs, al-Luhūf; Ibn Shuʿbah al-Ḥarrānī, Tuḥaf al-ʿUqūl","His famous words include “Hayhāt minnā al-dhillah” (humiliation is far from us)."),
+  Q(["69"],"📿","Which of the Imams was at Karbalāʾ and later taught through beautiful duʿās?",["Imam Zayn al-ʿĀbidīn (ʿa)","Imam al-Riḍā (ʿa)","Imam al-Hādī (ʿa)"],"Imam Zayn al-ʿĀbidīn (ʿa), Imam Ḥusayn's (ʿa) son, was at Karbalāʾ and later taught Islam through al-Ṣaḥīfah al-Sajjādiyyah.","al-Ṣaḥīfah al-Sajjādiyyah; "+IRSHAD,"He is the 4th Imam."),
+  Q(["69"],"🌱","What is the best way to show love for Imam Ḥusayn (ʿa) in our daily lives?",["Living by his values: truth, prayer, courage and helping others","Only remembering him once a year","Arguing with people who think differently"],"Love for Imam Ḥusayn (ʿa) is shown by living his values every day: prayer, truth, justice and kindness.",IRSHAD,"Which choice lasts all year?")
+ ]});
+})();
+
+APP.start();
+if("serviceWorker" in navigator&&location.protocol==="https:")window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+</body>
+</html>
