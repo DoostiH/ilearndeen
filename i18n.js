@@ -2,16 +2,16 @@
    Visible text is looked up by its English wording, numbers replaced by {0}, {1}…
    A sentence that mixes plain text with bold/italic words is translated as one unit:
    inline elements become <0>…</0>, <1>…</1> and untranslatable names become [[0]], [[1]].
-   Dictionaries: window.SS_DICT = {fa:{...}}. Missing entries stay in English. */
+   Dictionaries: window.SS_DICT = {fa:{...}, ar:{...}}. Missing entries stay in English. */
 (function(){
 const A = window.APP || (window.APP = {});
-const LANGS = [{id:"en",name:"English"},{id:"fa",name:"فارسی",rtl:true}];
+const LANGS = [{id:"en",name:"English"},{id:"fa",name:"فارسی",rtl:true},{id:"ar",name:"العربية",rtl:true}];
 A.LANGS = LANGS.filter(l=>l.id==="en"||(window.SS_DICT&&window.SS_DICT[l.id]&&Object.keys(window.SS_DICT[l.id]).length));
 let lang = "";
 try{ lang = JSON.parse(localStorage.getItem("ild.lang")) || ""; }catch(e){ lang = ""; }
 if(!A.LANGS.some(l=>l.id===lang)){
   const nav = ((navigator.languages&&navigator.languages[0])||navigator.language||"en").toLowerCase();
-  lang = nav.startsWith("fa")?"fa":"en";
+  lang = nav.startsWith("fa")?"fa":nav.startsWith("ar")?"ar":"en";
   if(!A.LANGS.some(l=>l.id===lang)) lang="en";
 }
 A.lang = lang;
@@ -102,7 +102,7 @@ function doText(n){
   if(r!=null){ seen.set(n,r); n.data = r; } else seen.set(n,n.data);
 }
 function doAttrs(el){
-  for(const a of ["placeholder","aria-label","title"]){
+  for(const a of ["placeholder","aria-label","title","label"]){
     if(el.hasAttribute && el.hasAttribute(a)){ const v=el.getAttribute(a), r=translate(v); if(r!=null && r!==v) el.setAttribute(a,r); }
   }
 }

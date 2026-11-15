@@ -133,16 +133,16 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
    Visible text is looked up by its English wording, numbers replaced by {0}, {1}…
    A sentence that mixes plain text with bold/italic words is translated as one unit:
    inline elements become <0>…</0>, <1>…</1> and untranslatable names become [[0]], [[1]].
-   Dictionaries: window.SS_DICT = {fa:{...}}. Missing entries stay in English. */
+   Dictionaries: window.SS_DICT = {fa:{...}, ar:{...}}. Missing entries stay in English. */
 (function(){
 const A = window.APP || (window.APP = {});
-const LANGS = [{id:"en",name:"English"},{id:"fa",name:"فارسی",rtl:true}];
+const LANGS = [{id:"en",name:"English"},{id:"fa",name:"فارسی",rtl:true},{id:"ar",name:"العربية",rtl:true}];
 A.LANGS = LANGS.filter(l=>l.id==="en"||(window.SS_DICT&&window.SS_DICT[l.id]&&Object.keys(window.SS_DICT[l.id]).length));
 let lang = "";
 try{ lang = JSON.parse(localStorage.getItem("ild.lang")) || ""; }catch(e){ lang = ""; }
 if(!A.LANGS.some(l=>l.id===lang)){
   const nav = ((navigator.languages&&navigator.languages[0])||navigator.language||"en").toLowerCase();
-  lang = nav.startsWith("fa")?"fa":"en";
+  lang = nav.startsWith("fa")?"fa":nav.startsWith("ar")?"ar":"en";
   if(!A.LANGS.some(l=>l.id===lang)) lang="en";
 }
 A.lang = lang;
@@ -233,7 +233,7 @@ function doText(n){
   if(r!=null){ seen.set(n,r); n.data = r; } else seen.set(n,n.data);
 }
 function doAttrs(el){
-  for(const a of ["placeholder","aria-label","title"]){
+  for(const a of ["placeholder","aria-label","title","label"]){
     if(el.hasAttribute && el.hasAttribute(a)){ const v=el.getAttribute(a), r=translate(v); if(r!=null && r!==v) el.setAttribute(a,r); }
   }
 }
@@ -306,7 +306,7 @@ A.curHints=[];
 A.hintUI=(box,penalty,onUse,given)=>{const hs=given||A.curHints||[];if(!hs.length)return;let k=0;
   const wrap=A.h("div",{class:"hintwrap",style:"display:flex;flex-direction:column;gap:8px"},`<button class="btn ghost hintbtn" type="button" style="align-self:flex-start">Show a hint${penalty?" (half points for this question)":""}</button><div class="hints"></div>`);
   box.appendChild(wrap);const btn=wrap.querySelector(".hintbtn"),list=wrap.querySelector(".hints");
-  btn.addEventListener("click",()=>{if(k>=hs.length)return;if(k===0&&onUse)onUse();list.insertAdjacentHTML("beforeend",`<p class="hint" style="background:var(--mean-soft);color:var(--ink);border-radius:10px;padding:8px 12px;font-size:.92rem"><strong>Hint ${k+1}:</strong> ${A.esc(hs[k])}</p>`);k++;btn.textContent=k<hs.length?"Another hint":"No more hints";if(k>=hs.length)btn.disabled=true})};
+  btn.addEventListener("click",()=>{if(k>=hs.length)return;if(k===0&&onUse)onUse();list.insertAdjacentHTML("beforeend",`<p class="hint" style="background:var(--mean-soft);color:var(--ink);border-radius:10px;padding:8px 12px;font-size:.92rem"><strong>Hint ${k+1}:</strong> <span>${A.esc(hs[k])}</span></p>`);k++;btn.textContent=k<hs.length?"Another hint":"No more hints";if(k>=hs.length)btn.disabled=true})};
 
 /* a shuffled deck that deals n items per round and reshuffles when it runs out */
 A.deck = arr => {let d=S.shuffle(arr),p=0;return {take:n=>{const out=[];for(let k=0;k<n;k++){if(p>=d.length){d=S.shuffle(arr);p=0}out.push(d[p++])}return out}}};
@@ -453,6 +453,7 @@ function renderHome(){
     <div class="row between"><span class="eyebrow">Learn about Islam by playing</span>${A.LANGS&&A.LANGS.length>1?`<div class="row" role="group" aria-label="Language" translate="no">${A.LANGS.map(l=>`<button class="chip lang" data-lang="${l.id}" aria-pressed="${A.lang===l.id}" style="padding:4px 10px;font-size:.8rem">${l.name}</button>`).join("")}</div>`:""}</div>
     <div class="brand">${STAR}<h1 translate="no">iLearnDeen</h1></div>
     <p class="lead">Short games about our faith for children from Kindy to Year 9. Play at home, in class or at community programs.</p>
+    ${A.lang&&A.lang!=="en"&&A.fbUrl()?`<p class="lead" style="font-size:.82rem">Found a translation that isn't right? <a href="${A.esc(A.fbUrl())}" target="_blank" rel="noopener" style="color:var(--mean)">Please tell us.</a></p>`:""}
     <div class="row"><button class="btn" id="quick">Play a quick game</button><span class="lead" style="font-size:.85rem">About 2 minutes</span></div>
   </header>
   <section class="card"><h2>Who is playing?</h2>
@@ -507,7 +508,7 @@ function renderOcc(o){
   view="occ";app.classList.remove("wide");
   app.innerHTML=`${topbar("Occasion")}
   <header style="display:flex;flex-direction:column;gap:8px"><div class="bigpic" style="text-align:start" aria-hidden="true">${o.pic}</div><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h1 style="font-size:1.9rem">${A.esc(o.title)}</h1><p class="lead">${o.about}</p></header>
-  <section class="card"><h2>Play on this device</h2><p class="lead">Five questions about ${A.esc(o.title)} plus some about good character, for ${A.esc(A.bandName(A.band))}. Change the age group on the home screen.</p><button class="btn" id="occplay" style="align-self:flex-start">Play now</button></section>
+  <section class="card"><h2>Play on this device</h2><p class="lead">Five questions about this occasion and about good character, for <span>${A.esc(A.bandName(A.band))}</span>.</p><p class="lead" style="font-size:.85rem">You can change the age group on the home screen.</p><button class="btn" id="occplay" style="align-self:flex-start">Play now</button></section>
   <section class="card accent"><h2>Running a program?</h2><p>Show the questions on a big screen and play in teams.</p><button class="btn" id="occhost" style="align-self:flex-start">Host for a class</button></section>
   <div id="stage" style="display:flex;flex-direction:column;gap:16px"></div>`;
   bindBack();A.track("occ/"+o.id);A.curHints=[];
@@ -543,7 +544,7 @@ function renderHost(preset){
     const board=()=>`<div class="scores">${teams.map(t=>`<div class="score" style="border-inline-start-color:${t.c}"><span>${t.name}</span><b>${t.pts}</b></div>`).join("")}</div>`;
     const draw=()=>{const q=items[i];const tiles=q.choices.some(c=>typeof c==="object");
       app.innerHTML=`${topbar(A.esc(set.title))}<section class="card host">${board()}<span class="eyebrow">Question ${i+1} of ${items.length}</span>${q.pic?`<div class="bigpic" aria-hidden="true">${q.pic}</div>`:""}<div class="hostq">${q.html}</div>
-        <div class="${tiles?"tiles"+(q.choices.length===3?" three":""):"choices"}">${q.choices.map((c,k)=>`<button class="choice" data-k="${k}" disabled>${tiles?"":`<span class="let">${"ABCD"[k]}</span>`}${choiceHTML(c)}</button>`).join("")}</div>
+        <div class="${tiles?"tiles"+(q.choices.length===3?" three":""):"choices"}">${q.choices.map((c,k)=>`<button class="choice" data-k="${k}" disabled>${tiles?"":`<span class="let">${"ABCD"[k]}</span>`}${tiles?choiceHTML(c):`<span>${choiceHTML(c)}</span>`}</button>`).join("")}</div>
         <div class="fb"><button class="btn" id="reveal" style="font-size:1.1rem">Show answer</button></div></section>`;
       bindBack();
       app.querySelector("#reveal").addEventListener("click",()=>{
@@ -635,7 +636,7 @@ const PEOPLE_MAKE=[["🚲","a bike"],["🪑","a chair"],["🚗","a car"],["🏠"
 const giftQ=()=>{const [p,n,k,ref,h]=S.pick(GIFTS);const wrong=S.shuffle(Object.keys(SRC).filter(x=>x!==k&&!(NOT_WITH[k]||[]).includes(x))).slice(0,2);
   return {b:["k2"],pic:p,q:`Where does <strong>${n}</strong> come from?`,c:[k,...wrong].map(x=>T(SRC[x][0],cap(SRC[x][1]))),e:`Allah created ${SRC[k][1]}, and from them we get ${n}. Alḥamdulillāh!`,ref,h}};
 const onlyQ=()=>{const [p,n]=S.pick(ONLY_ALLAH),made=S.shuffle(PEOPLE_MAKE).slice(0,2);
-  return {b:["k2"],q:"<strong>Which one could no person ever make?</strong>",c:[T(p,cap(n)),...made.map(([mp,mn])=>T(mp,cap(mn)))],e:`No one can create ${n}. Only Allah can. People can make things like ${made[0][1]}, but only with the minds, hands and materials Allah gave them.`,ref:"Qur'an 22:73: those worshipped besides Allah could never create even a fly.",h:"People can build things in a factory. Which one could never be built in a factory?"}};
+  return {b:["k2"],q:"<strong>Which one could no person ever make?</strong>",c:[T(p,cap(n)),...made.map(([mp,mn])=>T(mp,cap(mn)))],e:`No one can create ${n}. Only Allah can.</p><p>People can make things like bikes and chairs, but only with the minds, hands and materials Allah gave them.`,ref:"Qur'an 22:73: those worshipped besides Allah could never create even a fly.",h:"People can build things in a factory. Which one could never be built in a factory?"}};
 const mindQ=()=>{const [p,n]=S.pick(PEOPLE_MAKE);
   return {b:["k2"],pic:p,q:`To make <strong>${n}</strong>, people used…`,c:[T("🧠","The mind and hands Allah gave them"),T("💤","Nothing; it made itself"),T("🍀","Just luck")],e:"Allah gave us minds to think, and hands to work. People use them, with materials Allah created, to make things. So we thank Allah for everything we make.",ref:"Qur'an 16:78: Allah gave you hearing, sight and hearts, so that you may be thankful.",h:"Can something make itself? Think about what you use when you build with blocks."}};
 const giftsSet=A.addSet({id:"gifts-from-allah",title:"Gifts from Allah",bank:[giftQ()],take:(band,n)=>S.shuffle(Array.from({length:n},(_,i)=>[giftQ,giftQ,onlyQ,mindQ,giftQ][i%5]()))});
