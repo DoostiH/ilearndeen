@@ -435,7 +435,7 @@ const STAR = `<svg aria-hidden="true" viewBox="0 0 100 100"><rect width="100" he
 <rect x="25" y="66" width="50" height="18" fill="#F6F3EA"/>
 <path d="M43 84 V75 Q43 69 50 67 Q57 69 57 75 V84 Z" fill="#0B6E5F"/>
 <path d="M30 84 V77 Q30 74 33 73 Q36 74 36 77 V84 Z M64 84 V77 Q64 74 67 73 Q70 74 70 77 V84 Z" fill="#E0B04A"/></svg>`;
-let starRot=null,filter=store.get("filter","all"),query="",cleanup=null,view="home";
+let resetAsk=false,starRot=null,filter=store.get("filter","all"),query="",cleanup=null,view="home";
 const app=document.getElementById("app");
 const bandTags = g => (g.bands||[]).map(b=>`<span class="tag">${A.esc(A.BANDS.find(x=>x.id===b).yrs)}</span>`).join("");
 function unitTags(g){return g.units.map(([u,l])=>`<span class="tag">${A.esc(A.UNITS[u].name)} · Outcome ${l.join(", ")}</span>`).join("")}
@@ -464,7 +464,7 @@ function renderHome(){
     <div class="games">${occs.map(o=>`<button class="gcard occ" data-occ="${o.id}"><span class="gpic" aria-hidden="true">${o.pic}</span><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h3>${A.esc(o.title)}</h3><p>${A.esc(o.blurb)}</p></button>`).join("")}</div>
     <p class="lead" style="font-size:.85rem">More occasions are coming: 13 Rajab, Eid al-Ghadīr, Ramaḍān and more.</p></section>`:""}
   <section class="card accent"><h2>Teaching a class?</h2><p>Show the questions on a TV or projector. Children answer out loud in teams, and you tap who got it right.</p><button class="btn" id="hostbtn" style="align-self:flex-start">Open class host mode</button></section>
-  <section class="card"><h2>Your progress</h2><div class="stats"><div class="stat"><b>${Object.keys(A.best).filter(k=>A.games.some(g=>g.id===k)).length} / ${A.games.length}</b><span>games played</span></div><div class="stat"><b>${A.games.reduce((a,g)=>a+(A.best[g.id]?A.best[g.id].points:0),0)}</b><span>total best points</span></div><div class="stat"><b>${Object.values(A.best).filter(b=>b.points>=b.max*0.8).length}</b><span>top scores</span></div></div></section>
+  <section class="card"><h2>Your progress</h2><div class="stats"><div class="stat"><b>${Object.keys(A.best).filter(k=>A.games.some(g=>g.id===k)).length} / ${A.games.length}</b><span>games played</span></div><div class="stat"><b>${A.games.reduce((a,g)=>a+(A.best[g.id]?A.best[g.id].points:0),0)}</b><span>total best points</span></div><div class="stat"><b>${Object.values(A.best).filter(b=>b.points>=b.max*0.8).length}</b><span>top scores</span></div></div>${resetAsk?`<p>Are you sure? This clears all best scores on this device.</p><div class="row"><button class="btn" id="resetyes">Yes, reset</button><button class="btn ghost" id="resetno">Cancel</button></div>`:`<button class="btn ghost" id="resetbtn" style="align-self:flex-start">Reset my progress</button>`}</section>
   <section class="card"><h2>Games</h2>
     <input type="search" id="q" placeholder="Search games, e.g. wuḍūʾ, Prophets, Imams" value="${A.esc(query)}" aria-label="Search games">
     <div class="row" id="filters"><button class="chip" data-f="all" aria-pressed="${filter==="all"}">All units</button>${Object.entries(A.UNITS).filter(([k])=>A.games.some(g=>g.units.some(u=>u[0]===k))).map(([k,u])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${u.name}</button>`).join("")}</div></section>
@@ -474,6 +474,11 @@ function renderHome(){
   const hi=app.querySelector("#hideinst");if(hi)hi.addEventListener("click",()=>{store.set("installHidden",true);renderHome();A.toast("Hidden. Tap How to install at the bottom to show it again.")});
   const di=app.querySelector("#doinst");if(di)di.addEventListener("click",async()=>{const e=A.installEvt;if(!e)return;e.prompt();try{await e.userChoice}catch(x){}A.installEvt=null;renderHome()});
   app.querySelector("#quick").addEventListener("click",()=>{const pool=A.games.filter(g=>g.star&&A.inBand(g.bands)).map(g=>g.id);const all=pool.length?pool:A.games.filter(g=>g.star).map(g=>g.id);const fresh=all.filter(id=>!A.best[id]);A.track("quick-play");location.hash=S.pick(fresh.length?fresh:all)});
+  const rb=app.querySelector("#resetbtn");if(rb)rb.addEventListener("click",()=>{resetAsk=true;renderHome()});
+  const rn=app.querySelector("#resetno");if(rn)rn.addEventListener("click",()=>{resetAsk=false;renderHome()});
+  const ry=app.querySelector("#resetyes");if(ry)ry.addEventListener("click",()=>{A.best={};store.set("best",{});
+    try{const ks=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf("ild.seen.")===0)ks.push(k)}ks.forEach(k=>localStorage.removeItem(k))}catch(e){}
+    resetAsk=false;renderHome();A.toast("Progress reset.")});
   app.querySelector("#hostbtn").addEventListener("click",()=>{location.hash="host"});
   app.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.lang!==A.lang)A.setLang(b.dataset.lang)}));
   app.querySelectorAll("[data-band]").forEach(b=>b.addEventListener("click",()=>{A.band=b.dataset.band;store.set("band",A.band);A.track("band/"+A.band);renderHome()}));
@@ -565,6 +570,7 @@ function renderHost(preset){
 }
 
 function route(){
+  resetAsk=false;
   if(cleanup){try{cleanup()}catch(e){}cleanup=null}
   const h=decodeURIComponent(location.hash.replace("#",""));
   const g=A.games.find(x=>x.id===h);
