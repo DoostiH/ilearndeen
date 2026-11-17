@@ -12,5 +12,5 @@ window.SS_CONFIG = {
   /* Show the install guide and the About / Privacy links (true for the public web app). */
   installable: true,
   pages: true,
-  version: "v0.2.1"
+  version: "v0.2.2"
 };
