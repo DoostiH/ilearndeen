@@ -12,5 +12,9 @@ window.SS_CONFIG = {
   /* Show the install guide and the About / Privacy links (true for the public web app). */
   installable: true,
   pages: true,
-  version: "v0.2.2"
+  /* Class sessions (class code + live team board). Use the Supabase project "ilearndeen",
+     NOT "iplaystats". Paste the Project URL and the Publishable key here. Leave both "" to hide class sessions. */
+  classUrl: "https://eyiiduqfunqvvchyytjm.supabase.co",
+  classKey: "sb_publishable_NSQDVC3y2fUmhXkJ3QJFNg_k0ZGLawD",
+  version: "v0.3.0"
 };
