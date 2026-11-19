@@ -521,15 +521,15 @@ function renderHome(){
     ${A.lang&&A.lang!=="en"&&A.fbUrl()?`<p class="lead" style="font-size:.82rem">Found a translation that isn't right? <a href="${A.esc(A.fbUrl())}" target="_blank" rel="noopener" style="color:var(--mean)">Please tell us.</a></p>`:""}
     <div class="row"><button class="btn" id="quick">Play a quick game</button><span class="lead" style="font-size:.85rem">About 2 minutes</span></div>
   </header>
-  ${classCard()}
   <section class="card"><h2>Who is playing?</h2>
     <div class="seg" role="group" aria-label="Age group"><button class="chip" data-band="all" aria-pressed="${A.band==="all"}">All ages</button>${A.BANDS.map(b=>`<button class="chip" data-band="${b.id}" aria-pressed="${A.band===b.id}">${b.name} · ${b.yrs}</button>`).join("")}</div>
     <p class="lead" style="font-size:.85rem">${A.band==="all"?"Showing games for every age.":`Showing games for ${A.esc(A.bandName(A.band))}.`}</p></section>
+  ${classCard()}
+  ${CL.on()&&!CL.joined?`<section class="card accent"><h2>Teaching a class?</h2><p>Start a class session. Children join with a short code on their own phone or tablet and pick a team. Every game they finish adds to a live team board that you can show on a projector.</p>${CL.host?`<p>You're running class <b translate="no">${A.esc(CL.host.code)}</b>.</p><a class="btn" href="#class-host" style="align-self:flex-start">Open the team board</a>`:`<a class="btn" href="#class-host" style="align-self:flex-start">Start a class session</a>`}</section>`:""}
   ${installCard()}
   ${occs.length?`<section class="card"><h2>Occasions</h2><p class="lead">Ready-made questions for special days and community programs.</p>
     <div class="games">${occs.map(o=>`<button class="gcard occ" data-occ="${o.id}"><span class="gpic" aria-hidden="true">${o.pic}</span><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h3>${A.esc(o.title)}</h3><p>${A.esc(o.blurb)}</p></button>`).join("")}</div>
     <p class="lead" style="font-size:.85rem">More occasions are coming: 13 Rajab, Eid al-Ghadīr, Ramaḍān and more.</p></section>`:""}
-  ${CL.on()?`<section class="card accent"><h2>Teaching a class?</h2><p>Start a class session. Children join with a short code on their own phone or tablet and pick a team. Every game they finish adds to a live team board that you can show on a projector.</p>${CL.host?`<p>You're running class <b translate="no">${A.esc(CL.host.code)}</b>.</p><a class="btn" href="#class-host" style="align-self:flex-start">Open the team board</a>`:`<a class="btn" href="#class-host" style="align-self:flex-start">Start a class session</a>`}</section>`:""}
   <section class="card"><h2>Your progress</h2><div class="stats"><div class="stat"><b>${Object.keys(A.best).filter(k=>A.games.some(g=>g.id===k)).length} / ${A.games.length}</b><span>games played</span></div><div class="stat"><b>${A.games.reduce((a,g)=>a+(A.best[g.id]?A.best[g.id].points:0),0)}</b><span>total best points</span></div><div class="stat"><b>${Object.values(A.best).filter(b=>b.points>=b.max*0.8).length}</b><span>top scores</span></div></div>${resetAsk?`<p>Are you sure? This clears all best scores on this device.</p><div class="row"><button class="btn" id="resetyes">Yes, reset</button><button class="btn ghost" id="resetno">Cancel</button></div>`:`<button class="btn ghost" id="resetbtn" style="align-self:flex-start">Reset my progress</button>`}</section>
   <section class="card"><h2>Games</h2>
     <input type="search" id="q" placeholder="Search games, e.g. wuḍūʾ, Prophets, Imams" value="${A.esc(query)}" aria-label="Search games">
@@ -620,7 +620,7 @@ function classLine(){
 }
 function gameInfo(id){const g=A.games.find(x=>x.id===id);if(g)return {id,title:g.title};
   const o=id.indexOf("occ-")===0&&A.occasions.find(x=>x.id===id.slice(4));return o?{id,title:o.title}:null}
-function siteAddr(){return (location.host+location.pathname).replace(/index\.html$/,"").replace(/\/$/,"")}
+function siteAddr(){const c=window.SS_CONFIG||{};if(c.siteAddr)return c.siteAddr;return (location.host+location.pathname).replace(/index\.html$/,"").replace(/\/$/,"")}
 function renderHost(){
   view="host";app.classList.remove("wide");A.curHints=[];
   const top=`<div class="topbar"><button class="back" id="back">← Home</button><span class="eyebrow">For teachers</span></div>`;
