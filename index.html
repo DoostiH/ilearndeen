@@ -164,6 +164,39 @@ body.proj .hostonly,body.proj .topbar{display:none}
 .speedlog li.ok b{color:var(--ok)}.speedlog li.no b{color:var(--bad)}
 .speedq{font-size:1.15rem;min-height:4.5em}
 .speedbtns .btn{flex:1;font-size:1.1rem;padding:14px}
+
+.rolebar{display:flex;align-items:center;gap:8px;font-size:.82rem}
+.rolebar a{color:var(--mean);font-weight:600}
+.rolepick{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.rolebtn{font:inherit;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:20px;padding:24px 18px;cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
+.rolebtn:hover,.rolebtn[aria-pressed="true"]{border-color:var(--mean)}
+.rolebtn .rpic{font-size:4rem;line-height:1}
+.rolebtn b{font-family:var(--display);font-size:1.3rem}
+.rolebtn span:last-child{color:var(--muted);font-size:.92rem}
+a.gcard{text-decoration:none}
+.fldg{display:flex;flex-direction:column;gap:8px}.fldg h3{margin:0;font-size:1rem}
+.fld select{font:inherit;font-size:1rem;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);max-width:100%}
+.tips{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:6px}
+.sboard{display:flex;flex-wrap:wrap;gap:8px}
+.sboard.col{flex-direction:column}.sboard.col .steam{flex:none}
+.steam{display:flex;align-items:center;gap:8px;border:2px solid var(--line);border-radius:12px;padding:6px 12px;background:var(--bg);flex:1 1 140px}
+.steam.on{border-color:var(--tc);box-shadow:0 0 0 2px color-mix(in srgb,var(--tc) 30%,transparent)}
+.steam .sname{font-weight:600;flex:1}.steam b{font-size:1.3rem}
+.sturn{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;border-inline-start:6px solid var(--tc);background:color-mix(in srgb,var(--tc) 14%,var(--panel));border-radius:10px;padding:6px 14px;font-size:1.1rem}
+.swin{display:flex;flex-wrap:wrap;gap:8px}.swin .sturn{font-size:1.5rem}
+.stimer{position:relative;height:26px;border-radius:13px;background:var(--line);overflow:hidden}
+.stimer i{position:absolute;inset:0 auto 0 0;width:100%;background:var(--mean);transition:width 1s linear}
+.stimer span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ink)}
+.sstem{font-size:1.35rem;font-weight:600}
+.schoices{counter-reset:opt}
+.schoices .choice::before{counter-increment:opt;content:counter(opt,upper-alpha);font-family:var(--mono);font-size:.8rem;opacity:.6;border:1px solid var(--line);border-radius:6px;padding:0 6px;align-self:center}
+.choices.schoices .choice::before{margin-inline-end:10px}
+.choices.schoices .choice{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;min-height:0;text-align:start;font-size:1.15rem}
+.steamchip{font-size:1rem;padding:8px 14px;display:inline-flex;align-items:center;gap:6px}
+.sdua{font-size:1.6rem;text-align:center;margin:6px 0 0}
+.send{align-items:stretch}.send h2{text-align:center}.send .swin{justify-content:center}
+.proj .scr .sstem{font-size:2.2rem}.proj .scr .choice{font-size:1.6rem}.proj .scr .bigpic{font-size:7rem}
+.proj .scr .steam{font-size:1.3rem}.proj .scr .steam b{font-size:2rem}.proj .scr .feedback{font-size:1.3rem}.proj .scr .sturn{font-size:1.5rem}
 </style>
 </head>
 <body>
@@ -567,8 +600,34 @@ const bandTags = g => (g.bands||[]).map(b=>`<span class="tag">${A.esc(A.BANDS.fi
 function unitTags(g){return g.units.map(([u,l])=>`<span class="tag">${A.esc(A.UNITS[u].name)} · Outcome ${l.join(", ")}</span>`).join("")}
 function footer(){const c=window.SS_CONFIG;if(!c)return "";const y=new Date().getFullYear();
   return `<footer class="row" style="justify-content:center;gap:16px;font-size:.82rem;color:var(--muted);padding-top:8px"><span>© ${y>2026?"2026–"+y:"2026"} ${A.esc(c.owner||"")}. All rights reserved.</span>${c.installable?`<a href="#home" id="showinst" style="color:var(--muted)">How to install</a>`:""}${c.pages?`<a href="about.html" style="color:var(--muted)">About &amp; sources</a><a href="privacy.html" style="color:var(--muted)">Privacy</a>`:""}${A.fbUrl()?`<a href="${A.esc(A.fbUrl())}" target="_blank" rel="noopener" style="color:var(--muted)">Send feedback (parents and teachers)</a>`:""}<span>Free beta ${A.esc(c.version||"")}</span></footer>`}
+function teacherCard(){
+  return `<section class="card accent"><h2>For teachers and parents</h2><p class="lead">Run a team game for your class or family.</p>
+    <div class="games">
+      <a class="gcard" href="#class-screen"><span class="gpic" aria-hidden="true">📺</span><h3>Class on one screen</h3><p>No devices needed for the children. Show the questions on your phone, laptop or projector, and teams answer together.</p></a>
+      ${CL.on()?`<a class="gcard" href="#class-host"><span class="gpic" aria-hidden="true">📱</span><h3>Class with devices</h3><p>Children join with a short code on their own phone or tablet and pick a team. Every game they finish adds to a live team board.</p>${CL.host?`<span class="tag star" style="align-self:flex-start">You're running class <b translate="no">${A.esc(CL.host.code)}</b></span>`:""}</a>`:""}
+    </div></section>`;
+}
+function renderRole(){
+  view="role";app.classList.remove("wide");A.curHints=[];
+  const cur=store.get("role",null);
+  app.innerHTML=`
+  <header style="display:flex;flex-direction:column;gap:10px">
+    <div class="row between"><span class="eyebrow">Learn about Islam by playing</span>${A.LANGS&&A.LANGS.length>1?`<div class="row" role="group" aria-label="Language" translate="no">${A.LANGS.map(l=>`<button class="chip lang" data-lang="${l.id}" aria-pressed="${A.lang===l.id}" style="padding:4px 10px;font-size:.8rem">${l.name}</button>`).join("")}</div>`:""}</div>
+    <div class="brand">${STAR}<h1 translate="no">iLearnDeen</h1></div>
+    <p class="lead">Who is using iLearnDeen?</p>
+  </header>
+  <div class="rolepick">
+    <button class="rolebtn" data-role="student" aria-pressed="${cur==="student"}"><span class="rpic" aria-hidden="true">🧒</span><b>I'm a student</b><span>Play games, or join your class with a code.</span></button>
+    <button class="rolebtn" data-role="teacher" aria-pressed="${cur==="teacher"}"><span class="rpic" aria-hidden="true">🧑‍🏫</span><b>I'm a teacher or parent</b><span>Run a team game on one screen, or with your students' devices.</span></button>
+  </div>
+  <p class="lead" style="font-size:.85rem;text-align:center">You can change this any time with <strong>Change role</strong> at the top of the home screen.</p>
+  ${footer()}`;
+  app.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.lang!==A.lang)A.setLang(b.dataset.lang)}));
+  app.querySelectorAll("[data-role]").forEach(b=>b.addEventListener("click",()=>{store.set("role",b.dataset.role);A.track("role/"+b.dataset.role);if(location.hash==="#home"||location.hash==="")renderHome();else location.hash="home";window.scrollTo(0,0)}));
+}
 function renderHome(){
   view="home";app.classList.remove("wide");
+  const role=store.get("role",null);if(!role)return renderRole();const T=role==="teacher";
   const q=query.toLowerCase();
   let list=A.games.filter(g=>A.inBand(g.bands)&&(filter==="all"||g.units.some(u=>u[0]===filter))&&(!q||((g.title+" "+g.topics+" "+g.blurb+" "+g.units.map(u=>A.UNITS[u[0]].name).join(" ")+(A.tr?" "+[g.title,g.blurb].map(A.tr).join(" "):"")).toLowerCase().includes(q))));
   if(!starRot){const st=A.games.filter(g=>g.star).map(g=>g.id),k=Math.floor(S.r()*st.length);starRot=st.slice(k).concat(st.slice(0,k))}
@@ -576,7 +635,7 @@ function renderHome(){
   const occs=A.occasions;
   app.innerHTML=`
   <header style="display:flex;flex-direction:column;gap:10px">
-    <div class="row between"><span class="eyebrow">Learn about Islam by playing</span>${A.LANGS&&A.LANGS.length>1?`<div class="row" role="group" aria-label="Language" translate="no">${A.LANGS.map(l=>`<button class="chip lang" data-lang="${l.id}" aria-pressed="${A.lang===l.id}" style="padding:4px 10px;font-size:.8rem">${l.name}</button>`).join("")}</div>`:""}</div>
+    <div class="row between"><span class="eyebrow">Learn about Islam by playing</span><span class="rolebar"><span class="tag">${role==="teacher"?"Teacher or parent":"Student"}</span><a href="#role" id="chrole">Change role</a></span>${A.LANGS&&A.LANGS.length>1?`<div class="row" role="group" aria-label="Language" translate="no">${A.LANGS.map(l=>`<button class="chip lang" data-lang="${l.id}" aria-pressed="${A.lang===l.id}" style="padding:4px 10px;font-size:.8rem">${l.name}</button>`).join("")}</div>`:""}</div>
     <div class="brand">${STAR}<h1 translate="no">iLearnDeen</h1></div>
     <p class="lead">Short games about our faith for children from Kindy to Year 9. Play at home, in class or at community programs.</p>
     ${A.lang&&A.lang!=="en"&&A.fbUrl()?`<p class="lead" style="font-size:.82rem">Found a translation that isn't right? <a href="${A.esc(A.fbUrl())}" target="_blank" rel="noopener" style="color:var(--mean)">Please tell us.</a></p>`:""}
@@ -585,13 +644,12 @@ function renderHome(){
   <section class="card"><h2>Who is playing?</h2>
     <div class="seg" role="group" aria-label="Age group"><button class="chip" data-band="all" aria-pressed="${A.band==="all"}">All ages</button>${A.BANDS.map(b=>`<button class="chip" data-band="${b.id}" aria-pressed="${A.band===b.id}">${b.name} · ${b.yrs}</button>`).join("")}</div>
     <p class="lead" style="font-size:.85rem">${A.band==="all"?"Showing games for every age.":`Showing games for ${A.esc(A.bandName(A.band))}.`}</p></section>
-  ${classCard()}
-  ${CL.on()&&!CL.joined?`<section class="card accent"><h2>Teaching a class?</h2><p>Start a class session. Children join with a short code on their own phone or tablet and pick a team. Every game they finish adds to a live team board that you can show on a projector.</p>${CL.host?`<p>You're running class <b translate="no">${A.esc(CL.host.code)}</b>.</p><a class="btn" href="#class-host" style="align-self:flex-start">Open the team board</a>`:`<a class="btn" href="#class-host" style="align-self:flex-start">Start a class session</a>`}</section>`:""}
+  ${T?teacherCard():classCard()}
   ${installCard()}
   ${occs.length?`<section class="card"><h2>Occasions</h2><p class="lead">Ready-made questions for special days and community programs.</p>
     <div class="games">${occs.map(o=>`<button class="gcard occ" data-occ="${o.id}"><span class="gpic" aria-hidden="true">${o.pic}</span><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h3>${A.esc(o.title)}</h3><p>${A.esc(o.blurb)}</p></button>`).join("")}</div>
     <p class="lead" style="font-size:.85rem">More occasions are coming: 13 Rajab, Eid al-Ghadīr, Ramaḍān and more.</p></section>`:""}
-  <section class="card"><h2>Your progress</h2><div class="stats"><div class="stat"><b>${Object.keys(A.best).filter(k=>A.games.some(g=>g.id===k)).length} / ${A.games.length}</b><span>games played</span></div><div class="stat"><b>${A.games.reduce((a,g)=>a+(A.best[g.id]?A.best[g.id].points:0),0)}</b><span>total best points</span></div><div class="stat"><b>${Object.values(A.best).filter(b=>b.points>=b.max*0.8).length}</b><span>top scores</span></div></div>${resetAsk?`<p>Are you sure? This clears all best scores on this device.</p><div class="row"><button class="btn" id="resetyes">Yes, reset</button><button class="btn ghost" id="resetno">Cancel</button></div>`:`<button class="btn ghost" id="resetbtn" style="align-self:flex-start">Reset my progress</button>`}</section>
+  ${T?"":`<section class="card"><h2>Your progress</h2><div class="stats"><div class="stat"><b>${Object.keys(A.best).filter(k=>A.games.some(g=>g.id===k)).length} / ${A.games.length}</b><span>games played</span></div><div class="stat"><b>${A.games.reduce((a,g)=>a+(A.best[g.id]?A.best[g.id].points:0),0)}</b><span>total best points</span></div><div class="stat"><b>${Object.values(A.best).filter(b=>b.points>=b.max*0.8).length}</b><span>top scores</span></div></div>${resetAsk?`<p>Are you sure? This clears all best scores on this device.</p><div class="row"><button class="btn" id="resetyes">Yes, reset</button><button class="btn ghost" id="resetno">Cancel</button></div>`:`<button class="btn ghost" id="resetbtn" style="align-self:flex-start">Reset my progress</button>`}</section>`}
   <section class="card"><h2>Games</h2>
     <input type="search" id="q" placeholder="Search games, e.g. wuḍūʾ, Prophets, Imams" value="${A.esc(query)}" aria-label="Search games">
     <div class="row" id="filters"><button class="chip" data-f="all" aria-pressed="${filter==="all"}">All units</button>${Object.entries(A.UNITS).filter(([k])=>A.games.some(g=>g.units.some(u=>u[0]===k))).map(([k,u])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${u.name}</button>`).join("")}</div></section>
@@ -655,9 +713,10 @@ function renderOcc(o){
   <header style="display:flex;flex-direction:column;gap:8px"><div class="bigpic" style="text-align:start" aria-hidden="true">${o.pic}</div><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h1 style="font-size:1.9rem">${A.esc(o.title)}</h1><p class="lead">${o.about}</p></header>
   <section class="card"><h2>Play on this device</h2><p class="lead">Five questions about this occasion and about good character, for <span>${A.esc(A.bandName(A.band))}</span>.</p><p class="lead" style="font-size:.85rem">You can change the age group on the home screen.</p><button class="btn" id="occplay" style="align-self:flex-start">Play now</button></section>
   ${classLine()}
-  ${CL.on()&&!CL.joined?`<section class="card accent"><h2>Running a program?</h2><p>Start a class session. Children join with the code on their own devices, play this occasion, and their scores go to a live team board.</p><a class="btn" href="#class-host" style="align-self:flex-start">Start a class session</a></section>`:""}
+  ${store.get("role",null)==="teacher"?`<section class="card accent"><h2>Running a program?</h2><p>Play this occasion as a team game on one screen, with no devices needed for the children.</p><div class="row"><button class="btn" id="occscr">Play on one screen</button>${CL.on()?`<a class="btn ghost" href="#class-host">Class with devices</a>`:""}</div></section>`:""}
   <div id="stage" style="display:flex;flex-direction:column;gap:16px"></div>`;
   bindBack();A.track("occ/"+o.id);A.curHints=[];
+  const os=app.querySelector("#occscr");if(os)os.addEventListener("click",()=>{const c=store.get("scr",{});c.set=o.id;store.set("scr",c);location.hash="class-screen"});
   app.querySelector("#occplay").addEventListener("click",e=>{e.target.closest("section").remove();const set=A.sets.find(s=>s.id===o.id);const stage=app.querySelector("#stage");markPlay("occ-"+o.id);A.bankQuiz(stage,{id:"occ-"+o.id,set,n:5})});
 }
 
@@ -749,6 +808,136 @@ function renderBoard(isHost){
   cleanup=()=>{clearInterval(timer);document.body.classList.remove("proj");try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}};
 }
 
+/* ---------- class on one screen: teacher shows questions, teams answer together ---------- */
+function screenSets(){
+  return {games:A.sets.filter(s=>!s.occ),occs:A.sets.filter(s=>s.occ)};
+}
+function mixTake(band,n){
+  const pool=A.sets.filter(s=>!s.occ).filter(s=>{const g=A.games.find(x=>x.id===s.id||s.id.indexOf(x.id)===0);return !g||band==="all"||!g.bands||g.bands.includes(band)});
+  if(!pool.length)pool.push(...A.sets.filter(s=>!s.occ));
+  const out=[],seen=new Set();let guard=0;
+  while(out.length<n&&guard++<n*20){const s=S.pick(pool);const q=s.take(band,1)[0];if(!q||seen.has(q.q))continue;seen.add(q.q);out.push(q)}
+  return out;
+}
+function renderScreen(){
+  view="screen";app.classList.remove("wide");A.curHints=[];
+  const c=Object.assign({set:"mix",band:A.band==="all"?"k2":A.band,teams:2,mode:"turn",per:3,total:12,timer:0},store.get("scr",{}));
+  const save=()=>store.set("scr",c);
+  const {games,occs}=screenSets();
+  const chips=(key,vals,label)=>vals.map(([v,l])=>`<button class="chip" data-k="${key}" data-v="${v}" aria-pressed="${String(c[key])===String(v)}">${l}</button>`).join("");
+  const paint=()=>{
+    app.innerHTML=`${topbar("For teachers and parents")}
+    <header style="display:flex;flex-direction:column;gap:8px"><h1 style="font-size:1.9rem"><span aria-hidden="true">📺</span> Class on one screen</h1>
+      <p class="lead">Show the questions on your phone, laptop or projector. Teams talk together and give their answer, and you tap it. No devices are needed for the children, and no internet once the app has loaded.</p></header>
+    <section class="card">
+      <label class="fld"><span>What to play</span><select id="sset">
+        <option value="mix" ${c.set==="mix"?"selected":""}>A mix of all topics</option>
+        <optgroup label="Topics">${games.map(s=>`<option value="${s.id}" ${c.set===s.id?"selected":""}>${A.esc(s.title)}</option>`).join("")}</optgroup>
+        <optgroup label="Occasions">${occs.map(s=>`<option value="${s.id}" ${c.set===s.id?"selected":""}>${A.esc(s.title)}</option>`).join("")}</optgroup>
+      </select></label>
+      <div class="fldg"><h3>Age group</h3><div class="row">${A.BANDS.map(b=>`<button class="chip" data-k="band" data-v="${b.id}" aria-pressed="${c.band===b.id}">${b.name} · ${b.yrs}</button>`).join("")}</div></div>
+      <div class="fldg"><h3>Number of teams</h3><div class="row">${chips("teams",[[2,"2"],[3,"3"],[4,"4"]])}</div>
+        <div class="row">${A.TEAMS.slice(0,c.teams).map(t=>`<span class="tag"><span class="dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${t.c}"></span> ${t.name}</span>`).join("")}</div></div>
+      <div class="fldg"><h3>How teams answer</h3><div class="row">${chips("mode",[["turn","Turn by turn"],["hand","First hand up"]])}</div>
+        <p class="lead" style="font-size:.85rem">${c.mode==="turn"?"Each team gets its own question in turn. Calm and fair, best for younger children.":"Every team hears each question. The first team to put a hand up answers. If they get it wrong, another team can try. Best for older children."}</p></div>
+      <div class="fldg"><h3>${c.mode==="turn"?"Questions for each team":"Number of questions"}</h3><div class="row">${c.mode==="turn"?chips("per",[[2,"2"],[3,"3"],[5,"5"]]):chips("total",[[8,"8"],[12,"12"],[16,"16"]])}</div></div>
+      <div class="fldg"><h3>Timer for each question</h3><div class="row">${chips("timer",[[0,"Off"],[15,"15 seconds"],[30,"30 seconds"],[60,"60 seconds"]])}</div></div>
+      <div class="row"><button class="btn" id="sgo">Start the game</button></div>
+    </section>
+    <section class="card"><h2>Tips</h2><ul class="tips">
+      <li>Put the screen where everyone can see it, and tap <strong>Full screen</strong> once the game starts.</li>
+      <li>Read each question aloud. Give teams a moment to talk together quietly before they answer.</li>
+      <li>After each answer, the explanation appears. It's a good moment to teach for a minute.</li>
+    </ul></section>`;
+    bindBack();
+    app.querySelector("#sset").addEventListener("change",e=>{c.set=e.target.value;save()});
+    app.querySelectorAll("[data-k]").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.k,v=b.dataset.v;c[k]=k==="band"||!/^\d+$/.test(v)?v:+v;save();paint()}));
+    app.querySelector("#sgo").addEventListener("click",()=>{save();A.track("screen/"+c.set);play(c)});
+  };
+  paint();
+}
+function play(c){
+  const set=A.sets.find(s=>s.id===c.set);
+  const teams=A.TEAMS.slice(0,c.teams);
+  const n=c.mode==="turn"?c.per*c.teams:c.total;
+  const qs=(set?set.take(c.band,n):mixTake(c.band,n)).map(A.asQ);
+  const score=teams.map(()=>0);
+  let i=0,timer=null,left=0;
+  const stopT=()=>{if(timer){clearInterval(timer);timer=null}};
+  cleanup=()=>{stopT();document.body.classList.remove("proj");try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}};
+  const board=hi=>`<div class="sboard">${teams.map((t,k)=>`<div class="steam ${hi===k?"on":""}" style="--tc:${t.c}"><span class="dot" style="background:${t.c}"></span><span class="sname">${t.name}</span><b class="num">${score[k]}</b></div>`).join("")}</div>`;
+  const fsBtn=()=>`<button class="btn ghost" id="sfs">${document.body.classList.contains("proj")?"Exit full screen":"Full screen"}</button>`;
+  const bindFs=()=>{const b=app.querySelector("#sfs");if(b)b.addEventListener("click",()=>{const on=!document.body.classList.contains("proj");document.body.classList.toggle("proj",on);
+    try{if(on&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});else if(!on&&document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}b.textContent=on?"Exit full screen":"Full screen"})};
+  function ask(){
+    stopT();
+    if(i>=qs.length)return end();
+    const q=qs[i];const turn=c.mode==="turn"?i%teams.length:-1;
+    let team=turn,tried=[],done=false;
+    const tiles=q.choices.some(x=>typeof x==="object");
+    app.innerHTML=`<div class="topbar"><button class="back" id="back">← Home</button><span class="eyebrow">Class on one screen</span></div>
+    <section class="card scr">
+      <div class="row between"><span class="num lead">Question ${i+1} of ${qs.length}</span>${fsBtn()}</div>
+      ${board(turn)}
+      ${c.mode==="turn"?`<div class="sturn" style="--tc:${teams[turn].c}"><span>Turn:</span> <b>${teams[turn].name}</b></div>`:""}
+      ${c.timer?`<div class="stimer"><i id="sbar"></i><span class="num" id="stleft">${c.timer}</span></div>`:""}
+      ${q.pic?`<div class="bigpic" aria-hidden="true">${q.pic}</div>`:""}
+      <div class="stem sstem">${q.html}</div>
+      <div class="${tiles?"tiles"+(q.choices.length===3?" three":""):"choices"} schoices">${q.choices.map((x,k)=>`<button class="choice" data-k="${k}">${choiceHTML(x)}</button>`).join("")}</div>
+      <div id="spick"></div>
+      <div class="fb" id="sfb"></div>
+      <div class="row" id="sctl">${q.hint?`<button class="btn ghost" id="shint">Show a hint</button>`:""}${c.mode==="hand"?`<button class="btn ghost" id="sshow">Show the answer</button>`:""}</div>
+    </section>`;
+    app.querySelector("#back").addEventListener("click",()=>{location.hash="home"});bindFs();
+    const ch=[...app.querySelectorAll(".schoices .choice")];
+    const pick=app.querySelector("#spick"),fb=app.querySelector("#sfb");
+    const setEnabled=on=>ch.forEach((b,k)=>{if(!b.classList.contains("wrong"))b.disabled=!on});
+    const askTeam=msg=>{const opts=teams.map((t,k)=>k).filter(k=>!tried.includes(k));
+      pick.innerHTML=`<p class="lead"><strong>${msg}</strong></p><div class="row">${opts.map(k=>`<button class="chip steamchip" data-t="${k}"><span class="dot" style="background:${teams[k].c}"></span>${teams[k].name}</button>`).join("")}</div>`;
+      pick.querySelectorAll("[data-t]").forEach(b=>b.addEventListener("click",()=>{team=+b.dataset.t;pick.innerHTML=`<div class="sturn" style="--tc:${teams[team].c}"><span>Answering:</span> <b>${teams[team].name}</b></div>`;setEnabled(true)}))};
+    const reveal=(ok,msg)=>{done=true;stopT();
+      ch.forEach((b,k)=>{b.disabled=true;if(k===q.answer)b.classList.add("right")});
+      pick.innerHTML="";
+      const hb=app.querySelector("#shint");if(hb)hb.remove();const sb=app.querySelector("#sshow");if(sb)sb.remove();
+      app.querySelector(".sboard").outerHTML=board(ok?team:-1);
+      fb.innerHTML=`<div class="feedback ${ok?"":"no"}"><p><strong>${msg}</strong></p>${q.explain||""}</div><div class="row" style="margin-top:10px"><button class="btn" id="snext">${i===qs.length-1?"See the winners":"Next question"}</button></div>`;
+      app.querySelector("#snext").addEventListener("click",()=>{i++;ask();window.scrollTo(0,0)});
+      fb.scrollIntoView&&fb.scrollIntoView({block:"nearest",behavior:"smooth"})};
+    ch.forEach((b,k)=>b.addEventListener("click",()=>{if(done||team<0)return;
+      if(k===q.answer){score[team]++;reveal(true,"Well done!")}
+      else{b.classList.add("wrong");b.disabled=true;
+        if(c.mode==="turn")reveal(false,"Not quite.");
+        else{tried.push(team);team=-1;setEnabled(false);
+          if(tried.length>=teams.length)reveal(false,"Not quite.");else askTeam("Not quite. Another team can try. Which team put a hand up?")}}}));
+    if(c.mode==="hand"){setEnabled(false);askTeam("Which team put a hand up first?")}
+    const hb=app.querySelector("#shint");if(hb)hb.addEventListener("click",()=>{hb.outerHTML=`<p class="hint" style="background:var(--mean-soft);color:var(--ink);border-radius:10px;padding:8px 12px;font-size:1rem"><strong>Hint 1:</strong> <span>${A.esc(q.hint)}</span></p>`});
+    const sb=app.querySelector("#sshow");if(sb)sb.addEventListener("click",()=>reveal(false,"Here is the answer."));
+    if(c.timer){left=c.timer;const bar=app.querySelector("#sbar"),tl=app.querySelector("#stleft");
+      timer=setInterval(()=>{left--;if(tl)tl.textContent=Math.max(0,left);if(bar)bar.style.width=(left/c.timer*100)+"%";
+        if(left<=0){stopT();if(!done){ch.forEach(b=>{if(!b.classList.contains("wrong"))b.disabled=true});reveal(false,"Time's up!")}}},1000)}
+  }
+  function end(){
+    stopT();
+    const best=Math.max(...score),win=teams.filter((t,k)=>score[k]===best);
+    const order=teams.map((t,k)=>({t,s:score[k]})).sort((a,b)=>b.s-a.s);
+    app.innerHTML=`<div class="topbar"><button class="back" id="back">← Home</button><span class="eyebrow">Class on one screen</span></div>
+    <section class="card scr send">
+      <div class="row between"><span class="eyebrow">Game over</span>${fsBtn()}</div>
+      <div class="bigpic" aria-hidden="true">🏆</div>
+      <h2>${win.length===1?"The winning team":"It's a tie!"}</h2>
+      <div class="swin">${win.map(t=>`<span class="sturn" style="--tc:${t.c}"><b>${t.name}</b></span>`).join("")}</div>
+      <div class="sboard col">${order.map(r=>`<div class="steam" style="--tc:${r.t.c}"><span class="dot" style="background:${r.t.c}"></span><span class="sname">${r.t.name}</span><b class="num">${r.s}</b></div>`).join("")}</div>
+      <p class="sdua" translate="no" dir="rtl" lang="ar">اللّهُمَّ صَلِّ عَلىٰ مُحَمَّدٍ وَآلِ مُحَمَّدٍ</p>
+      <p class="lead">Well done, everyone! May Allah bless what you learned today.</p>
+      <div class="row"><button class="btn" id="sagain">Play again</button><button class="btn ghost" id="sset2">Change the settings</button></div>
+    </section>`;
+    app.querySelector("#back").addEventListener("click",()=>{location.hash="home"});bindFs();
+    app.querySelector("#sagain").addEventListener("click",()=>{play(c);window.scrollTo(0,0)});
+    app.querySelector("#sset2").addEventListener("click",()=>{cleanup();cleanup=null;renderScreen();window.scrollTo(0,0)});
+  }
+  ask();window.scrollTo(0,0);
+}
+
 function route(){
   resetAsk=false;
   if(cleanup){try{cleanup()}catch(e){}cleanup=null}
@@ -756,6 +945,8 @@ function route(){
   const g=A.games.find(x=>x.id===h);
   if(g)renderGame(g);
   else if(h==="class-host")renderHost();
+  else if(h==="class-screen")renderScreen();
+  else if(h==="role")renderRole();
   else if(h==="board")renderBoard(false);
   else if(h==="host"||h.startsWith("host-")){location.replace("#class-host");return}
   else if(h.startsWith("occasion-")&&A.occasions.some(o=>o.id===h.slice(9)))renderOcc(A.occasions.find(o=>o.id===h.slice(9)));
