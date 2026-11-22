@@ -208,6 +208,7 @@ a.gcard{text-decoration:none}
 .howin summary,.howto summary{cursor:pointer;font-family:var(--display);font-weight:600;font-size:1.05rem}
 .howin ol,.howto ol{margin:8px 0 0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
 .gcard .when{font-size:.82rem;color:var(--mean);font-weight:600}
+.status.warn{font-size:.95rem;color:var(--ink);background:color-mix(in srgb,var(--gold) 16%,var(--panel));border:1.5px solid var(--gold);border-radius:14px;padding:12px 14px;align-items:stretch}
 </style>
 </head>
 <body>
@@ -411,12 +412,14 @@ CL.norm = c => String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
 CL.time = d => {try{return new Date(d).toLocaleTimeString((A.lang||"en"),{hour:"2-digit",minute:"2-digit"})}catch(e){return ""}};
 CL.send = it => CL.rpc("submit_score",{p_code:CL.joined.code,p_device:CL.dev(),p_team:it.team,p_game:it.game,p_score:it.score,p_max:it.max});
 CL.ended = () => {CL.leave();A.toast("Your class session has ended. Your scores are saved on this device.");if(view==="home")renderHome()};
+CL.counts = id => !CL.joined||!CL.joined.chosen||id===CL.joined.chosen||(CL.joined.allowed||[]).includes(id);
+CL.noteRule = r => {if(CL.joined&&r){if("chosen" in r)CL.joined.chosen=r.chosen||null;if(r.allowed)CL.joined.allowed=r.allowed;store.set("class",CL.joined)}};
 CL.go = id => {if(!id)return;if(id.indexOf("occ-")===0){A.autoOcc=true;location.hash="occasion-"+id.slice(4)}else location.hash=id};
 CL.watch = onChange => {if(!CL.on()||!CL.joined)return null;let busy=false;
   const tick=async()=>{if(busy||document.hidden||!CL.joined)return;busy=true;
     try{const r=await CL.rpc("session_status",{p_code:CL.joined.code});
       if(r&&r.ok===false){busy=false;CL.ended();return}
-      if(r&&r.ok&&CL.joined){const c=r.chosen||null;if(c!==(CL.joined.chosen||null)){CL.joined.chosen=c;store.set("class",CL.joined);onChange&&onChange(c)}}}catch(e){}
+      if(r&&r.ok&&CL.joined){const c=r.chosen||null;CL.joined.allowed=r.allowed||[];if(c!==(CL.joined.chosen||null)){CL.joined.chosen=c;store.set("class",CL.joined);onChange&&onChange(c)}else store.set("class",CL.joined)}}catch(e){}
     busy=false};
   const t=setInterval(tick,5000);tick();return ()=>clearInterval(t)};
 CL.flush = async () => {if(!CL.on()||!CL.joined||!CL.q.length||CL.busy)return;CL.busy=true;
@@ -426,6 +429,7 @@ CL.submit = async (game,score,max) => {
   try{const r=await CL.send(it);
     if(r&&r.ok){A.toast(`Sent to your class team: ${it.score}/${it.max}`);CL.flush();return}
     if(r&&r.reason==="ended"){CL.ended();return}
+    if(r&&r.reason==="not_chosen"){CL.noteRule(r);A.toast("This game doesn't count for your class right now. Only the game your teacher chose counts. Your score is saved on this device.");return}
     A.toast("The class didn't accept this score. It is saved on this device.");
   }catch(e){CL.q.push(it);if(CL.q.length>50)CL.q.shift();store.set("classq",CL.q);A.toast("No connection. Your score will go to the class when you're back online.")}
 };
@@ -692,7 +696,7 @@ function renderHome(){
   const jb=app.querySelector("#joincls");
   if(jb){const ci=app.querySelector("#ccode");const go=async()=>{const code=CL.norm(ci.value);if(code.length<4){A.toast("Enter the 4-character code your teacher shows.");return}
       jb.disabled=true;try{const r=await CL.rpc("join_session",{p_code:code});
-        if(r&&r.ok){CL.joined={code:r.code,title:r.title||"",teams:r.teams||4,expires:r.expires,chosen:r.chosen||null};store.set("class",CL.joined);CL.q=[];store.set("classq",[]);
+        if(r&&r.ok){CL.joined={code:r.code,title:r.title||"",teams:r.teams||4,expires:r.expires,chosen:r.chosen||null,allowed:r.allowed||[]};store.set("class",CL.joined);CL.q=[];store.set("classq",[]);
           if(A.me.team&&!CL.teams().some(t=>t.id===A.me.team)){A.me.team=null;store.set("team",null)}
           A.track("class-join");renderHome();A.toast(A.me.team?"You joined the class.":"You joined the class. Now pick your team.");const tc=app.querySelector("#classcard");if(tc&&tc.scrollIntoView)tc.scrollIntoView({block:"center"})}
         else{jb.disabled=false;A.toast("That code isn't active. Check it with your teacher.")}
@@ -718,9 +722,9 @@ function renderGame(g){
   <header style="display:flex;flex-direction:column;gap:8px"><h1 style="font-size:1.9rem">${g.pic?`<span aria-hidden="true">${g.pic}</span> `:""}${A.esc(g.title)}</h1><div class="row">${bandTags(g)}${unitTags(g)}</div></header>
   ${(()=>{const hp=A.HELP&&A.HELP[g.id];const seen=store.get("seen."+g.id,false);store.set("seen."+g.id,true);
     return `<details class="card howto" ${seen?"":"open"}><summary style="cursor:pointer;font-family:var(--display);font-weight:600;font-size:1.05rem">How to play</summary><p>${A.esc(g.how)}</p>${hp?`<ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">${hp.steps.map(x=>`<li>${A.esc(x)}</li>`).join("")}</ol>`:""}<p class="lead" style="font-size:.85rem">Stuck? Tap <strong>Show a hint</strong> during the game.</p></details>`})()}
-  ${classLine()}
+  ${classLine(g.id)}
   <div id="stage" style="display:flex;flex-direction:column;gap:16px"></div>`;
-  bindBack();
+  bindBack();bindGoChosen();
   A.track("open/"+g.id,g.title);A.track("play-lang/"+(A.lang||"en"));markPlay(g.id);
   A.curHints=(A.HELP&&A.HELP[g.id]&&A.HELP[g.id].hints)||[];
   try{cleanup=g.mount(app.querySelector("#stage"))||null}catch(e){app.querySelector("#stage").innerHTML=`<p class="lead">This game hit a problem loading. Go back and try again.</p>`;console.error(e)}
@@ -737,10 +741,11 @@ function renderOcc(o){
   app.innerHTML=`${topbar("Occasion")}
   <header style="display:flex;flex-direction:column;gap:8px"><div class="bigpic" style="text-align:start" aria-hidden="true">${o.pic}</div><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h1 style="font-size:1.9rem">${A.esc(o.title)}</h1><p class="lead">${o.about}</p></header>
   <section class="card"><h2>Play on this device</h2><p class="lead">Five questions about this occasion and about good character, for <span>${A.esc(A.bandName(A.band))}</span>.</p><p class="lead" style="font-size:.85rem">You can change the age group on the home screen.</p><button class="btn" id="occplay" style="align-self:flex-start">Play now</button></section>
-  ${classLine()}
+  ${classLine("occ-"+o.id)}
   ${store.get("role",null)==="teacher"?`<section class="card accent"><h2>Running a program?</h2><p>Play this occasion as a team game on one screen, with no devices needed for the children.</p><div class="row"><button class="btn" id="occscr">Play on one screen</button>${CL.on()?`<a class="btn ghost" href="#class-host">Class with devices</a>`:""}</div></section>`:""}
   <div id="stage" style="display:flex;flex-direction:column;gap:16px"></div>`;
   bindBack();A.track("occ/"+o.id);A.curHints=[];
+  bindGoChosen();
   if(A.autoOcc){A.autoOcc=false;const op=app.querySelector("#occplay");if(op)setTimeout(()=>op.click(),0)}
   const os=app.querySelector("#occscr");if(os)os.addEventListener("click",()=>{const c=store.get("scr",{});c.set=o.id;store.set("scr",c);location.hash="class-screen"});
   app.querySelector("#occplay").addEventListener("click",e=>{e.target.closest("section").remove();const set=A.sets.find(s=>s.id===o.id);const stage=app.querySelector("#stage");markPlay("occ-"+o.id);A.bankQuiz(stage,{id:"occ-"+o.id,set,n:5})});
@@ -776,9 +781,11 @@ function classCard(){
   return `<section class="card"><h2>Join a class</h2><p class="lead">Enter the code your teacher shows, then pick your team.</p>
     <div class="row"><input type="text" id="ccode" class="codein" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Code" aria-label="Class code"><button class="btn" id="joincls">Join</button></div>${howBox("join",true)}</section>`;
 }
-function classLine(){
+function bindGoChosen(){const b=app.querySelector("#gochosen");if(b)b.addEventListener("click",()=>CL.go(CL.joined&&CL.joined.chosen))}
+function classLine(id){
   if(!CL.on()||!CL.joined)return "";
   const has=A.me.team&&CL.teams().some(t=>t.id===A.me.team);
+  if(id&&!CL.counts(id)){const g=gameInfo(CL.joined.chosen);return `<div class="status warn"><div style="display:flex;flex-direction:column;gap:6px"><p style="margin:0"><strong>This game doesn't count for your class right now.</strong> Only the game your teacher chose counts. You can still play this one for practice.</p>${g?`<div class="chosenline"><div class="eyebrow">Your teacher chose:</div><div><b>${A.esc(g.title)}</b></div></div><button class="btn" id="gochosen" style="align-self:flex-start">Play the teacher's game</button>`:""}</div></div>`}
   return `<p class="lead" style="font-size:.85rem">${has?`Class <b translate="no">${A.esc(CL.joined.code)}</b>: your score goes to your team when you finish.`:`You're in a class but haven't picked a team. Go back to the home screen and pick one.`}</p>`;
 }
 function gameInfo(id){const g=A.games.find(x=>x.id===id);if(g)return {id,title:g.title};
@@ -846,7 +853,7 @@ function renderBoard(isHost){
       </select></label></section>
     <details class="card howto hostonly" id="bhow" ${howOpen?"open":""}><summary>How it works</summary><ol>${HOW.host.map(x=>`<li>${x}</li>`).join("")}</ol></details>`:""}
     <section class="card"><div class="row between"><h2>Team board</h2><div class="status ${err?"":"live"}"><span class="led"></span><span>${err?"Reconnecting…":data?"Live":"Loading…"}</span></div></div>
-      ${games.length>1?`<div class="row"><button class="chip" data-gm="" aria-pressed="${!game}">All games</button>${games.map(g=>`<button class="chip" data-gm="${g.id}" aria-pressed="${game===g.id}">${A.esc(g.title)}</button>`).join("")}</div>`:""}
+      ${games.length>1?`<div class="row"><button class="chip" data-gm="" aria-pressed="${!game}">${chosen?"All the teacher's games":"All games"}</button>${games.map(g=>`<button class="chip" data-gm="${g.id}" aria-pressed="${game===g.id}">${A.esc(g.title)}</button>`).join("")}</div>`:""}
       <div class="tboard">${rows.map((r,i)=>`<div class="trow"><div class="row between"><span class="tname"><span class="rank num">${i+1}</span><span class="dot" style="background:${r.t.c}"></span>${r.t.name}</span><b class="num tavg">${r.avg%1?r.avg.toFixed(1):r.avg}</b></div><div class="bar"><i style="width:${r.avg/mx*100}%;background:${r.t.c}"></i></div><span class="lead tmeta">Players ${r.players} · Total ${r.total}</span></div>`).join("")}</div>
       <p class="lead" style="font-size:.82rem">Team score is the average points per player, so team size doesn't matter. Each player's best score in each game counts.</p></section>
     ${isHost?`<section class="card hostonly"><div class="row"><button class="btn ghost ${armR?"warn":""}" id="newrnd">${armR?"Tap again to confirm":"New round (clear scores)"}</button><button class="btn ghost ${armE?"warn":""}" id="endses">${armE?"Tap again to confirm":"End session"}</button></div>
