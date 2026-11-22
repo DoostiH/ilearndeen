@@ -197,6 +197,17 @@ a.gcard{text-decoration:none}
 .send{align-items:stretch}.send h2{text-align:center}.send .swin{justify-content:center}
 .proj .scr .sstem{font-size:2.2rem}.proj .scr .choice{font-size:1.6rem}.proj .scr .bigpic{font-size:7rem}
 .proj .scr .steam{font-size:1.3rem}.proj .scr .steam b{font-size:2rem}.proj .scr .feedback{font-size:1.3rem}.proj .scr .sturn{font-size:1.5rem}
+.chosen{border:2px solid var(--mean)}
+.chosenrow{display:flex;align-items:center;gap:12px}.chosenrow .gpic{font-size:2.6rem;line-height:1}
+.chosentitle{font-family:var(--display);font-size:1.4rem}
+.chosen #chosenplay{align-self:flex-start;font-size:1.1rem;padding:12px 26px}
+.chosenline{display:flex;flex-direction:column;gap:2px;border-inline-start:4px solid var(--mean);padding-inline-start:10px}
+.chosenline b{font-size:1.15rem}
+.proj .chosenline b{font-size:1.8rem}
+.howin{border-top:1px solid var(--line);padding-top:10px}
+.howin summary,.howto summary{cursor:pointer;font-family:var(--display);font-weight:600;font-size:1.05rem}
+.howin ol,.howto ol{margin:8px 0 0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
+.gcard .when{font-size:.82rem;color:var(--mean);font-weight:600}
 </style>
 </head>
 <body>
@@ -400,6 +411,14 @@ CL.norm = c => String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
 CL.time = d => {try{return new Date(d).toLocaleTimeString((A.lang||"en"),{hour:"2-digit",minute:"2-digit"})}catch(e){return ""}};
 CL.send = it => CL.rpc("submit_score",{p_code:CL.joined.code,p_device:CL.dev(),p_team:it.team,p_game:it.game,p_score:it.score,p_max:it.max});
 CL.ended = () => {CL.leave();A.toast("Your class session has ended. Your scores are saved on this device.");if(view==="home")renderHome()};
+CL.go = id => {if(!id)return;if(id.indexOf("occ-")===0){A.autoOcc=true;location.hash="occasion-"+id.slice(4)}else location.hash=id};
+CL.watch = onChange => {if(!CL.on()||!CL.joined)return null;let busy=false;
+  const tick=async()=>{if(busy||document.hidden||!CL.joined)return;busy=true;
+    try{const r=await CL.rpc("session_status",{p_code:CL.joined.code});
+      if(r&&r.ok===false){busy=false;CL.ended();return}
+      if(r&&r.ok&&CL.joined){const c=r.chosen||null;if(c!==(CL.joined.chosen||null)){CL.joined.chosen=c;store.set("class",CL.joined);onChange&&onChange(c)}}}catch(e){}
+    busy=false};
+  const t=setInterval(tick,5000);tick();return ()=>clearInterval(t)};
 CL.flush = async () => {if(!CL.on()||!CL.joined||!CL.q.length||CL.busy)return;CL.busy=true;
   try{while(CL.q.length&&CL.joined){const r=await CL.send(CL.q[0]);CL.q.shift();store.set("classq",CL.q);if(r&&r.reason==="ended"){CL.ended();break}}}catch(e){}CL.busy=false};
 CL.submit = async (game,score,max) => {
@@ -603,8 +622,8 @@ function footer(){const c=window.SS_CONFIG;if(!c)return "";const y=new Date().ge
 function teacherCard(){
   return `<section class="card accent"><h2>For teachers and parents</h2><p class="lead">Run a team game for your class or family.</p>
     <div class="games">
-      <a class="gcard" href="#class-screen"><span class="gpic" aria-hidden="true">📺</span><h3>Class on one screen</h3><p>No devices needed for the children. Show the questions on your phone, laptop or projector, and teams answer together.</p></a>
-      ${CL.on()?`<a class="gcard" href="#class-host"><span class="gpic" aria-hidden="true">📱</span><h3>Class with devices</h3><p>Children join with a short code on their own phone or tablet and pick a team. Every game they finish adds to a live team board.</p>${CL.host?`<span class="tag star" style="align-self:flex-start">You're running class <b translate="no">${A.esc(CL.host.code)}</b></span>`:""}</a>`:""}
+      <a class="gcard" href="#class-screen"><span class="gpic" aria-hidden="true">📺</span><h3>Class on one screen</h3><p>No devices needed for the children. Show the questions on your phone, laptop or projector, and teams answer together.</p><span class="when">Best when only you have a screen.</span></a>
+      ${CL.on()?`<a class="gcard" href="#class-host"><span class="gpic" aria-hidden="true">📱</span><h3>Class with devices</h3><p>Children join with a short code on their own phone or tablet and pick a team. Every game they finish adds to a live team board.</p><span class="when">Best when every child has a phone or tablet.</span>${CL.host?`<span class="tag star" style="align-self:flex-start">You're running class <b translate="no">${A.esc(CL.host.code)}</b></span>`:""}</a>`:""}
     </div></section>`;
 }
 const PIC_KIDS=`<svg viewBox="0 0 320 220" class="rsvg" aria-hidden="true" focusable="false"><g transform="translate(0,4)"><path d="M36 214 Q36 164 80 158 Q124 164 124 214 Z" fill="#1D9E75"/><path d="M68 159 L80 172 L92 159 Z" fill="#F7F5EF"/><rect x="72" y="130" width="16" height="30" fill="#E3B48A"/><ellipse cx="50" cy="96" rx="6" ry="8" fill="#EDBF96"/><ellipse cx="110" cy="96" rx="6" ry="8" fill="#EDBF96"/><ellipse cx="80" cy="92" rx="31" ry="33" fill="#F2CCA6"/><path d="M48 90 Q44 54 80 52 Q116 54 112 90 Q108 72 96 68 Q88 76 76 70 Q64 76 58 70 Q50 76 48 90 Z" fill="#3B2A20"/><path d="M62 84 Q67 81 73 83" fill="none" stroke="#3B2A20" stroke-width="2.2" stroke-linecap="round"/><path d="M87 83 Q93 81 98 84" fill="none" stroke="#3B2A20" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="68" cy="95" rx="6.6" ry="6.2" fill="#FFF"/><circle cx="68" cy="95.5" r="4.4" fill="#4A2E1E"/><circle cx="69.6" cy="93.8" r="1.5" fill="#FFF"/><ellipse cx="92" cy="95" rx="6.6" ry="6.2" fill="#FFF"/><circle cx="92" cy="95.5" r="4.4" fill="#4A2E1E"/><circle cx="93.6" cy="93.8" r="1.5" fill="#FFF"/><path d="M79 103 Q77 108 81 108" fill="none" stroke="#C9946B" stroke-width="1.8" stroke-linecap="round"/><circle cx="59" cy="108" r="5.5" fill="#F09595" opacity=".4"/><circle cx="101" cy="108" r="5.5" fill="#F09595" opacity=".4"/><path d="M72 113 Q80 121 88 113 Q80 116 72 113 Z" fill="#B5524A"/></g><g transform="translate(150,4)"><path d="M80 54 Q48 54 46 94 Q44 124 36 146 Q30 166 30 214 L130 214 Q130 166 124 146 Q116 124 114 94 Q112 54 80 54 Z" fill="#7F77DD"/><path d="M52 134 Q80 160 108 134" fill="none" stroke="#534AB7" stroke-width="2"/><path d="M44 178 Q80 196 116 178" fill="none" stroke="#534AB7" stroke-width="1.5"/><ellipse cx="80" cy="98" rx="25" ry="26" fill="#F2CCA6"/><path d="M56 90 Q80 66 104 90 Q80 78 56 90 Z" fill="#EEEDFE"/><path d="M64 90 Q69 87 75 89" fill="none" stroke="#3B2A20" stroke-width="2" stroke-linecap="round"/><path d="M85 89 Q91 87 96 90" fill="none" stroke="#3B2A20" stroke-width="2" stroke-linecap="round"/><ellipse cx="70" cy="99" rx="6.2" ry="5.8" fill="#FFF"/><circle cx="70" cy="99.5" r="4.1" fill="#4A2E1E"/><circle cx="71.5" cy="97.9" r="1.4" fill="#FFF"/><ellipse cx="90" cy="99" rx="6.2" ry="5.8" fill="#FFF"/><circle cx="90" cy="99.5" r="4.1" fill="#4A2E1E"/><circle cx="91.5" cy="97.9" r="1.4" fill="#FFF"/><path d="M63.6 95 L62 93 M76.4 95 L78 93 M83.6 95 L82 93 M96.4 95 L98 93" stroke="#3B2A20" stroke-width="1.2" stroke-linecap="round"/><path d="M79 106 Q77 110 81 110" fill="none" stroke="#C9946B" stroke-width="1.6" stroke-linecap="round"/><circle cx="62" cy="110" r="5" fill="#F09595" opacity=".4"/><circle cx="98" cy="110" r="5" fill="#F09595" opacity=".4"/><path d="M73 115 Q80 121 87 115 Q80 118 73 115 Z" fill="#C0605A"/></g></svg>`;
@@ -628,6 +647,7 @@ function renderRole(){
   app.querySelectorAll("[data-role]").forEach(b=>b.addEventListener("click",()=>{store.set("role",b.dataset.role);A.track("role/"+b.dataset.role);if(location.hash==="#home"||location.hash==="")renderHome();else location.hash="home";window.scrollTo(0,0)}));
 }
 function renderHome(){
+  if(cleanup){try{cleanup()}catch(e){}cleanup=null}
   view="home";app.classList.remove("wide");
   const role=store.get("role",null);if(!role)return renderRole();const T=role==="teacher";
   const q=query.toLowerCase();
@@ -643,6 +663,7 @@ function renderHome(){
     ${A.lang&&A.lang!=="en"&&A.fbUrl()?`<p class="lead" style="font-size:.82rem">Found a translation that isn't right? <a href="${A.esc(A.fbUrl())}" target="_blank" rel="noopener" style="color:var(--mean)">Please tell us.</a></p>`:""}
     <div class="row"><button class="btn" id="quick">Play a quick game</button><span class="lead" style="font-size:.85rem">About 2 minutes</span></div>
   </header>
+  ${T?"":chosenCard()}
   <section class="card"><h2>Who is playing?</h2>
     <div class="seg" role="group" aria-label="Age group"><button class="chip" data-band="all" aria-pressed="${A.band==="all"}">All ages</button>${A.BANDS.map(b=>`<button class="chip" data-band="${b.id}" aria-pressed="${A.band===b.id}">${b.name} · ${b.yrs}</button>`).join("")}</div>
     <p class="lead" style="font-size:.85rem">${A.band==="all"?"Showing games for every age.":`Showing games for ${A.esc(A.bandName(A.band))}.`}</p></section>
@@ -660,6 +681,8 @@ function renderHome(){
   const si=app.querySelector("#showinst");if(si)si.addEventListener("click",e=>{e.preventDefault();store.set("installHidden",false);renderHome();window.scrollTo(0,0)});
   const hi=app.querySelector("#hideinst");if(hi)hi.addEventListener("click",()=>{store.set("installHidden",true);renderHome();A.toast("Hidden. Tap How to install at the bottom to show it again.")});
   const di=app.querySelector("#doinst");if(di)di.addEventListener("click",async()=>{const e=A.installEvt;if(!e)return;e.prompt();try{await e.userChoice}catch(x){}A.installEvt=null;renderHome()});
+  const bindChosen=()=>{const b=app.querySelector("#chosenplay");if(b)b.addEventListener("click",()=>{A.track("class-chosen-play");CL.go(CL.joined&&CL.joined.chosen)})};bindChosen();
+  if(!T&&CL.joined&&CL.on()){const stop=CL.watch(()=>{const el=app.querySelector("#chosencard");if(!el)return;const w=document.createElement("div");w.innerHTML=chosenCard();el.replaceWith(w.firstElementChild);bindChosen();if(CL.joined&&CL.joined.chosen)A.toast("Your teacher chose a new game.")});cleanup=stop}
   app.querySelector("#quick").addEventListener("click",()=>{const pool=A.games.filter(g=>g.star&&A.inBand(g.bands)).map(g=>g.id);const all=pool.length?pool:A.games.filter(g=>g.star).map(g=>g.id);const fresh=all.filter(id=>!A.best[id]);A.track("quick-play");location.hash=S.pick(fresh.length?fresh:all)});
   const rb=app.querySelector("#resetbtn");if(rb)rb.addEventListener("click",()=>{resetAsk=true;renderHome()});
   const rn=app.querySelector("#resetno");if(rn)rn.addEventListener("click",()=>{resetAsk=false;renderHome()});
@@ -669,7 +692,7 @@ function renderHome(){
   const jb=app.querySelector("#joincls");
   if(jb){const ci=app.querySelector("#ccode");const go=async()=>{const code=CL.norm(ci.value);if(code.length<4){A.toast("Enter the 4-character code your teacher shows.");return}
       jb.disabled=true;try{const r=await CL.rpc("join_session",{p_code:code});
-        if(r&&r.ok){CL.joined={code:r.code,title:r.title||"",teams:r.teams||4,expires:r.expires};store.set("class",CL.joined);CL.q=[];store.set("classq",[]);
+        if(r&&r.ok){CL.joined={code:r.code,title:r.title||"",teams:r.teams||4,expires:r.expires,chosen:r.chosen||null};store.set("class",CL.joined);CL.q=[];store.set("classq",[]);
           if(A.me.team&&!CL.teams().some(t=>t.id===A.me.team)){A.me.team=null;store.set("team",null)}
           A.track("class-join");renderHome();A.toast(A.me.team?"You joined the class.":"You joined the class. Now pick your team.");const tc=app.querySelector("#classcard");if(tc&&tc.scrollIntoView)tc.scrollIntoView({block:"center"})}
         else{jb.disabled=false;A.toast("That code isn't active. Check it with your teacher.")}
@@ -718,11 +741,29 @@ function renderOcc(o){
   ${store.get("role",null)==="teacher"?`<section class="card accent"><h2>Running a program?</h2><p>Play this occasion as a team game on one screen, with no devices needed for the children.</p><div class="row"><button class="btn" id="occscr">Play on one screen</button>${CL.on()?`<a class="btn ghost" href="#class-host">Class with devices</a>`:""}</div></section>`:""}
   <div id="stage" style="display:flex;flex-direction:column;gap:16px"></div>`;
   bindBack();A.track("occ/"+o.id);A.curHints=[];
+  if(A.autoOcc){A.autoOcc=false;const op=app.querySelector("#occplay");if(op)setTimeout(()=>op.click(),0)}
   const os=app.querySelector("#occscr");if(os)os.addEventListener("click",()=>{const c=store.get("scr",{});c.set=o.id;store.set("scr",c);location.hash="class-screen"});
   app.querySelector("#occplay").addEventListener("click",e=>{e.target.closest("section").remove();const set=A.sets.find(s=>s.id===o.id);const stage=app.querySelector("#stage");markPlay("occ-"+o.id);A.bankQuiz(stage,{id:"occ-"+o.id,set,n:5})});
 }
 
 /* ---------- class sessions: teacher and board views ---------- */
+const HOW={
+  join:["Ask your teacher for the class code.","Type the code here and tap <strong>Join</strong>.","Pick your team.","If your teacher chooses a game, it appears at the top of the home screen. Tap <strong>Play now</strong>.","Every game you finish adds points to your team."],
+  host:["Choose how many teams, then tap <strong>Start class session</strong>.","Show the code on the board, or read it out.","Students open iLearnDeen on their own phone or tablet, enter the code under <strong>Join a class</strong> and pick a team.","Choose a game for the class, or let students choose freely. You can change it at any time.","Watch the team board. Tap <strong>Projector view</strong> to show it to the class.","Tap <strong>New round</strong> to clear the scores, and <strong>End session</strong> when you finish."],
+  screen:["Choose what to play, the age group, the teams, how teams answer and the timer.","Tap <strong>Start the game</strong>, then <strong>Full screen</strong>.","Read each question aloud. Give teams a moment to talk together quietly.","Tap the team's answer. In <strong>First hand up</strong>, tap the team first, then their answer.","Talk about the explanation for a minute, then tap <strong>Next question</strong>.","The winning team appears at the end. Tap <strong>Play again</strong> for another round."]
+};
+function howBox(id,inCard){const seen=store.get("seen.how."+id,false);store.set("seen.how."+id,true);
+  return `<details class="${inCard?"howin":"card howto"}${id==="host"?" hostonly":""}" ${seen?"":"open"}><summary>How it works</summary><ol>${HOW[id].map(x=>`<li>${x}</li>`).join("")}</ol></details>`}
+function chosenCard(){
+  if(!CL.on()||!CL.joined||!CL.joined.chosen)return `<div id="chosencard" hidden></div>`;
+  const id=CL.joined.chosen,g=A.games.find(x=>x.id===id),o=id.indexOf("occ-")===0&&A.occasions.find(x=>x.id===id.slice(4));
+  if(!g&&!o)return `<div id="chosencard" hidden></div>`;
+  const it=g||o;
+  return `<section class="card accent chosen" id="chosencard"><span class="eyebrow">Class <span translate="no">${A.esc(CL.joined.code)}</span></span>
+    <h2>Your teacher chose:</h2>
+    <div class="chosenrow"><span class="gpic" aria-hidden="true">${it.pic||""}</span><b class="chosentitle">${A.esc(it.title)}</b></div>
+    <button class="btn" id="chosenplay">Play now</button></section>`;
+}
 function classCard(){
   if(!CL.on())return "";
   if(CL.joined){const ts=CL.teams();const has=A.me.team&&ts.some(t=>t.id===A.me.team);
@@ -731,9 +772,9 @@ function classCard(){
     <h3 style="margin:0">Your team</h3>
     <div class="row">${ts.map(t=>`<button class="chip" data-team="${t.id}" aria-pressed="${A.me.team===t.id}"><span class="dot" style="background:${t.c}"></span>${t.name}</button>`).join("")}</div>
     ${has?`<div class="status live"><span class="led"></span><div>Live: your scores go to class <b translate="no">${A.esc(CL.joined.code)}</b> for your team.</div></div>`:`<p class="lead" style="font-size:.9rem;color:var(--gold)"><strong>Pick your team</strong> so your scores count for your class.</p>`}
-    <div class="row"><a class="btn ghost" href="#board">See the team board</a><button class="btn ghost" id="leavecls">Leave class</button></div></section>`}
+    <div class="row"><a class="btn ghost" href="#board">See the team board</a><button class="btn ghost" id="leavecls">Leave class</button></div>${howBox("join",true)}</section>`}
   return `<section class="card"><h2>Join a class</h2><p class="lead">Enter the code your teacher shows, then pick your team.</p>
-    <div class="row"><input type="text" id="ccode" class="codein" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Code" aria-label="Class code"><button class="btn" id="joincls">Join</button></div></section>`;
+    <div class="row"><input type="text" id="ccode" class="codein" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Code" aria-label="Class code"><button class="btn" id="joincls">Join</button></div>${howBox("join",true)}</section>`;
 }
 function classLine(){
   if(!CL.on()||!CL.joined)return "";
@@ -758,7 +799,8 @@ function renderHost(){
           <div class="row">${A.TEAMS.slice(0,n).map(t=>`<span class="tag"><span class="dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${t.c}"></span> ${t.name}</span>`).join("")}</div><p class="lead" style="font-size:.85rem">Noor means light, Ṣabr patience, Ṣidq truthfulness and Shukr thankfulness.</p></div>
         <p class="lead" style="font-size:.85rem">The session lasts 8 hours. Students don't need an account. Only team names and game scores are shared, never personal names.</p>
         <div class="row"><button class="btn" id="mk">Start class session</button></div>
-      </section>`;
+      </section>
+      ${howBox("host")}`;
     app.querySelector("#back").addEventListener("click",()=>{location.hash="home"});
     app.querySelectorAll("[data-n]").forEach(b=>b.addEventListener("click",()=>{store.set("hostTitle",app.querySelector("#ctitle").value);n=+b.dataset.n;store.set("hostTeams",n);paint()}));
     const mk=app.querySelector("#mk");
@@ -773,22 +815,36 @@ function renderBoard(isHost){
   view=isHost?"host":"board";app.classList.remove("wide");A.curHints=[];
   const s=isHost?CL.host:CL.joined;
   if(!s||!CL.on()){location.hash=isHost?"class-host":"home";return}
-  let data=null,err=false,game=null,armR=false,armE=false,timer=null,busy=false;
+  let data=null,err=false,game=null,armR=false,armE=false,timer=null,busy=false,seen;
+  let howOpen=isHost&&!store.get("seen.how.host",false);if(isHost)store.set("seen.how.host",true);
   const load=async()=>{if(busy)return;busy=true;try{const r=await CL.rpc("session_board",{p_code:s.code,p_game:game});err=false;
       if(!r||!r.ok){if(isHost){CL.host=null;store.set("host",null)}else if(CL.joined&&CL.joined.code===s.code)CL.leave();data={ended:true}}else data=r}
-    catch(e){err=true}busy=false;if(view===(isHost?"host":"board"))paint()};
+    catch(e){err=true}busy=false;
+    if(data&&!data.ended){const c=data.chosen||null;if(seen===undefined||c!==seen){const first=seen===undefined;seen=c;if(!isHost&&CL.joined&&CL.joined.code===s.code&&(CL.joined.chosen||null)!==c){CL.joined.chosen=c;store.set("class",CL.joined)}if(c!==game&&(c||!first)){game=c;if(view===(isHost?"host":"board"))paint();return load()}}}
+    if(view===(isHost?"host":"board"))paint()};
   const paint=()=>{
     const teams=A.TEAMS.slice(0,(data&&data.teams)||s.teams||4);
     const rows=teams.map(t=>{const b=(data&&data.board||[]).find(x=>x.team===t.id)||{players:0,total:0,average:0};return {t,players:+b.players||0,total:+b.total||0,avg:+b.average||0}}).sort((a,b)=>b.avg-a.avg||b.total-a.total);
     const mx=Math.max(1,...rows.map(r=>r.avg));
-    const games=(data&&data.games||[]).map(gameInfo).filter(Boolean);
+    const chosen=data&&data.chosen||null;
+    const games=[...new Set([...(data&&data.games||[]),...(chosen?[chosen]:[])])].map(gameInfo).filter(Boolean);
+    const ch=chosen&&gameInfo(chosen);
     const proj=document.body.classList.contains("proj");
     if(data&&data.ended){app.innerHTML=`<div class="topbar"><button class="back" id="back">← Home</button></div><section class="card"><h2>This class session has ended</h2><p class="lead">Its scores have been deleted. Scores stay on each student's device.</p>${isHost?`<div class="row"><a class="btn" href="#class-host">Start a new session</a></div>`:""}</section>`;
       document.body.classList.remove("proj");app.querySelector("#back").addEventListener("click",()=>{location.hash="home"});return}
     app.innerHTML=`<div class="topbar"><button class="back" id="back">← Home</button><span class="eyebrow">${isHost?"Teacher view":"Team board"}</span></div>
     <section class="card codecard"><div class="row between" style="align-items:flex-start"><div style="display:flex;flex-direction:column;gap:4px;min-width:0"><span class="eyebrow">Class code</span><div class="bigcode" translate="no">${A.esc(s.code)}</div>${s.title||(data&&data.title)?`<span class="lead" translate="no">${A.esc(s.title||data.title)}</span>`:""}</div>
       ${isHost?`<button class="btn ghost" id="projbtn">${proj?"Exit projector view":"Projector view"}</button>`:""}</div>
-      ${isHost?`<p class="lead">Students: open <b translate="no">${A.esc(siteAddr())}</b>, enter this code under <strong>Join a class</strong>, then pick a team.</p>`:""}</section>
+      ${isHost?`<p class="lead">Students: open <b translate="no">${A.esc(siteAddr())}</b>, enter this code under <strong>Join a class</strong>, then pick a team.</p>`:""}
+      ${ch?`<div class="chosenline"><span class="eyebrow">Game for the class</span><b>${A.esc(ch.title)}</b></div>`:""}</section>
+    ${isHost?`<section class="card hostonly"><h2>Choose a game for the class</h2>
+      <p class="lead" style="font-size:.9rem">Students who have joined see it at the top of their screen with a <strong>Play now</strong> button. Other games stay available. You can change it at any time.</p>
+      <label class="fld"><span>Game for the class</span><select id="chgame">
+        <option value="" ${!chosen?"selected":""}>Let students choose freely</option>
+        <optgroup label="Games">${A.games.map(g=>`<option value="${g.id}" ${chosen===g.id?"selected":""}>${A.esc(g.title)}</option>`).join("")}</optgroup>
+        <optgroup label="Occasions">${A.occasions.map(o=>`<option value="occ-${o.id}" ${chosen==="occ-"+o.id?"selected":""}>${A.esc(o.title)}</option>`).join("")}</optgroup>
+      </select></label></section>
+    <details class="card howto hostonly" id="bhow" ${howOpen?"open":""}><summary>How it works</summary><ol>${HOW.host.map(x=>`<li>${x}</li>`).join("")}</ol></details>`:""}
     <section class="card"><div class="row between"><h2>Team board</h2><div class="status ${err?"":"live"}"><span class="led"></span><span>${err?"Reconnecting…":data?"Live":"Loading…"}</span></div></div>
       ${games.length>1?`<div class="row"><button class="chip" data-gm="" aria-pressed="${!game}">All games</button>${games.map(g=>`<button class="chip" data-gm="${g.id}" aria-pressed="${game===g.id}">${A.esc(g.title)}</button>`).join("")}</div>`:""}
       <div class="tboard">${rows.map((r,i)=>`<div class="trow"><div class="row between"><span class="tname"><span class="rank num">${i+1}</span><span class="dot" style="background:${r.t.c}"></span>${r.t.name}</span><b class="num tavg">${r.avg%1?r.avg.toFixed(1):r.avg}</b></div><div class="bar"><i style="width:${r.avg/mx*100}%;background:${r.t.c}"></i></div><span class="lead tmeta">Players ${r.players} · Total ${r.total}</span></div>`).join("")}</div>
@@ -797,6 +853,13 @@ function renderBoard(isHost){
       <p class="lead" style="font-size:.85rem">Ends automatically at <span translate="no">${A.esc(CL.time(s.expires))}</span>. Ending deletes the class scores straight away.</p></section>`:""}`;
     app.querySelector("#back").addEventListener("click",()=>{location.hash="home"});
     app.querySelectorAll("[data-gm]").forEach(b=>b.addEventListener("click",()=>{game=b.dataset.gm||null;paint();load()}));
+    const bh=app.querySelector("#bhow");if(bh)bh.addEventListener("toggle",()=>{howOpen=bh.open});
+    const cg=app.querySelector("#chgame");if(cg)cg.addEventListener("change",async()=>{const v=cg.value||null;cg.disabled=true;
+      try{const r=await CL.rpc("set_session_game",{p_code:s.code,p_key:s.key,p_game:v});
+        if(r&&r.ok){A.track("class-choose/"+(v||"free"));data.chosen=v;seen=v;game=v;A.toast(v?"Done. Students now see this game at the top of their screen.":"Done. Students can choose any game.")}
+        else A.toast("Couldn't change the game. Check that the database update for v0.6.0 has been run.")}
+      catch(e){A.toast("Couldn't change the game. Check that the database update for v0.6.0 has been run.")}
+      cg.disabled=false;paint();load()});
     const pb=app.querySelector("#projbtn");if(pb)pb.addEventListener("click",()=>{const on=!document.body.classList.contains("proj");document.body.classList.toggle("proj",on);
       try{if(on&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});else if(!on&&document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}paint()});
     const nr=app.querySelector("#newrnd");if(nr)nr.addEventListener("click",async()=>{if(!armR){armR=true;armE=false;paint();return}armR=false;
@@ -846,11 +909,7 @@ function renderScreen(){
       <div class="fldg"><h3>Timer for each question</h3><div class="row">${chips("timer",[[0,"Off"],[15,"15 seconds"],[30,"30 seconds"],[60,"60 seconds"]])}</div></div>
       <div class="row"><button class="btn" id="sgo">Start the game</button></div>
     </section>
-    <section class="card"><h2>Tips</h2><ul class="tips">
-      <li>Put the screen where everyone can see it, and tap <strong>Full screen</strong> once the game starts.</li>
-      <li>Read each question aloud. Give teams a moment to talk together quietly before they answer.</li>
-      <li>After each answer, the explanation appears. It's a good moment to teach for a minute.</li>
-    </ul></section>`;
+    ${howBox("screen")}`;
     bindBack();
     app.querySelector("#sset").addEventListener("change",e=>{c.set=e.target.value;save()});
     app.querySelectorAll("[data-k]").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.k,v=b.dataset.v;c[k]=k==="band"||!/^\d+$/.test(v)?v:+v;save();paint()}));
