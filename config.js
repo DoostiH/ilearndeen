@@ -16,5 +16,5 @@ window.SS_CONFIG = {
      NOT "iplaystats". Paste the Project URL and the Publishable key here. Leave both "" to hide class sessions. */
   classUrl: "https://eyiiduqfunqvvchyytjm.supabase.co",
   classKey: "sb_publishable_NSQDVC3y2fUmhXkJ3QJFNg_k0ZGLawD",
-  version: "v0.6.1"
+  version: "v0.7.0"
 };

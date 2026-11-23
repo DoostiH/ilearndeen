@@ -209,6 +209,39 @@ a.gcard{text-decoration:none}
 .howin ol,.howto ol{margin:8px 0 0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
 .gcard .when{font-size:.82rem;color:var(--mean);font-weight:600}
 .status.warn{font-size:.95rem;color:var(--ink);background:color-mix(in srgb,var(--gold) 16%,var(--panel));border:1.5px solid var(--gold);border-radius:14px;padding:12px 14px;align-items:stretch}
+/* v0.7.0 compact home, age question, end screen */
+.hero{gap:10px}
+.btn.big{font-size:1.15rem;padding:14px 26px;border-radius:14px}
+.joinline{margin:0 4px;color:var(--muted);font-size:.92rem}
+.linkbtn{font:inherit;background:none;border:0;padding:0;color:var(--mean);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.glist{display:flex;flex-direction:column;gap:10px}
+.gcard.wide{flex-direction:row;align-items:center;gap:14px;padding:12px 14px}
+.gcard.wide .gpic{font-size:2.1rem;flex:none}
+.occtext{display:flex;flex-direction:column;gap:4px;min-width:0}
+.occtext h3{margin:0;font-size:1.02rem}
+.occtext p{margin:0}
+.when-d{font-size:.88rem;color:var(--ink)}
+.when-d b{color:var(--gold)}
+.morelink{color:var(--mean);font-weight:600;font-size:.9rem;text-decoration:none}
+.tabs{gap:6px}
+.tabs .chip{font-size:.82rem;padding:6px 11px}
+.gtiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:640px){.gtiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.gtile{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:start;min-width:0}
+.gtile:hover{border-color:var(--mean)}
+.gtile .gpic{font-size:1.7rem;line-height:1}
+.gtile b{font-size:.92rem;line-height:1.3;font-weight:600;overflow-wrap:anywhere}
+.gtile .best{font-family:var(--mono);font-size:.72rem;color:var(--ok)}
+.endnav{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.btn.nextg{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:start;width:100%}
+.btn.nextg .nlab{font-size:.78rem;font-weight:500;opacity:.9;text-transform:uppercase;letter-spacing:.05em}
+.btn.nextg b{font-size:1.05rem}
+.agepick{display:flex;flex-direction:column;gap:12px}
+.agebtn{display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:2px;text-align:start;align-items:center;padding:16px 18px}
+.agebtn .agepic{font-size:2.4rem;line-height:1;grid-row:span 2}
+.agebtn b{font-size:1.15rem}
+.card.howto:not([open]){padding:12px 16px;gap:0}
+.card.howto:not([open]) summary{font-size:.98rem}
 </style>
 </head>
 <body>
@@ -447,6 +480,15 @@ A.deck = arr => {let d=S.shuffle(arr),p=0;return {take:n=>{const out=[];for(let 
 A.mc = (choices,answer) => {const idx=S.shuffle(choices.map((_,k)=>k));return {choices:idx.map(k=>choices[k]),answer:idx.indexOf(answer)}};
 const choiceHTML = c => typeof c==="object"?`<span class="pic" aria-hidden="true">${c.pic}</span><span>${c.label}</span>`:c;
 const starsHTML = (score,max) => {const n=Math.max(1,Math.round(score/max*5));return `<div class="stars" aria-label="${n} of 5 stars">${"⭐".repeat(n)}${"☆".repeat(5-n)}</div>`};
+/* end of a game: Next game (same age, same topic if possible), Play again, All games */
+A.nextGame = id => {const cur=A.games.find(g=>g.id===id),u=cur&&cur.units[0][0];
+  const pool=A.games.filter(g=>g.id!==id&&A.inBand(g.bands)),fresh=pool.filter(g=>!A.best[g.id]),same=l=>l.filter(g=>g.units.some(x=>x[0]===u));
+  for(const l of [same(fresh),fresh,same(pool),pool])if(l.length)return S.pick(l);return null};
+const endBtns = id => {const n=A.nextGame(id);
+  return `<div class="endnav">${n?`<button class="btn nextg" id="nextg" data-next="${n.id}"><span class="nlab">Next game</span><b>${n.pic?`<span aria-hidden="true">${n.pic}</span> `:""}${A.esc(n.title)}</b></button>`:""}<div class="row"><button class="btn ghost" id="again">Play again</button><button class="btn ghost" id="allg">All games</button></div></div>`};
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("#nextg,#allg");if(!t)return;
+  if(t.id==="nextg"){A.track("next-game");location.hash=t.dataset.next}
+  else{A.goAll=true;if(location.hash==="#home")A.render();else location.hash="home"}});
 const endMsg = (score,max) => score>=max*0.8?"Excellent work, mā shāʾ Allāh!":score>=max*0.5?"Good effort! Play again to remember even more.":"Nice try! Read the answers again, then play another round.";
 
 /* ---------- question banks ----------
@@ -492,11 +534,10 @@ A.quiz = (el,cfg) => {
       res.push(!q._miss);i++;
       if(i<cfg.n)next();else finish();
     });
-    fb.scrollIntoView&&fb.scrollIntoView({block:"nearest",behavior:"smooth"});
   }
   function finish(){
     const max=cfg.n*pts;A.award(cfg.id,score,max);
-    box.innerHTML=`${starsHTML(score,max)}<h2>${score} / ${max} points</h2><p class="lead">${endMsg(score,max)}</p><p class="lead" style="font-size:.85rem">Best scores are saved on this device.</p><div class="row"><button class="btn" id="again">Play another round</button></div>`;
+    box.innerHTML=`${starsHTML(score,max)}<h2>${score} / ${max} points</h2><p class="lead">${endMsg(score,max)}</p><p class="lead" style="font-size:.85rem">Best scores are saved on this device.</p>${endBtns(cfg.id)}`;
     box.querySelector("#again").addEventListener("click",start);
   }
   if(cfg.intro){box.innerHTML=`<p>${cfg.intro}</p><div class="row"><button class="btn" id="go">Start</button></div>`;box.querySelector("#go").addEventListener("click",start)}else start();
@@ -509,7 +550,7 @@ A.tap = (el,cfg) => A.quiz(el,cfg);
 A.rounds = (el,cfg) => {
   let r=0,score=0,rh=null;const box=A.h("div",{class:"card"});el.appendChild(box);
   const api={get round(){return r},add:p=>{score+=p},get score(){return score},setHints:l=>{rh=l},
-    next:()=>{r++;if(r<cfg.n)paint();else{const max=cfg.n*cfg.max,sc=Math.round(score);A.award(cfg.id,sc,max);box.innerHTML=`${starsHTML(sc,max)}<h2>${sc} / ${max} points</h2><p class="lead">${endMsg(sc,max)}</p><p class="lead" style="font-size:.85rem">Best scores are saved on this device.</p><div class="row"><button class="btn" id="again">Play another round</button></div>`;box.querySelector("#again").addEventListener("click",()=>{r=0;score=0;if(cfg.onStart)cfg.onStart();paint()})}}};
+    next:()=>{r++;if(r<cfg.n)paint();else{const max=cfg.n*cfg.max,sc=Math.round(score);A.award(cfg.id,sc,max);box.innerHTML=`${starsHTML(sc,max)}<h2>${sc} / ${max} points</h2><p class="lead">${endMsg(sc,max)}</p><p class="lead" style="font-size:.85rem">Best scores are saved on this device.</p>${endBtns(cfg.id)}`;box.querySelector("#again").addEventListener("click",()=>{r=0;score=0;if(cfg.onStart)cfg.onStart();paint()})}}};
   const paint=()=>{box.innerHTML=`<div class="row between"><span class="eyebrow">Round ${r+1} of ${cfg.n}</span><span class="num lead">${Math.round(score)} pts</span></div><div class="body" style="display:flex;flex-direction:column;gap:12px"></div><div class="hb"></div>`;rh=null;cfg.render(box.querySelector(".body"),api);A.hintUI(box.querySelector(".hb"),false,null,rh||A.curHints)};
   if(cfg.onStart)cfg.onStart();paint();
 };
@@ -561,7 +602,7 @@ A.memory = (el,cfg) => {
       if(isPair(cards[x],cards[y])){[x,y].forEach(k=>{matched.add(k);btns[k].classList.add("matched");btns[k].disabled=true});open=[];done++;if(done===pairs.length)finish()}
       else{lock=true;setTimeout(()=>{btns[x].classList.remove("up");btns[y].classList.remove("up");open=[];lock=false},1000)}}));
     const finish=()=>{const max=pairs.length*10,score=Math.max(pairs.length*2,max-(tries-pairs.length)*5);A.award(cfg.id,score,max);
-      box.querySelector(".fb").innerHTML=`${starsHTML(score,max)}<h2>${score} / ${max} points</h2><p class="lead">${endMsg(score,max)}</p><ul class="pairlist">${pairs.map(p=>`<li><span>${p[0]}</span> ↔ <span>${p[1]}</span></li>`).join("")}</ul><p class="ref">${set.ref}</p><div class="row"><button class="btn" id="again">Play another round</button></div>`;
+      box.querySelector(".fb").innerHTML=`${starsHTML(score,max)}<h2>${score} / ${max} points</h2><p class="lead">${endMsg(score,max)}</p><ul class="pairlist">${pairs.map(p=>`<li><span>${p[0]}</span> ↔ <span>${p[1]}</span></li>`).join("")}</ul><p class="ref">${set.ref}</p>${endBtns(cfg.id)}`;
       box.querySelector("#again").addEventListener("click",start);box.querySelector(".fb").scrollIntoView&&box.querySelector(".fb").scrollIntoView({block:"nearest",behavior:"smooth"})};
   };
   start();
@@ -578,7 +619,7 @@ A.speed = (el,cfg) => {
     const sq=box.querySelector("#sq"),fb=box.querySelector("#sfb");
     const show=()=>{sq.innerHTML=`<p>${pool[i].s}</p>`};
     const end=()=>{clearInterval(tick);tick=null;const max=Math.max(10,pool.length*10);A.award(cfg.id,score*10,max);
-      box.innerHTML=`${starsHTML(score*10,max)}<h2>${score*10} / ${max} points</h2><p class="lead">${endMsg(score*10,max)}</p>${log.length?`<ul class="speedlog">${log.map(l=>`<li class="${l.ok?"ok":"no"}"><span>${l.s}</span> <b>${l.t?"True":"False"}</b><br><small>${l.e}</small></li>`).join("")}</ul>`:""}<div class="row"><button class="btn" id="again">Play another round</button></div>`;
+      box.innerHTML=`${starsHTML(score*10,max)}<h2>${score*10} / ${max} points</h2><p class="lead">${endMsg(score*10,max)}</p>${log.length?`<ul class="speedlog">${log.map(l=>`<li class="${l.ok?"ok":"no"}"><span>${l.s}</span> <b>${l.t?"True":"False"}</b><br><small>${l.e}</small></li>`).join("")}</ul>`:""}${endBtns(cfg.id)}`;
       box.querySelector("#again").addEventListener("click",start)};
     box.querySelectorAll(".tf").forEach(b=>b.addEventListener("click",()=>{if(!tick)return;const it=pool[i],ans=b.dataset.v==="1",right=ans===it.t;
       if(right)score++;log.push({s:it.s,t:it.t,e:it.e,ok:right});box.querySelector("#sscore").textContent=score*10;
@@ -617,7 +658,7 @@ const STAR = `<svg aria-hidden="true" viewBox="0 0 100 100"><rect width="100" he
 <rect x="25" y="66" width="50" height="18" fill="#F6F3EA"/>
 <path d="M43 84 V75 Q43 69 50 67 Q57 69 57 75 V84 Z" fill="#0B6E5F"/>
 <path d="M30 84 V77 Q30 74 33 73 Q36 74 36 77 V84 Z M64 84 V77 Q64 74 67 73 Q70 74 70 77 V84 Z" fill="#E0B04A"/></svg>`;
-let resetAsk=false,starRot=null,filter=store.get("filter","all"),query="",cleanup=null,view="home";
+let resetAsk=false,joinOpen=false,youRot=null,starRot=null,filter=store.get("filter","all"),query="",cleanup=null,view="home";
 const app=document.getElementById("app");
 const bandTags = g => (g.bands||[]).map(b=>`<span class="tag">${A.esc(A.BANDS.find(x=>x.id===b).yrs)}</span>`).join("");
 function unitTags(g){return g.units.map(([u,l])=>`<span class="tag">${A.esc(A.UNITS[u].name)} · Outcome ${l.join(", ")}</span>`).join("")}
@@ -650,38 +691,58 @@ function renderRole(){
   app.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.lang!==A.lang)A.setLang(b.dataset.lang)}));
   app.querySelectorAll("[data-role]").forEach(b=>b.addEventListener("click",()=>{store.set("role",b.dataset.role);A.track("role/"+b.dataset.role);if(location.hash==="#home"||location.hash==="")renderHome();else location.hash="home";window.scrollTo(0,0)}));
 }
+const TOPICS={u1:"Beliefs",u2:"Worship",u3:"Prophet and Imams",u4:"Prophets",u5:"Qur'an",u6:"Character"};
+/* three suggestions for this age: games not played yet first ("Start here" games before others), then the lowest scores */
+function forYou(){if(!youRot)youRot=S.shuffle(A.games.map(g=>g.id));
+  const pool=A.games.filter(g=>A.inBand(g.bands)),rank=g=>{const b=A.best[g.id];return b?2+b.points/b.max:(g.star?0:1)};
+  return pool.slice().sort((x,y)=>rank(x)-rank(y)||youRot.indexOf(x.id)-youRot.indexOf(y.id)).slice(0,3)}
+function renderAge(){
+  view="age";app.classList.remove("wide");
+  app.innerHTML=`<header style="display:flex;flex-direction:column;gap:10px"><div class="brand">${STAR}<h1 translate="no">iLearnDeen</h1></div><h2>How old is the player?</h2><p class="lead">We'll show games that fit. You can change this any time on the home screen.</p></header>
+  <div class="agepick">${A.BANDS.map((b,k)=>`<button class="rolebtn agebtn" data-age="${b.id}"><span class="agepic" aria-hidden="true">${["🧒","👦","🧑"][k]}</span><b>${b.name} · ${b.yrs}</b><span>${["About 5 to 7 years old","About 8 to 10 years old","About 11 to 15 years old"][k]}</span></button>`).join("")}</div>
+  <p class="lead" style="font-size:.9rem;text-align:center">Different ages playing together? Choose the youngest.</p>
+  <button class="linkbtn" id="ageall" style="align-self:center">Show games for all ages</button>${footer()}`;
+  const done=id=>{A.band=id;store.set("band",id);store.set("ageAsked",true);A.track("age/"+id);if(location.hash==="#home"||location.hash==="")renderHome();else location.hash="home";window.scrollTo(0,0)};
+  app.querySelectorAll("[data-age]").forEach(b=>b.addEventListener("click",()=>done(b.dataset.age)));
+  app.querySelector("#ageall").addEventListener("click",()=>done("all"));
+}
 function renderHome(){
   if(cleanup){try{cleanup()}catch(e){}cleanup=null}
   view="home";app.classList.remove("wide");
   const role=store.get("role",null);if(!role)return renderRole();const T=role==="teacher";
+  if(!T&&!store.get("ageAsked",false))return renderAge();
   const q=query.toLowerCase();
-  let list=A.games.filter(g=>A.inBand(g.bands)&&(filter==="all"||g.units.some(u=>u[0]===filter))&&(!q||((g.title+" "+g.topics+" "+g.blurb+" "+g.units.map(u=>A.UNITS[u[0]].name).join(" ")+(A.tr?" "+[g.title,g.blurb].map(A.tr).join(" "):"")).toLowerCase().includes(q))));
+  let list=A.games.filter(g=>A.inBand(g.bands)&&(filter==="all"||!TOPICS[filter]||g.units.some(u=>u[0]===filter))&&(!q||((g.title+" "+g.topics+" "+g.blurb+" "+g.units.map(u=>A.UNITS[u[0]].name).join(" ")+(A.tr?" "+[g.title,g.blurb].map(A.tr).join(" "):"")).toLowerCase().includes(q))));
   if(!starRot){const st=A.games.filter(g=>g.star).map(g=>g.id),k=Math.floor(S.r()*st.length);starRot=st.slice(k).concat(st.slice(0,k))}
   list=[...starRot.map(id=>list.find(g=>g.id===id)).filter(Boolean),...list.filter(g=>!g.star)];
-  const occs=A.occasions;
+  const tab=t=>`<button class="chip" data-f="${t}" aria-pressed="${filter===t}">${t==="all"?"All":TOPICS[t]}</button>`;
+  const joinBit=T||!CL.on()?"":CL.joined||joinOpen?classCard():`<p class="joinline">Have a class code? <button class="linkbtn" id="openjoin">Join your class</button></p>`;
   app.innerHTML=`
-  <header style="display:flex;flex-direction:column;gap:10px">
-    <div class="row between"><span class="eyebrow">Learn about Islam by playing</span><span class="rolebar"><span class="tag">${role==="teacher"?"Teacher or parent":"Student"}</span><a href="#role" id="chrole">Change role</a></span>${A.LANGS&&A.LANGS.length>1?`<div class="row" role="group" aria-label="Language" translate="no">${A.LANGS.map(l=>`<button class="chip lang" data-lang="${l.id}" aria-pressed="${A.lang===l.id}" style="padding:4px 10px;font-size:.8rem">${l.name}</button>`).join("")}</div>`:""}</div>
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <div class="row between"><span class="rolebar"><span class="tag">${role==="teacher"?"Teacher or parent":"Student"}</span><a href="#role" id="chrole">Change role</a></span>${A.LANGS&&A.LANGS.length>1?`<div class="row" role="group" aria-label="Language" translate="no">${A.LANGS.map(l=>`<button class="chip lang" data-lang="${l.id}" aria-pressed="${A.lang===l.id}" style="padding:4px 10px;font-size:.8rem">${l.name}</button>`).join("")}</div>`:""}</div>
     <div class="brand">${STAR}<h1 translate="no">iLearnDeen</h1></div>
-    <p class="lead">Short games about our faith for children from Kindy to Year 9. Play at home, in class or at community programs.</p>
     ${A.lang&&A.lang!=="en"&&A.fbUrl()?`<p class="lead" style="font-size:.82rem">Found a translation that isn't right? <a href="${A.esc(A.fbUrl())}" target="_blank" rel="noopener" style="color:var(--mean)">Please tell us.</a></p>`:""}
-    <div class="row"><button class="btn" id="quick">Play a quick game</button><span class="lead" style="font-size:.85rem">About 2 minutes</span></div>
   </header>
-  ${T?"":chosenCard()}
-  <section class="card"><h2>Who is playing?</h2>
-    <div class="seg" role="group" aria-label="Age group"><button class="chip" data-band="all" aria-pressed="${A.band==="all"}">All ages</button>${A.BANDS.map(b=>`<button class="chip" data-band="${b.id}" aria-pressed="${A.band===b.id}">${b.name} · ${b.yrs}</button>`).join("")}</div>
-    <p class="lead" style="font-size:.85rem">${A.band==="all"?"Showing games for every age.":`Showing games for ${A.esc(A.bandName(A.band))}.`}</p></section>
-  ${T?teacherCard():classCard()}
-  ${installCard()}
-  ${occs.length?`<section class="card"><h2>Occasions</h2><p class="lead">Ready-made questions for special days and community programs.</p>
-    <div class="games">${occs.map(o=>`<button class="gcard occ" data-occ="${o.id}"><span class="gpic" aria-hidden="true">${o.pic}</span><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h3>${A.esc(o.title)}</h3><p>${A.esc(o.blurb)}</p></button>`).join("")}</div>
-    <p class="lead" style="font-size:.85rem">More occasions are coming: 13 Rajab, Eid al-Ghadīr, Ramaḍān and more.</p></section>`:""}
-  ${T?"":`<section class="card"><h2>Your progress</h2><div class="stats"><div class="stat"><b>${Object.keys(A.best).filter(k=>A.games.some(g=>g.id===k)).length} / ${A.games.length}</b><span>games played</span></div><div class="stat"><b>${A.games.reduce((a,g)=>a+(A.best[g.id]?A.best[g.id].points:0),0)}</b><span>total best points</span></div><div class="stat"><b>${Object.values(A.best).filter(b=>b.points>=b.max*0.8).length}</b><span>top scores</span></div></div>${resetAsk?`<p>Are you sure? This clears all best scores on this device.</p><div class="row"><button class="btn" id="resetyes">Yes, reset</button><button class="btn ghost" id="resetno">Cancel</button></div>`:`<button class="btn ghost" id="resetbtn" style="align-self:flex-start">Reset my progress</button>`}</section>`}
-  <section class="card"><h2>Games</h2>
+  ${T?teacherCard():chosenCard()}
+  <section class="card hero">
+    <h2 style="font-size:1rem">Playing as</h2>
+    <div class="seg" role="group" aria-label="Age group">${A.BANDS.map(b=>`<button class="chip" data-band="${b.id}" aria-pressed="${A.band===b.id}">${b.name} · ${b.yrs}</button>`).join("")}<button class="chip" data-band="all" aria-pressed="${A.band==="all"}">All ages</button></div>
+    <div class="row"><button class="btn big" id="quick">▶ Play a game</button><span class="lead" style="font-size:.85rem">About 2 minutes</span></div>
+  </section>
+  ${joinBit}
+  ${T?"":`<section class="card"><h2>Games for you</h2><div class="glist">${forYou().map(g=>`<button class="gcard wide" data-g="${g.id}"><span class="gpic" aria-hidden="true">${g.pic||""}</span><div class="occtext"><h3>${A.esc(g.title)}</h3><p>${A.esc(g.blurb)}</p>${A.best[g.id]?`<span class="best">Best: ${A.best[g.id].points}/${A.best[g.id].max}</span>`:""}</div></button>`).join("")}</div></section>`}
+  ${comingCard()}
+  <section class="card" id="allgames"><h2>All games</h2>
+    <div class="row tabs" id="filters">${tab("all")}${Object.keys(TOPICS).filter(k=>A.games.some(g=>g.units.some(u=>u[0]===k))).map(tab).join("")}</div>
     <input type="search" id="q" placeholder="Search games, e.g. wuḍūʾ, Prophets, Imams" value="${A.esc(query)}" aria-label="Search games">
-    <div class="row" id="filters"><button class="chip" data-f="all" aria-pressed="${filter==="all"}">All units</button>${Object.entries(A.UNITS).filter(([k])=>A.games.some(g=>g.units.some(u=>u[0]===k))).map(([k,u])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${u.name}</button>`).join("")}</div></section>
-  <div class="games">${list.map(g=>`<button class="gcard" data-g="${g.id}"><span class="gpic" aria-hidden="true">${g.pic||""}</span><div class="row">${g.star?`<span class="tag star">Start here</span>`:""}${g.isNew?`<span class="tag new">New</span>`:""}${bandTags(g)}</div><h3>${A.esc(g.title)}</h3><p>${A.esc(g.blurb)}</p>${A.best[g.id]?`<span class="best">Best: ${A.best[g.id].points}/${A.best[g.id].max}</span>`:""}</button>`).join("")||`<p class="lead">No games match. Try another age group or search.</p>`}</div>
+    <div class="gtiles">${list.map(g=>`<button class="gtile" data-g="${g.id}"><span class="gpic" aria-hidden="true">${g.pic||""}</span><b>${A.esc(g.title)}</b>${A.best[g.id]?`<span class="best">Best: ${A.best[g.id].points}/${A.best[g.id].max}</span>`:g.isNew?`<span class="tag new">New</span>`:""}</button>`).join("")||`<p class="lead">No games match. Try another age group or search.</p>`}</div>
+    ${A.band==="all"?"":`<p class="lead" style="font-size:.85rem">Showing games for ${A.esc(A.bandName(A.band))}.</p>`}
+  </section>
+  ${T?"":`<section class="card"><h2>Your progress</h2><div class="stats"><div class="stat"><b>${Object.keys(A.best).filter(k=>A.games.some(g=>g.id===k)).length} / ${A.games.length}</b><span>games played</span></div><div class="stat"><b>${A.games.reduce((a,g)=>a+(A.best[g.id]?A.best[g.id].points:0),0)}</b><span>total best points</span></div><div class="stat"><b>${Object.values(A.best).filter(b=>b.points>=b.max*0.8).length}</b><span>top scores</span></div></div>${resetAsk?`<p>Are you sure? This clears all best scores on this device.</p><div class="row"><button class="btn" id="resetyes">Yes, reset</button><button class="btn ghost" id="resetno">Cancel</button></div>`:`<button class="btn ghost" id="resetbtn" style="align-self:flex-start">Reset my progress</button>`}</section>`}
+  ${installCard()}
   ${footer()}`;
+  if(A.goAll){A.goAll=false;const ag=app.querySelector("#allgames");if(ag&&ag.scrollIntoView)setTimeout(()=>ag.scrollIntoView({block:"start"}),0)}
+  const oj=app.querySelector("#openjoin");if(oj)oj.addEventListener("click",()=>{joinOpen=true;renderHome();const c=app.querySelector("#ccode");if(c){c.focus();c.scrollIntoView&&c.scrollIntoView({block:"center"})}});
   const si=app.querySelector("#showinst");if(si)si.addEventListener("click",e=>{e.preventDefault();store.set("installHidden",false);renderHome();window.scrollTo(0,0)});
   const hi=app.querySelector("#hideinst");if(hi)hi.addEventListener("click",()=>{store.set("installHidden",true);renderHome();A.toast("Hidden. Tap How to install at the bottom to show it again.")});
   const di=app.querySelector("#doinst");if(di)di.addEventListener("click",async()=>{const e=A.installEvt;if(!e)return;e.prompt();try{await e.userChoice}catch(x){}A.installEvt=null;renderHome()});
@@ -715,18 +776,27 @@ function renderHome(){
 }
 function topbar(label){return `<div class="topbar"><button class="back" id="back">← Home</button><span class="eyebrow">${label}</span></div>`}
 function bindBack(){app.querySelector("#back").addEventListener("click",()=>{location.hash="home"})}
-function markPlay(id){let played=false;const stg=app.querySelector("#stage");const mark=e=>{if(played)return;const b=e.target.closest&&e.target.closest("button");if(!b||b.classList.contains("hintbtn")||b.id==="go"||b.id==="again")return;played=true;A.track("play/"+id)};stg.addEventListener("click",mark)}
+function markPlay(id){let played=false;const stg=app.querySelector("#stage");const mark=e=>{if(played)return;const b=e.target.closest&&e.target.closest("button");if(!b||b.classList.contains("hintbtn")||b.id==="go"||b.id==="again"||b.id==="nextg"||b.id==="allg")return;played=true;A.track("play/"+id)};stg.addEventListener("click",mark)}
+/* keep the Next button on screen after an answer, and bring the next question back to the top */
+function keepNextInView(stg){if(!stg||!window.MutationObserver)return;let last=null;
+  const mo=new MutationObserver(()=>{const n=stg.querySelector("#qn,#nx,#nextg");
+    if(n&&n!==last){last=n;setTimeout(()=>{if(!n.isConnected||!n.scrollIntoView)return;
+      if(n.id==="nextg"){const c=n.closest(".card");if(c&&c.getBoundingClientRect().top<0)c.scrollIntoView({block:"start",behavior:"smooth"});else if(n.getBoundingClientRect().bottom>innerHeight)n.scrollIntoView({block:"nearest",behavior:"smooth"});return}
+      const r=n.getBoundingClientRect();if(r.bottom>innerHeight-8||r.top<0)n.scrollIntoView({block:"nearest",behavior:"smooth"})},40)}
+    else if(!n&&last){last=null;const c=stg.querySelector(".card");if(c&&c.getBoundingClientRect().top<0&&c.scrollIntoView)c.scrollIntoView({block:"start",behavior:"smooth"})}});
+  mo.observe(stg,{childList:true,subtree:true})}
 function renderGame(g){
   view="game";app.classList.remove("wide");
   app.innerHTML=`${topbar(A.esc(g.mode))}
   <header style="display:flex;flex-direction:column;gap:8px"><h1 style="font-size:1.9rem">${g.pic?`<span aria-hidden="true">${g.pic}</span> `:""}${A.esc(g.title)}</h1><div class="row">${bandTags(g)}${unitTags(g)}</div></header>
-  ${(()=>{const hp=A.HELP&&A.HELP[g.id];const seen=store.get("seen."+g.id,false);store.set("seen."+g.id,true);
-    return `<details class="card howto" ${seen?"":"open"}><summary style="cursor:pointer;font-family:var(--display);font-weight:600;font-size:1.05rem">How to play</summary><p>${A.esc(g.how)}</p>${hp?`<ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">${hp.steps.map(x=>`<li>${A.esc(x)}</li>`).join("")}</ol>`:""}<p class="lead" style="font-size:.85rem">Stuck? Tap <strong>Show a hint</strong> during the game.</p></details>`})()}
+  ${(()=>{const hp=A.HELP&&A.HELP[g.id];store.set("seen."+g.id,true);
+    return `<details class="card howto"><summary style="cursor:pointer;font-family:var(--display);font-weight:600;font-size:1.05rem">How to play</summary><p>${A.esc(g.how)}</p>${hp?`<ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">${hp.steps.map(x=>`<li>${A.esc(x)}</li>`).join("")}</ol>`:""}<p class="lead" style="font-size:.85rem">Stuck? Tap <strong>Show a hint</strong> during the game.</p></details>`})()}
   ${classLine(g.id)}
   <div id="stage" style="display:flex;flex-direction:column;gap:16px"></div>`;
   bindBack();bindGoChosen();
   A.track("open/"+g.id,g.title);A.track("play-lang/"+(A.lang||"en"));markPlay(g.id);
   A.curHints=(A.HELP&&A.HELP[g.id]&&A.HELP[g.id].hints)||[];
+  keepNextInView(app.querySelector("#stage"));
   try{cleanup=g.mount(app.querySelector("#stage"))||null}catch(e){app.querySelector("#stage").innerHTML=`<p class="lead">This game hit a problem loading. Go back and try again.</p>`;console.error(e)}
 }
 
@@ -736,10 +806,55 @@ function renderGame(g){
 A.addOccasion = o => {const d1={},d2={};
   const take=(band,n)=>{const k=band||"all";if(!d1[k])d1[k]=A.deck(A.pickBand(o.bank,k));if(!d2[k])d2[k]=A.deck(A.pickBand(o.mix,k));const m=o.mix&&o.mix.length?Math.floor(n*0.4):0;return S.shuffle(d1[k].take(n-m).concat(m?d2[k].take(m):[]))};
   A.occasions.push(o);A.addSet({id:o.id,title:o.title+" ("+o.date+")",occ:true,bank:o.bank.concat(o.mix||[]),take});return o};
+/* ---------- occasion dates ----------
+   IRAN = first day of each Hijri month from Iran's official calendar (Geophysics Institute, University of Tehran),
+   as [hijriYear, month, Gregorian date of day 1]. After the table ends, the phone's Umm al-Qurā calendar is used. */
+const IRAN=[[1448,6,"2026-11-11"],[1448,7,"2026-12-11"],[1448,8,"2027-01-10"],[1448,9,"2027-02-08"],[1448,10,"2027-03-10"],[1448,11,"2027-04-08"],[1448,12,"2027-05-08"],
+  [1449,1,"2027-06-06"],[1449,2,"2027-07-05"],[1449,3,"2027-08-04"],[1449,4,"2027-09-02"],[1449,6,"2027-10-31"],[1449,7,"2027-11-30"],[1449,8,"2027-12-30"],[1449,9,"2028-01-28"],[1449,10,"2028-02-27"]];
+/* Hijri month and day(s) for each occasion; len = the whole month */
+const OCC_HD={"shaban-15":[8,15],"rajab-13":[7,13],"jumada-20":[6,20],"rabi-17":[3,17],ramadan:[9,1,30],ghadir:[12,18],muharram:[1,1,10],"eid-al-fitr":[10,1],"eid-al-adha":[12,10],mabath:[7,27],mubahalah:[12,24],"shaban-births":[8,3,3],"imam-rida":[11,11],arbain:[2,20]};
+const DAY=864e5,utc=s=>Date.parse(s+"T00:00:00Z");
+const todayUTC=()=>{const n=new Date();return Date.UTC(n.getFullYear(),n.getMonth(),n.getDate())};
+let uqf=null;try{uqf=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura-nu-latn",{year:"numeric",month:"numeric",day:"numeric",timeZone:"UTC"});if(uqf.resolvedOptions().calendar!=="islamic-umalqura")uqf=null}catch(e){uqf=null}
+const uqParts=t=>{const o={};uqf.formatToParts(new Date(t)).forEach(p=>{o[p.type]=p.value});return {y:+o.year,m:+o.month,d:+o.day}};
+/* Gregorian (UTC ms) of day 1 of Hijri month m of year y, or null */
+function monthStart(y,m){const row=IRAN.find(r=>r[0]===y&&r[1]===m);if(row)return utc(row[2]);
+  const last=IRAN[IRAN.length-1],lastT=utc(last[2]),k=(y-last[0])*12+(m-last[1]);
+  if(k<=0||!uqf)return null;
+  const est=lastT+Math.round(k*29.530588*DAY);
+  for(let dd=-4;dd<=4;dd++){const t=est+dd*DAY,p=uqParts(t);if(p.y===y&&p.m===m&&p.d===1)return t}
+  return null}
+/* the next time this occasion happens (or is happening now): {start, end, now:bool, days} */
+A.occWhen = id => {const hd=OCC_HD[id];if(!hd)return null;const [m,d,len=1]=hd,today=todayUTC();
+  for(let y=1448;y<=1452;y++){const ms=monthStart(y,m);if(ms==null)continue;const s=ms+(d-1)*DAY,e=s+(len-1)*DAY;
+    if(e>=today)return {start:s,end:e,now:s<=today,days:Math.round((s-today)/DAY)}}
+  return null};
+A.fmtDay = t => {const d=new Date(t),thisYear=new Date().getFullYear()===d.getUTCFullYear(),o={weekday:"short",day:"numeric",month:"short",timeZone:"UTC"};
+  try{if(A.lang==="fa"){const f=new Intl.DateTimeFormat("fa-IR-u-ca-persian",Object.assign(o,{weekday:"long",month:"long"},thisYear?{}:{year:"numeric"}));return f.format(d)}
+    if(A.lang==="ar"){return new Intl.DateTimeFormat("ar-u-ca-gregory-nu-arab",Object.assign(o,{weekday:"long",month:"long"},thisYear?{}:{year:"numeric"})).format(d)}
+    return new Intl.DateTimeFormat("en-GB",Object.assign(o,thisYear?{}:{year:"numeric"})).format(d)}catch(e){return d.toISOString().slice(0,10)}};
+/* "Today", "Tomorrow", "In 7 days", "This month" */
+const whenWords = (id,w) => {const hd=OCC_HD[id]||[];const month=(hd[2]||1)>=10;
+  if(w.now)return month?"This month":"Today";
+  return w.days===1?"Tomorrow":`In ${w.days} days`};
+A.occsByDate = () => A.occasions.map(o=>({o,w:A.occWhen(o.id)})).sort((a,b)=>(a.w?a.w.start:1e15)-(b.w?b.w.start:1e15));
+const dateLine = (o,w) => w?`<span class="when-d"><b>${whenWords(o.id,w)}</b> · <span translate="no">${A.esc(A.fmtDay(w.start))}</span></span>`:"";
+function comingCard(){
+  if(!A.occasions.length)return "";const l=A.occsByDate();const top=l[0];if(!top||!top.w)return "";
+  const {o,w}=top;
+  return `<section class="card coming"><div class="row between"><h2>Coming up</h2><a href="#occasions" class="morelink">All occasions →</a></div>
+    <button class="gcard occ wide" data-occ="${o.id}"><span class="gpic" aria-hidden="true">${o.pic}</span><div class="occtext"><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h3>${A.esc(o.title)}</h3>${dateLine(o,w)}</div></button></section>`;
+}
+function renderOccList(){
+  view="occs";app.classList.remove("wide");
+  app.innerHTML=`${topbar("Occasions")}<header><h1 style="font-size:1.9rem">Occasions</h1><p class="lead">Ready-made questions for special days and community programs.</p></header>
+  <div class="games">${A.occsByDate().map(({o,w})=>`<button class="gcard occ" data-occ="${o.id}"><span class="gpic" aria-hidden="true">${o.pic}</span><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h3>${A.esc(o.title)}</h3>${dateLine(o,w)}<p>${A.esc(o.blurb)}</p></button>`).join("")}</div>${footer()}`;
+  bindBack();app.querySelectorAll("[data-occ]").forEach(b=>b.addEventListener("click",()=>{location.hash="occasion-"+b.dataset.occ}));
+}
 function renderOcc(o){
   view="occ";app.classList.remove("wide");
   app.innerHTML=`${topbar("Occasion")}
-  <header style="display:flex;flex-direction:column;gap:8px"><div class="bigpic" style="text-align:start" aria-hidden="true">${o.pic}</div><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h1 style="font-size:1.9rem">${A.esc(o.title)}</h1><p class="lead">${o.about}</p></header>
+  <header style="display:flex;flex-direction:column;gap:8px"><div class="bigpic" style="text-align:start" aria-hidden="true">${o.pic}</div><span class="tag star" style="align-self:flex-start">${A.esc(o.date)}</span><h1 style="font-size:1.9rem">${A.esc(o.title)}</h1>${dateLine(o,A.occWhen(o.id))}<p class="lead">${o.about}</p></header>
   <section class="card"><h2>Play on this device</h2><p class="lead">Five questions about this occasion and about good character, for <span>${A.esc(A.bandName(A.band))}</span>.</p><p class="lead" style="font-size:.85rem">You can change the age group on the home screen.</p><button class="btn" id="occplay" style="align-self:flex-start">Play now</button></section>
   ${classLine("occ-"+o.id)}
   ${store.get("role",null)==="teacher"?`<section class="card accent"><h2>Running a program?</h2><p>Play this occasion as a team game on one screen, with no devices needed for the children.</p><div class="row"><button class="btn" id="occscr">Play on one screen</button>${CL.on()?`<a class="btn ghost" href="#class-host">Class with devices</a>`:""}</div></section>`:""}
@@ -748,7 +863,7 @@ function renderOcc(o){
   bindGoChosen();
   if(A.autoOcc){A.autoOcc=false;const op=app.querySelector("#occplay");if(op)setTimeout(()=>op.click(),0)}
   const os=app.querySelector("#occscr");if(os)os.addEventListener("click",()=>{const c=store.get("scr",{});c.set=o.id;store.set("scr",c);location.hash="class-screen"});
-  app.querySelector("#occplay").addEventListener("click",e=>{e.target.closest("section").remove();const set=A.sets.find(s=>s.id===o.id);const stage=app.querySelector("#stage");markPlay("occ-"+o.id);A.bankQuiz(stage,{id:"occ-"+o.id,set,n:5})});
+  app.querySelector("#occplay").addEventListener("click",e=>{e.target.closest("section").remove();const set=A.sets.find(s=>s.id===o.id);const stage=app.querySelector("#stage");markPlay("occ-"+o.id);keepNextInView(stage);A.bankQuiz(stage,{id:"occ-"+o.id,set,n:5})});
 }
 
 /* ---------- class sessions: teacher and board views ---------- */
@@ -822,14 +937,16 @@ function renderBoard(isHost){
   view=isHost?"host":"board";app.classList.remove("wide");A.curHints=[];
   const s=isHost?CL.host:CL.joined;
   if(!s||!CL.on()){location.hash=isHost?"class-host":"home";return}
-  let data=null,err=false,game=null,armR=false,armE=false,timer=null,busy=false,seen;
+  let data=null,err=false,game=null,armR=false,armE=false,timer=null,busy=false,seen,picking=false,pickT=0;
   let howOpen=isHost&&!store.get("seen.how.host",false);if(isHost)store.set("seen.how.host",true);
   const load=async()=>{if(busy)return;busy=true;try{const r=await CL.rpc("session_board",{p_code:s.code,p_game:game});err=false;
       if(!r||!r.ok){if(isHost){CL.host=null;store.set("host",null)}else if(CL.joined&&CL.joined.code===s.code)CL.leave();data={ended:true}}else data=r}
     catch(e){err=true}busy=false;
-    if(data&&!data.ended){const c=data.chosen||null;if(seen===undefined||c!==seen){const first=seen===undefined;seen=c;if(!isHost&&CL.joined&&CL.joined.code===s.code&&(CL.joined.chosen||null)!==c){CL.joined.chosen=c;store.set("class",CL.joined)}if(c!==game&&(c||!first)){game=c;if(view===(isHost?"host":"board"))paint();return load()}}}
-    if(view===(isHost?"host":"board"))paint()};
-  const paint=()=>{
+    if(data&&!data.ended){const c=data.chosen||null;if(seen===undefined||c!==seen){const first=seen===undefined;seen=c;if(!isHost&&CL.joined&&CL.joined.code===s.code&&(CL.joined.chosen||null)!==c){CL.joined.chosen=c;store.set("class",CL.joined)}if(c!==game&&(c||!first)){game=c;if(view===(isHost?"host":"board")&&!picking)paint();return load()}}}
+    if(view===(isHost?"host":"board"))update()};
+  /* the 5-second refresh only redraws the class code and the team board, and waits while the teacher is choosing a game */
+  const update=()=>{if(picking)return;if(!app.querySelector("#tbsec")||(data&&data.ended))return paint();paint(true)};
+  const paint=part=>{
     const teams=A.TEAMS.slice(0,(data&&data.teams)||s.teams||4);
     const rows=teams.map(t=>{const b=(data&&data.board||[]).find(x=>x.team===t.id)||{players:0,total:0,average:0};return {t,players:+b.players||0,total:+b.total||0,avg:+b.average||0}}).sort((a,b)=>b.avg-a.avg||b.total-a.total);
     const mx=Math.max(1,...rows.map(r=>r.avg));
@@ -837,9 +954,10 @@ function renderBoard(isHost){
     const games=[...new Set([...(data&&data.games||[]),...(chosen?[chosen]:[])])].map(gameInfo).filter(Boolean);
     const ch=chosen&&gameInfo(chosen);
     const proj=document.body.classList.contains("proj");
+    const y=window.scrollY;
     if(data&&data.ended){app.innerHTML=`<div class="topbar"><button class="back" id="back">← Home</button></div><section class="card"><h2>This class session has ended</h2><p class="lead">Its scores have been deleted. Scores stay on each student's device.</p>${isHost?`<div class="row"><a class="btn" href="#class-host">Start a new session</a></div>`:""}</section>`;
       document.body.classList.remove("proj");app.querySelector("#back").addEventListener("click",()=>{location.hash="home"});return}
-    app.innerHTML=`<div class="topbar"><button class="back" id="back">← Home</button><span class="eyebrow">${isHost?"Teacher view":"Team board"}</span></div>
+    const html=`<div class="topbar"><button class="back" id="back">← Home</button><span class="eyebrow">${isHost?"Teacher view":"Team board"}</span></div>
     <section class="card codecard"><div class="row between" style="align-items:flex-start"><div style="display:flex;flex-direction:column;gap:4px;min-width:0"><span class="eyebrow">Class code</span><div class="bigcode" translate="no">${A.esc(s.code)}</div>${s.title||(data&&data.title)?`<span class="lead" translate="no">${A.esc(s.title||data.title)}</span>`:""}</div>
       ${isHost?`<button class="btn ghost" id="projbtn">${proj?"Exit projector view":"Projector view"}</button>`:""}</div>
       ${isHost?`<p class="lead">Students: open <b translate="no">${A.esc(siteAddr())}</b>, enter this code under <strong>Join a class</strong>, then pick a team.</p>`:""}
@@ -852,31 +970,39 @@ function renderBoard(isHost){
         <optgroup label="Occasions">${A.occasions.map(o=>`<option value="occ-${o.id}" ${chosen==="occ-"+o.id?"selected":""}>${A.esc(o.title)}</option>`).join("")}</optgroup>
       </select></label></section>
     <details class="card howto hostonly" id="bhow" ${howOpen?"open":""}><summary>How it works</summary><ol>${HOW.host.map(x=>`<li>${x}</li>`).join("")}</ol></details>`:""}
-    <section class="card"><div class="row between"><h2>Team board</h2><div class="status ${err?"":"live"}"><span class="led"></span><span>${err?"Reconnecting…":data?"Live":"Loading…"}</span></div></div>
+    <section class="card" id="tbsec"><div class="row between"><h2>Team board</h2><div class="status ${err?"":"live"}"><span class="led"></span><span>${err?"Reconnecting…":data?"Live":"Loading…"}</span></div></div>
       ${games.length>1?`<div class="row"><button class="chip" data-gm="" aria-pressed="${!game}">${chosen?"All the teacher's games":"All games"}</button>${games.map(g=>`<button class="chip" data-gm="${g.id}" aria-pressed="${game===g.id}">${A.esc(g.title)}</button>`).join("")}</div>`:""}
       <div class="tboard">${rows.map((r,i)=>`<div class="trow"><div class="row between"><span class="tname"><span class="rank num">${i+1}</span><span class="dot" style="background:${r.t.c}"></span>${r.t.name}</span><b class="num tavg">${r.avg%1?r.avg.toFixed(1):r.avg}</b></div><div class="bar"><i style="width:${r.avg/mx*100}%;background:${r.t.c}"></i></div><span class="lead tmeta">Players ${r.players} · Total ${r.total}</span></div>`).join("")}</div>
       <p class="lead" style="font-size:.82rem">Team score is the average points per player, so team size doesn't matter. Each player's best score in each game counts.</p></section>
     ${isHost?`<section class="card hostonly"><div class="row"><button class="btn ghost ${armR?"warn":""}" id="newrnd">${armR?"Tap again to confirm":"New round (clear scores)"}</button><button class="btn ghost ${armE?"warn":""}" id="endses">${armE?"Tap again to confirm":"End session"}</button></div>
       <p class="lead" style="font-size:.85rem">Ends automatically at <span translate="no">${A.esc(CL.time(s.expires))}</span>. Ending deletes the class scores straight away.</p></section>`:""}`;
+    const chips=()=>app.querySelectorAll("[data-gm]").forEach(b=>b.addEventListener("click",()=>{game=b.dataset.gm||null;paint();load()}));
+    if(part){const tmp=document.createElement("div");tmp.innerHTML=html;
+      ["#tbsec",".codecard"].forEach(q=>{const o=app.querySelector(q),n=tmp.querySelector(q);if(o&&n)o.replaceWith(n)});
+      const pb0=app.querySelector("#projbtn");if(pb0)pb0.addEventListener("click",projToggle);
+      chips();return}
+    app.innerHTML=html;window.scrollTo(0,y);
     app.querySelector("#back").addEventListener("click",()=>{location.hash="home"});
-    app.querySelectorAll("[data-gm]").forEach(b=>b.addEventListener("click",()=>{game=b.dataset.gm||null;paint();load()}));
+    chips();
     const bh=app.querySelector("#bhow");if(bh)bh.addEventListener("toggle",()=>{howOpen=bh.open});
-    const cg=app.querySelector("#chgame");if(cg)cg.addEventListener("change",async()=>{const v=cg.value||null;cg.disabled=true;
+    const cg=app.querySelector("#chgame");if(cg){["focus","pointerdown","touchstart","mousedown"].forEach(ev=>cg.addEventListener(ev,()=>{picking=true;pickT=Date.now()},{passive:true}));cg.addEventListener("blur",()=>{if(picking){picking=false;update()}})}
+    if(cg)cg.addEventListener("change",async()=>{const v=cg.value||null;picking=false;cg.disabled=true;
       try{const r=await CL.rpc("set_session_game",{p_code:s.code,p_key:s.key,p_game:v});
         if(r&&r.ok){A.track("class-choose/"+(v||"free"));data.chosen=v;seen=v;game=v;A.toast(v?"Done. Students now see this game at the top of their screen.":"Done. Students can choose any game.")}
         else A.toast("Couldn't change the game. Check that the database update for v0.6.0 has been run.")}
       catch(e){A.toast("Couldn't change the game. Check that the database update for v0.6.0 has been run.")}
       cg.disabled=false;paint();load()});
-    const pb=app.querySelector("#projbtn");if(pb)pb.addEventListener("click",()=>{const on=!document.body.classList.contains("proj");document.body.classList.toggle("proj",on);
-      try{if(on&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});else if(!on&&document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}paint()});
+    const pb=app.querySelector("#projbtn");if(pb)pb.addEventListener("click",projToggle);
     const nr=app.querySelector("#newrnd");if(nr)nr.addEventListener("click",async()=>{if(!armR){armR=true;armE=false;paint();return}armR=false;
       try{const r=await CL.rpc("reset_session",{p_code:s.code,p_key:s.key});A.toast(r&&r.ok?"Scores cleared. Same code, new round.":"Couldn't clear the scores.")}catch(e){A.toast("Couldn't reach the class server. Check your connection and try again.")}load()});
     const es=app.querySelector("#endses");if(es)es.addEventListener("click",async()=>{if(!armE){armE=true;armR=false;paint();return}armE=false;
       try{await CL.rpc("end_session",{p_code:s.code,p_key:s.key});CL.host=null;store.set("host",null);if(CL.joined&&CL.joined.code===s.code)CL.leave();document.body.classList.remove("proj");A.toast("Session ended and its scores deleted.");location.hash="home"}
       catch(e){A.toast("Couldn't reach the class server. Check your connection and try again.")}});
   };
+  const projToggle=()=>{const on=!document.body.classList.contains("proj");document.body.classList.toggle("proj",on);
+      try{if(on&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});else if(!on&&document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}paint()};
   paint();load();
-  timer=setInterval(()=>{if(!document.hidden)load()},5000);
+  timer=setInterval(()=>{if(picking&&Date.now()-pickT>60000)picking=false;if(!document.hidden&&!picking)load()},5000);
   cleanup=()=>{clearInterval(timer);document.body.classList.remove("proj");try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}};
 }
 
@@ -1015,12 +1141,15 @@ function route(){
   else if(h==="class-host")renderHost();
   else if(h==="class-screen")renderScreen();
   else if(h==="role")renderRole();
+  else if(h==="age")renderAge();
+  else if(h==="occasions")renderOccList();
   else if(h==="board")renderBoard(false);
   else if(h==="host"||h.startsWith("host-")){location.replace("#class-host");return}
   else if(h.startsWith("occasion-")&&A.occasions.some(o=>o.id===h.slice(9)))renderOcc(A.occasions.find(o=>o.id===h.slice(9)));
   else renderHome();
   window.scrollTo(0,0);
 }
+A.render = () => route();
 A.start = () => {A.track("app-lang/"+(A.lang||"en"));window.addEventListener("hashchange",route);route()};
 })();
 
